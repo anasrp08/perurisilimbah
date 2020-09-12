@@ -344,19 +344,21 @@ class LimbahController extends Controller
     {
         // dd($request->all());
         $html = '';
+        $getJenis = DB::table('md_jenislimbah')->where('id',$request->jenis)->first();
+        // dd($getJenis);
         $namalimbah = DB::table('md_namalimbah')
-        ->where('jenislimbah', $request->jenis)
-        ->where('fisik', $request->fisik)
+        ->where('jenislimbah', $getJenis->jenislimbah)
+        // ->where('fisik', $request->fisik)
         ->get();
         
         $html .='<option value="-">-</option>';
         foreach ($namalimbah as $nama) {
-            $html .= '<option value="'.$nama->namalimbah.'">'.$nama->namalimbah.'</option>';
+            $html .= '<option value="'.$nama->id.'">'.$nama->namalimbah.'</option>';
         }
         return response()->json(['html' => $html]);
         //
     }
-    public function getSatuan(Request $request)
+    public function getSatuan1(Request $request)
     {
         //
         $html = '';
@@ -371,6 +373,21 @@ class LimbahController extends Controller
             $html .= '<option value="'.$nama->satuan.'">'.$nama->satuan.'</option>';
         }
         return response()->json(['html' => $html]);
+    }
+    public function getSatuan(Request $request)
+    {
+        // dd($request->idlimbah);
+        $html = '';
+        $namalimbah = DB::table('md_namalimbah')
+         
+        ->where('id', $request->idlimbah)
+      
+        ->first();
+        // dd($namalimbah);
+
+        $dataSatuan= $namalimbah->satuan;
+   
+        return response()->json(['satuan' => $dataSatuan]);
     }
 
 }

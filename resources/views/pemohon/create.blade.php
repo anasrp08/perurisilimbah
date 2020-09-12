@@ -15,8 +15,6 @@
 @section('content')
 
 
-<!-- Main content -->
-
 
 <div class="row">
     @include('pemohon.f_pemohon')
@@ -29,17 +27,8 @@
 
 @section('scripts')
 <script>
-    $(document).ready(function () {
-        // $('.select2bs4').select2()
-        $('#nonb3').hide()
-        // if ($('#suratperintah').is(':visible')) {
-
-        //    if (isEmpty("tglsuratperintah")) {
-        //        if (isEmpty("filesuratperintah")) {
-
-        //            sentData(this)
-        //        } 
-        //    } 
+    $(document).ready(function () { 
+        $('#nonb3').hide() 
         var counter = 1;
         // if (lastNumber != 0) {
         //     counter = lastNumber + 1;
@@ -75,118 +64,59 @@
                 return true
             }
         }
-        $("#fisiklimbah").change(function () {
-            getDropdown('{{ route("limbah.getnama")}}', $('#jenislimbah').val(), $(this).val(),
-                "namalimbah")
+        $("#jenislimbah").change(function () {
+            getDropdown('{{ route("limbah.getnama")}}', "", $(this).val(), "namalimbah")
 
         });
+     
         $("#namalimbah").change(function () {
             getDropdown('{{ route("limbah.getsatuan")}}', "", $(this).val(), "satuan")
 
         });
-
-
-        // function getDropdown(paramUrl, param, idkomponen) {
-        //     var url = paramUrl;
-        //     url = url.replace(':id', param);
-        //     $.ajax({
-        //         url: url,
-        //         method: 'GET',
-
-        //         success: function (data) {
-
-        //             $("#" + idkomponen).html(data.html);
-        //         }
-        //     });
-
-        // }
+ 
         function getDropdown(paramUrl, param1, param2, idkomponen) {
-            
+
             var paramData
             if (idkomponen == 'namalimbah') {
+                // console.log(param1)
                 paramData = {
-                    jenis: param1,
-                    fisik: param2
+                    jenis: param2,
+                    // fisik: param2
                 }
+                $.ajax({
+                    url: paramUrl,
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: paramData,
+                    success: function (data) {
+                        console.log(data)
+                        // if(data==''){
+
+                        // }
+                        $("#" + idkomponen).html(data.html);
+                    }
+                });
             } else {
                 paramData = {
-                    namalimbah: param2
+                    idlimbah: param2
+
                 }
-            }
-
-            $.ajax({
-                url: paramUrl,
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: paramData,
-                success: function (data) {
-
-                    $("#" + idkomponen).html(data.html);
-                }
-            });
-
-        }
-        // $('#input_limbah').on('submit', function (event) {
-        //     event.preventDefault();
-        //     if ($('#nonb3').is(':visible')) {
-
-        //         if (isEmpty("limbah3r")) {
-
-
-        //             sentData(this)
-
-        //         }
-        //     } else {
-        //         toastr.success("Berhasil Tersimpan", 'Data Tersimpan', {
-        //             timeOut: 5000
-        //         });
-        //         // sentData(this)
-        //     }
-
-        //     function sentData(tes) {
-        //         $.ajax({
-        //             url: "{{ route('limbah.store') }}",
-        //             method: "POST",
-        //             data: new FormData(tes),
-        //             contentType: false,
-        //             cache: false,
-        //             processData: false,
-        //             dataType: "json",
-        //             beforeSend: function () {
-        //                 $('#action_button').val('menyimpan...');
-        //             },
-        //             success: function (data) {
-        //                 var html = '';
-        //                 console.log(data)
-        //                 if (data.errors) {
-        //                     html = '<div class="alert alert-danger">';
-        //                     for (var count = 0; count < data.errors.length; count++) {
-        //                         html += '<p>' + data.errors[count] + '</p>';
-        //                     }
-        //                     html += '</div>';
-        //                     $('#form_result').html(html);
-        //                     $('#action_button').val('Submit');
-        //                 }
-        //                 if (data.success) {
-        //                     toastr.success(data.success, 'Tersimpan', {
-        //                         timeOut: 5000
-        //                     });
-        //                     $('#input_limbah')[0].reset();
-        //                     $('#action_button').val('Simpan');
-        //                     // $('#pilihuji').get(0).selectedIndex = 0;
-        //                     window.location.reload()
-
-        //                     $('#form_result').html('');
-        //                 }
-
-        //             }
-        //         })
-        //     }
-
-        // })
-
+                 console.log(param2)
+                $.ajax({
+                    url: paramUrl,
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: paramData,
+                    success: function (data) {
+                        $("#" + idkomponen).text(data.satuan);
+                    }
+                });
+            } 
+        } 
         var table = $('#tbl_pemohon').DataTable({
 
             scrollX: true,
@@ -197,12 +127,21 @@
             ordering: false,
             dom: 'Bfrtip',
             language: {
-                emptyTable: "Tidak Ada Data Limbah"
+                emptyTable: "Tidak Ada Data Permohonan"
             },
-            select:{
-                style:'multiple'
+            select: {
+                style: 'multi'
             },
-            
+//             createdRow: function ( row, data, index ) {
+//                 $('.select2bs4').select2({
+//                 theme: 'bootstrap4'
+//             })
+//         },
+//         drawCallback: function() {
+//             $('.select2bs4').select2({
+//                 theme: 'bootstrap4'
+//             })
+//   },
             buttons: [
 
                 {
@@ -232,25 +171,25 @@
 
         function assignToInput(collectid, counter) {
 
-            var valWarna; 
+            var valWarna;
 
             var getValueInput = [
                 $("#entridate").val(),
                 $("#jmlhlimbah").val(),
-                $("#keterangan").val(), 
+                $("#keterangan").val(),
                 // valWarna
             ]
 
 
-            var getSelected = [ 
+            var getSelected = [
                 $("#np").val(),
                 $("#jenislimbah").val(),
                 $("#namalimbah").val(),
                 $("#limbahasal").val(),
-                $("#limbah3r").val(), 
+                $("#limbah3r").val(),
 
             ]
-            
+
 
 
             for (i = 0; i < collectid[0].length; i++) {
@@ -261,67 +200,68 @@
             // console.log(getSelected)
             for (j = 0; j < collectid[1].length; j++) {
 
-                $('select[name=id' + collectid[1][j] + counter + ']').find('option[value="' + getSelected[j] +'"]').attr("selected", true).change();
+                $('select[name=' + collectid[1][j]+']').find('option[value="' + getSelected[j] +'"]').attr("selected", true).change();
                 // document.getElementById("id" + collectid[1][j] + counter).selectedIndex = getSelected[j];
-            } 
-            selectbs4()
+            }
+            // selectbs4()
         }
 
 
         function createInputTextEnabled(id, counter, data) {
-            return '<input style="width:100%;"type="text" name="' + id + '"  id="id' + id + counter +
+            return '<input style="width:auto;"type="text" name="' + id + '"  id="id' + id + counter +
                 '" class="form-control" value="' + data + '" >'
         }
 
-         
+
 
         function createDropdown(id, counter, option) {
-            selectbs4()
-                return '<select name="id' + id + counter + '" id="' + id + '" class="form-control select2bs4">' +
-                    option + '</select>'
-           
+            // selectbs4()
+            return '<select name="' + id+ '" id="' + id + counter +  '" class="form-control select2bs4" style="width: auto;">' +
+                option + '</select>'
+
 
         }
         $('#copy').on('click', function () {
-            selectbs4()
+            // selectbs4()
+            console.log($("#namalimbah").val())
             collectid = [
                 [
-                    "tgl", 
-                    "jmlhlimbah", 
+                    "tgl",
+                    "jmlhlimbah",
                     "keterangan"
 
                 ],
                 [
                     "np",
                     "jenis_limbah",
-                    "nama_limbah", 
+                    "nama_limbah",
                     "asal_limbah",
-                    "limbah_3r", 
+                    "limbah_3r",
                 ]
 
             ]
-            
+
             table.row.add([
                 //id table
                 counter,
 
                 // createInputTextDisabled("uji", counter, counter), 
                 createDropdown("np", counter,
-                    ' <option value="" disabled selected>-</option>'+
+                    ' <option value="" disabled selected>-</option>' +
                     '@foreach($np as $data)' +
                     '<option value="{{$data->id}}" >{{$data->np}}</option>' +
                     '@endforeach' +
                     '</select>'),
-                createInputTextEnabled("tgl", counter, ""), 
+                createInputTextEnabled("tgl", counter, ""),
                 createDropdown("nama_limbah", counter,
-                '<option value="" disabled selected>-</option>'+
+                    '<option value="" disabled selected>-</option>' +
                     '@foreach($namaLimbah as $data)' +
                     '<option value="{{$data->id}}" >{{$data->namalimbah}}</option>' +
                     '@endforeach' +
-                    '</select>'), 
+                    '</select>'),
 
                 createDropdown("jenis_limbah", counter,
-                    ' <option value="" disabled selected>-</option> '+
+                    ' <option value="" disabled selected>-</option> ' +
                     '@foreach($jenisLimbah  as $data)' +
                     '<option value="{{$data->id}}">{{$data->jenislimbah}} </option>' +
                     '@endforeach' +
@@ -329,35 +269,36 @@
 
 
                 createDropdown("asal_limbah", counter,
-                    ' <option value="" disabled selected>-</option>'+
+                    ' <option value="" disabled selected>-</option>' +
                     '@foreach($penghasilLimbah as $data)' +
                     '<option value="{{$data->id}}" >{{$data->seksi}}</option>' +
                     '@endforeach' +
                     '</select>'),
- 
+
                 createInputTextEnabled("jmlhlimbah", counter, ""),
                 createDropdown("limbah_3r", counter,
-                '<option value="" selected="selected">-</option>'+
-                '<option value="Ya">Ya</option>'+
-                '<option value="Tidak">Tidak</option>'),
-                createInputTextEnabled("keterangan", counter, ""), 
+                    '<option value="" selected="selected">-</option>' +
+                    '<option value="Ya">Ya</option>' +
+                    '<option value="Tidak">Tidak</option>'),
+                createInputTextEnabled("keterangan", counter, ""),
 
             ]).draw(false);
-          
+
             assignToInput(collectid, counter);
             counter++;
             selectbs4()
-           
+
 
         });
-        function selectbs4(){
-             $('.select2bs4').select2({
-            theme: 'bootstrap4'
-        })
+        
+
+        function selectbs4() {
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
         }
 
-        $('#save').click(function () {
-            // t.row('.selected').remove().draw(false);
+        $('#save').click(function () { 
             var myTable = $("#tbl_pemohon").DataTable();
             var form_data = myTable.rows().data();
             console.log(form_data)
@@ -369,25 +310,25 @@
 
                 var output = [];
                 var jsonData = {}
-                 
-                $("tbody tr").each(function () {
-                    // console.log($(":input[name=tgl]", this).val())
-                    if($(":input[name=tgl]", this).val() == undefined){
 
-                    }else{
-                    var obj = {};
-                    obj.tgl = $(":input[name=tgl]", this).val();
-                    obj.nama_limbah = $("#nama_limbah", this).val();
-                    obj.jenis_limbah = $("#jenis_limbah", this).val();
-                    obj.asal_limbah = $("#asal_limbah", this).val();
-                    obj.jmlhlimbah = $(":input[name=jmlhlimbah]", this).val();
-                    obj.limbah_3r = $("#limbah_3r", this).val();
-                    obj.np = $("#np", this).val();
-                    obj.keterangan = $(":input[name=keterangan]", this).val();
+                $("tbody tr").each(function () {
+                     
+                    if ($(":input[name=tgl]", this).val() == undefined) {
+
+                    } else {
+                        var obj = {};
+                        obj.tgl = $(":input[name=tgl]", this).val();
+                        obj.nama_limbah = $("select[name=nama_limbah]", this).val();
+                        obj.jenis_limbah = $("select[name=jenis_limbah]", this).val();
+                        obj.asal_limbah = $("select[name=asal_limbah]", this).val();
+                        obj.jmlhlimbah = $(":input[name=jmlhlimbah]", this).val();
+                        obj.limbah_3r = $("select[name=limbah_3r]", this).val();
+                        obj.np = $(":input[name=np]", this).val();
+                        obj.keterangan = $(":input[name=keterangan]", this).val();
                         // console.log(obj)
-                    output.push(obj);
+                        output.push(obj);
                     }
-                    
+
                 });
 
                 // var idJadwal = {
@@ -427,14 +368,14 @@
 
                             // $('#saveentri').text('Simpan');
 
-                            // location.reload();
+                            location.reload();
 
                         }
 
                     }
                 })
             }
- 
+
         });
 
 

@@ -5,12 +5,12 @@
                 Save</button>
         </div>
         <div class="card-body">
-            <table id="tbl_pemohon" class="table table-bordered table-striped" style="width:100%;">
+            <table id="tbl_pemohon" class="table table-bordered table-striped" style="width:100%;" >
                 <thead>
                     <tr>
                         <th>No. </th>
                         <th>NP Petugas</th>
-                        <th>Tanggal Permohonan</th>
+                        <th >Tanggal Permohonan</th>
                         <th>Nama Limbah</th>
                         <th>Jenis Limbah (B3/Non)</th> 
                         <th>Unit Penghasil</th>  

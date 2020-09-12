@@ -39,47 +39,11 @@
                             <th>Nama Limbah</th>
                             <th>Jumlah</th>
                             <th>Jenis Limbah (B3/Non)</th>
-                            <th>Fisik</th>
-
+                            <th>Fisik</th> 
                             <th>Tanggal Permohonan</th>
                             <th>Status</th>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Limbah Sludge</td>
-                            <td>300 karung</td>
-                            <td>Limbah B3</td>
-                            <td>Padat</td>
-                            <td>07/08/2020</td>
-                            <td><span class="badge badge-warning">Permohonan Angkut</span></td>
-                        </tr>
-                        <td>2</td>
-                        <td>Limbah Sludge</td>
-                        <td>100 liter</td>
-                        <td>Limbah B3</td>
-                        <td>Cair</td>
-                        <td>20/08/2020</td>
-                        <td><span class="badge badge-warning">Permohonan Angkut</span></td>
-                        </tr>
-                        <td>3</td>
-                        <td>Limbah Sludge</td>
-                        <td>400 Kaleng</td>
-                        <td>Limbah B3</td>
-                        <td>Padat</td>
-                        <td>20/08/2020</td>
-                        <td><span class="badge badge-warning">Permohonan Angkut</span></td>
-                        </tr>
-                        <td>4</td>
-                        <td>Limbah Sludge</td>
-                        <td>100 Drum</td>
-                        <td>Limbah B3</td>
-                        <td>Padat</td>
-                        <td>27/08/2020</td>
-                        <td><span class="badge badge-warning">Permohonan Angkut</span></td>
-                        </tr>
-                    </tbody>
+                    </thead> 
                 </table>
             </div>
         </div>

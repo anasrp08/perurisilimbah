@@ -13,6 +13,7 @@ class QueryHelper
         $satuanLimbah=DB::table('md_satuan')->get();
         $tpsLimbah=DB::table('md_tps')->get();
         $np=DB::table('tbl_np')->get();
+        // dd($namaLimbah);
         
 
         return [

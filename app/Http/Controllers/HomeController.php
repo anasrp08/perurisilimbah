@@ -3,7 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Laratrust\LaratrustFacade as Laratrust;
+use App\Helpers\QueryHelper; 
+use App\Http\Requests;
+use App\Jadwal;
+use App\Helpers\AppHelper;
+use App\Role;
 use DB;
+use Illuminate\Support\Facades\Auth;
+
 
 class HomeController extends Controller
 {
@@ -25,30 +33,34 @@ class HomeController extends Controller
     public function index()
     {
         // dd(DB::table('cemori.tbl_status')->get());
-        // if (Laratrust::hasRole('admin') || Laratrust::hasRole('beacukai')||Laratrust::hasRole('taskforce')) {
 
-        //     // $getYear = DB::table('desain_tahun')->orderBy('tahun','desc')->get();
-        //     // $year=[];
-        //     // for($i=0;$i<count($getYear);$i++){
-        //     //     array_push($year,$getYear[$i]->tahun);
-        //     //     if($getYear[$i]->tahun == '2019'){ 
-        //     //     break;
-        //     //     }
-        //     // }
-        //     // dd($year);
-        //     // $book = Book::all();
+        if (Laratrust::hasRole('admin')) {
 
-        //     // $member = Role::where('name', 'member')->first()->users;
+            //     // $getYear = DB::table('desain_tahun')->orderBy('tahun','desc')->get();
+            //     // $year=[];
+            //     // for($i=0;$i<count($getYear);$i++){
+            //     //     array_push($year,$getYear[$i]->tahun);
+            //     //     if($getYear[$i]->tahun == '2019'){ 
+            //     //     break;
+            //     //     }
+            //     // }
+            //     // dd($year);
+            //     // $book = Book::all();
 
-        //     // $borrow = BorrowLog::all();
-        //     // return view('dashboard.admin', compact('author', 'book', 'member', 'borrow'));
+            //     // $member = Role::where('name', 'member')->first()->users;
 
-        //     return view('dashboard.admin',[
-        //         // 'year'=>$year
-        //     ]);
-        // }
+            //     // $borrow = BorrowLog::all();
+            //     // return view('dashboard.admin', compact('author', 'book', 'member', 'borrow'));
 
-        return view('dashboard.dashboard');
+            //     return view('dashboard.admin',[
+            //         // 'year'=>$year
+            //     ]);
+            return view('dashboard.dashboard');
+        } else {
+            return view('pemohon.create', QueryHelper::getDropDown());
+        }
+
+
         // return view('home');
     }
 

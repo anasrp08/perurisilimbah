@@ -74,8 +74,9 @@
                     <!-- no surat -->
                     <div id="formnosurat" class="form-group">
                         <label for="nosurat">Jumlah Limbah</label>
-                        <input type="text" name="jmlhlimbah" id="jmlhlimbah" class="form-control"
-                            placeholder="Jumlah Limbah">
+                        
+                        {{-- <input type="text" name="jmlhlimbah" id="jmlhlimbah" class="form-control"
+                            placeholder="Jumlah Limbah"> --}}
                         {{-- <small class="text-danger">{{ $errors->nosurat->first() }}</small> --}}
                     </div>
                     <div class="form-group">
