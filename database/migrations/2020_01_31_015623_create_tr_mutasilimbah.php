@@ -16,6 +16,8 @@ class CreateTrMutasilimbah extends Migration
         Schema::create('tr_headermutasi', function (Blueprint $table) {
             // $table->engine = 'InnoDB';
             $table->bigIncrements('id');
+            $table->integer('id_transaksi');
+            $table->string('no_surat')->nullable();
             $table->bigInteger('idlimbah')->unsigned()->nullable();
             $table->foreign('idlimbah')->references('id')->on('md_namalimbah')->onDelete('cascade');
             $table->bigInteger('idasallimbah')->unsigned()->nullable();
@@ -33,9 +35,12 @@ class CreateTrMutasilimbah extends Migration
             $table->integer('jumlah');  
             $table->string('limbah3r')->nullable();
             $table->string('np')->nullable();
+            $table->date('validated')->nullable();
+            $table->string('validated_by')->nullable();
             $table->string('created_by')->nullable();
             $table->string('changed_by')->nullable();
             $table->string('keterangan')->nullable();
+            $table->string('maksud')->nullable();
             $table->timestamps();
         });
     }

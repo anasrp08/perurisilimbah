@@ -15,6 +15,7 @@ class CreateTrStatusmutasi extends Migration
     {
         Schema::create('tr_statusmutasi', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('id_transaksi');
             $table->bigInteger('idmutasi')->unsigned()->nullable(); 
             $table->foreign('idmutasi')->references('id')->on('tr_headermutasi')->onDelete('cascade');
             $table->bigInteger('idlimbah')->unsigned()->nullable();
@@ -31,6 +32,8 @@ class CreateTrStatusmutasi extends Migration
             $table->string('limbah3r'); 
             $table->date('tgl'); 
             $table->string('np')->nullable();
+            $table->date('validated')->nullable();
+            $table->string('validated_by')->nullable();
             $table->string('created_by')->nullable();
             $table->string('changed_by')->nullable();
             $table->timestamps();

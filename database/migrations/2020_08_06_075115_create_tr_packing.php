@@ -15,6 +15,7 @@ class CreateTrPacking extends Migration
     {
         Schema::create('tr_packing', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('id_transaksi');
             $table->integer('no_packing');
             $table->string('kode_pack');
             $table->bigInteger('idmutasi')->unsigned()->nullable(); 

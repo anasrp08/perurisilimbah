@@ -149,10 +149,10 @@
                     <th>Jumlah</th>
                     <th>Asal Limbah</th>
                     <th>Jenis Limbah (B3/Non)</th>
-                    <th>Status</th>
-                    {{-- <th>TPS</th>  --}}
-
-                    {{-- <th width="30%">Action</th> --}}
+                    <th>Status</th> 
+                    <th>Terima Oleh</th>
+                    <th>Tervalidasi</th>
+                    <th>Validasi Oleh</th> 
                 </tr>
             </thead>
 
@@ -214,7 +214,20 @@
                     text: 'Terima',
                     className: 'btn btn-success',
                     action: function (e, dt, node, config) {
+                        $('#title_konfirmasi').text('Diterima Oleh: ')
+                        $('#hidden_transaksi').val('terima')
+                        $('#modalconfirm').modal('show')
 
+                    }
+
+
+                },
+                {
+                    text: 'Validasi',
+                    className: 'btn btn-info',
+                    action: function (e, dt, node, config) {
+                        $('#title_konfirmasi').text('Divalidasi Oleh: ')
+                        $('#hidden_transaksi').val('validasi')
                         $('#modalconfirm').modal('show')
 
                     }
@@ -234,7 +247,7 @@
             ],
             columnDefs: [{
                     className: 'text-center',
-                    targets: [1, 2, 3, 4, 5]
+                    targets: [1, 2, 3, 4, 5,6,7,8,9]
                 },
                 {
                     className: 'dt-body-nowrap',
@@ -320,6 +333,42 @@
                         }
                     }
                 },
+                {
+                    data: 'changed_by',
+                    name: 'changed_by',
+                    render: function (data, type, row) {
+                    if (data == null) {
+                            return '<span class="badge badge-info">-</span>'
+                        } else {
+                            return '<span class="badge badge-success">' + data + '</span>'
+                        }
+                    }
+                },
+                {
+                    data: 'validated',
+                    name: 'validated',
+                    render: function (data, type, row) {
+                        if (data == null) {
+                            return '<span class="badge badge-info">Belum Validasi</span>'
+                        } else {
+                         return moment(data).format('DD/MM/YYYY');
+                        }
+                    }
+
+                },
+                {
+                    data: 'validated_by',
+                    name: 'validated_by',
+                    render: function (data, type, row) {
+                        // console.log(data)
+                    if (data == null) {
+                            return '<span class="badge badge-info">Belum Validasi</span>'
+                        } else {
+                            return data
+                        }
+                }
+
+                },
 
 
                 // {
@@ -385,19 +434,26 @@
                                 obj.idjenislimbah = data1[i].idjenislimbah;
                                 obj.jumlah = data1[i].jumlah;
                                 obj.np = $('#np').val();
+                                obj.hiddenTransaksi = $('#hidden_transaksi').val();
 
                                 output.push(obj);
                                 jsonData["Order"] = output
                             }
                            
                         }
-
+                        // var tipeTransaksi=('#hidden_transaksi').val()
+                        var url=''
+                        // if(tipeTransaksi=='terima'){
+                        //     url="{{ route('pemohon.updatevalid') }}"
+                        // }else{
+                        //     url="{{ route('satpam.valid') }}"
+                        // }
 
 
                         console.log(jsonData)
-
+                        url="{{ route('pemohon.updatevalid') }}"
                         $.ajax({
-                            url: "{{ route('pemohon.updatevalid') }}",
+                            url: url,
                             method: "POST",
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(

@@ -32,7 +32,8 @@ Route::get('viewlist', 'LimbahController@viewIndex')->name('limbah.listview');
 Route::get('/pemohon/viewlist', 'PemohonController@viewIndex')->name('pemohon.listview');
 Route::get('pemohon/entri', 'PemohonController@viewEntri')->name('pemohon.entri');
 Route::post('pemohon/list', 'PemohonController@index')->name('pemohon.list');
-Route::post('pemohon/updatevalid', 'PemohonController@updatevalid') -> name('pemohon.updatevalid');
+Route::post('pemohon/terima', 'PemohonController@updatevalid') -> name('pemohon.updatevalid');
+Route::post('pemohon/validasi', 'PemohonController@updatedValidSatpam') -> name('satpam.valid');
 Route::resource('pemohon', 'PemohonController');
 
 Route::post('penyimpanan/list', 'PenyimpananLimbahController@index')->name('penyimpanan.list');
@@ -61,16 +62,18 @@ Route::post('penghasil/daftar', 'ReportLimbahController@indexPenghasil')->name('
 
 
 Route::get('/kontrak/viewlist', 'ReportLimbahController@viewIndexKontrak')->name('kontrak.listview');
-
 Route::get('/penghasil/viewlist', 'ReportLimbahController@viewIndexPenghasil')->name('penghasil.listview');
 Route::get('/limbah/viewlist', 'ReportLimbahController@viewIndex')->name('limbah.listview');
 Route::resource('report', 'ReportLimbahController');
 
+Route::get('formulir/viewlist', 'FormLimbahController@viewIndex')->name('formulir.listview');
+Route::post('formulir/daftar', 'FormLimbahController@index')->name('formulir.daftar');
+Route::get('lampirankerja/cetak/{id}', 'FormLimbahController@cetakFormulir')->name('formulir.cetak'); 
+// Route::get('/footballerdetail/GeneratePDFBA/{id}','JadwalController@GeneratePDFBA');
+Route::resource('formulir', 'FormLimbahController');
 
-// Route::get('limbah/getjenis/{id}', 'PengujianController@getJenis') -> name('limbah.getjenis');
-// Route::get('limbah/getfisik/{id}', 'PengujianController@getFisik') -> name('limbah.getfisik');
+ 
 Route::post('limbah/getnamalimbah', 'LimbahController@getNama')->name('limbah.getnama');
-Route::post('limbah/getsatuanlimbah', 'LimbahController@getSatuan')->name('limbah.getsatuan');
-// Route::get('limbah/getsatuan/{id}', 'PengujianController@getSatuan') -> name('limbah.getsatuan');
+Route::post('limbah/getsatuanlimbah', 'LimbahController@getSatuan')->name('limbah.getsatuan'); 
 
 });

@@ -199,8 +199,8 @@
             }
             // console.log(getSelected)
             for (j = 0; j < collectid[1].length; j++) {
-
-                $('select[name=' + collectid[1][j]+']').find('option[value="' + getSelected[j] +'"]').attr("selected", true).change();
+                // console.log('id' + collectid[1][j]+ counter )
+                $('select[id=' + collectid[1][j]+ counter +']').find('option[value="' + getSelected[j] +'"]').attr("selected", true).change();
                 // document.getElementById("id" + collectid[1][j] + counter).selectedIndex = getSelected[j];
             }
             // selectbs4()
@@ -303,7 +303,7 @@
             var form_data = myTable.rows().data();
             console.log(form_data)
             if (table.rows().count() == 0) {
-                toastr.warning('Tidak ada inputan hasil uji pita cukai', 'Hasil Uji Kosong', {
+                toastr.warning('Tidak ada inputan data angkutan limbah', 'Data Kosong', {
                     timeOut: 5000
                 });
             } else {
@@ -323,7 +323,7 @@
                         obj.asal_limbah = $("select[name=asal_limbah]", this).val();
                         obj.jmlhlimbah = $(":input[name=jmlhlimbah]", this).val();
                         obj.limbah_3r = $("select[name=limbah_3r]", this).val();
-                        obj.np = $(":input[name=np]", this).val();
+                        obj.np = $("select[name=np]", this).val();
                         obj.keterangan = $(":input[name=keterangan]", this).val();
                         // console.log(obj)
                         output.push(obj);
@@ -364,11 +364,12 @@
                             toastr.success(data.success, 'Tersimpan', {
                                 timeOut: 5000
                             });
+                            // location.reload();
                             // $('#counterentries').text(data.count);
 
                             // $('#saveentri').text('Simpan');
 
-                            location.reload();
+                            
 
                         }
 

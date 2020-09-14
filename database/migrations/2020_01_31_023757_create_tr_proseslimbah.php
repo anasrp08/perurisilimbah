@@ -15,6 +15,7 @@ class CreateTrProseslimbah extends Migration
     {
         Schema::create('tr_detailmutasi', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('id_transaksi');
             $table->bigInteger('idmutasi')->unsigned()->nullable();
             $table->foreign('idmutasi')->references('id')->on('tr_headermutasi')->onDelete('cascade');
             $table->bigInteger('idlimbah')->unsigned()->nullable();

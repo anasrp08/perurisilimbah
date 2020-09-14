@@ -50,24 +50,24 @@
                             <div class="col-sm-6">
                                 <div class="form-group nonpihakketiga">
                                     <label>Tanggal Proses</label>
-                                    <input type="text" id="prosesdate" name="prosesdate" class="form-control float-right"
+                                    <input type="text" id="prosesdate" name="prosesdate" class="formproses form-control float-right"
                                         autocomplete="off">
                                 </div>
                                 <div class="form-group pihakketiga" >
                                         <label>No. Manifest</label>
                                         <input type="text" id="nomanifest" name="nomanifest"
-                                            class="form-control float-right" autocomplete="off">
+                                            class="formproses form-control float-right" autocomplete="off">
                                     </div>
                                     <div class="form-group pihakketiga">
                                         <label>No. Kendaraan</label>
                                         <input type="text" id="nokendaraan" name="nokendaraan"
-                                            class="form-control float-right" autocomplete="off">
+                                            class="formproses form-control float-right" autocomplete="off">
                                     </div>
                             </div> 
                                 <div class="col-sm-6">
                                     <div class="form-group nonpihakketiga">
                                         <label>Nomor Pegawai</label>
-                                        <select name="np" id="np" class="form-control select2bs4"
+                                        <select name="np" id="np" class="formproses form-control select2bs4"
                                             style="width: 100%;">
                                             {{-- <option value="-" selected="selected">Pilih Salah Satu</option> --}}
                                             <option value="" disabled selected>-</option>
@@ -78,7 +78,7 @@
                                     </div>
                                     <div class="form-group pihakketiga">
                                         <label>Vendor Pengangkut</label>
-                                        <select name="vendor" id="vendor" class="form-control select2bs4"
+                                        <select name="vendor" id="vendor" class="formproses form-control select2bs4"
                                             style="width: 100%;">
                                             <option value="" disabled selected>-Pilih Vendor-</option>
                                             @foreach($vendor as $data)
@@ -94,7 +94,7 @@
                                     <div class="form-group pihakketiga">
                                         <label>No. SPBE</label>
                                         <input type="text" id="nospbe" name="nospbe"
-                                            class="form-control float-right" autocomplete="off">
+                                            class="formproses form-control float-right" autocomplete="off">
                                     </div>
                                 </div>
                              

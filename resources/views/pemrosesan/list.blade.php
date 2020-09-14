@@ -424,7 +424,9 @@
                         toastr.success(data.success, 'Success', {
                             timeOut: 5000
                         });
+                        $('#modaldetail').modal('toggle')
                         $('#daftar_pack').DataTable().ajax.reload();
+                        $('.formproses').val('');
                         // $('#counterentries').text(data.count);
 
                         // $('#saveentri').text('Simpan');

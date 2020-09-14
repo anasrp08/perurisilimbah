@@ -91,6 +91,12 @@
     </a>
     <ul class="nav nav-treeview">
         <li class="nav-item">
+            <a href="{{ route('formulir.listview') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Formulir Limbah</p>
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="{{ route('neraca.listview') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Report Neraca Limbah</p>

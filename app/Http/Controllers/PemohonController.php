@@ -47,7 +47,9 @@ class PemohonController extends Controller
             'md_penghasillimbah.seksi',
             'md_statusmutasi.keterangan')
             ->where('tr_statusmutasi.idstatus',1) 
+            ->orWhere('tr_statusmutasi.validated_by',null)
            ->orderBy('tr_statusmutasi.created_at', 'desc');
+        //    dd();
  
             // if(!empty($request->tglinput)){
 
@@ -172,13 +174,20 @@ class PemohonController extends Controller
         // dd($username);
         $countDataReq=count($dataRequest); 
         $error=null;
+        $getLastTransaksi=DB::table('tr_headermutasi')->latest('id')->first();
+        if($getLastTransaksi==null){
+            $getLastTransaksi=0 ;
+        }
+        
+        $getLastTransaksi++;
+        // dd($getLastTransaksi);  
          foreach($dataRequest as $row){
- 
             $dataHeader = array(
-                'idlimbah'		=>  $row['nama_limbah'],
+                'id_transaksi'      =>  $getLastTransaksi,
+                'idlimbah'		    =>  $row['nama_limbah'],
                 'tgl'			    =>  AppHelper::convertDate($row['tgl']),
                 'idasallimbah'	    =>  $row['asal_limbah']	, 
-                'idjenislimbah'       => $row['jenis_limbah'],
+                'idjenislimbah'     =>  $row['jenis_limbah'],
                 // 'mutasi'            =>  0	, 
                 'jumlah'	        =>  $row['jmlhlimbah'], 
                 'limbah3r'	        =>  $row['limbah_3r'],
@@ -191,6 +200,7 @@ class PemohonController extends Controller
             $insertHeader=DB::table('tr_headermutasi')->insertGetId($dataHeader,true);
 
             $dataStatus = array(
+                'id_transaksi'      =>  $getLastTransaksi,
                 'idmutasi'      => $insertHeader,
                 'idlimbah'		=>  $row['nama_limbah'],  
                 'idstatus'            =>  1	, 
@@ -262,40 +272,53 @@ class PemohonController extends Controller
      */
     public function updatevalid(Request $request)
     {  
+
+        // dd($request->all());
         $username=AuthHelper::getAuthUser()[0]->email;
-        $getRequest=json_decode($request->getContent(), true);
-        
-        $dataRequest=$getRequest['Order'];
-        
+        $getRequest=json_decode($request->getContent(), true); 
+        $dataRequest=$getRequest['Order']; 
         $countDataReq=count($dataRequest); 
         $error=null; 
+        $dataStatus=null;
+        $dataDetail=null;
+        // dd($dataRequest);
         try {
+        
          foreach($dataRequest as $row){
             
-                $dataDetail = array(
-                    'idmutasi'      => $row['idmutasi'],
-                    'idlimbah'		=>  $row['idlimbah'],
-                    'tgl'			    =>  $row['tgl'],
-                    'idasallimbah'	    =>  $row['idasallimbah']	, 
-                    'idjenislimbah'       => $row['idjenislimbah'],
-                    'idstatus'            =>  2	, 
-                    'jumlah'	        =>  $row['jumlah'], 
-                    'limbah3r'	        =>  $row['limbah3r'],
-                    'created_at'        => date('Y-m-d'),
-                    'np'                   =>$row['np'],
-                    'created_by'            =>$username,
-                   
-                );
-                $dataStatus=array('idstatus'            =>  2	,
-                'updated_at'        => date('Y-m-d'),
-                'changed_by'            =>$username,
-            );
-
-                $insertDetail=DB::table('tr_detailmutasi')->insert($dataDetail,true); 
-                $insertStatus=DB::table('tr_statusmutasi')->where('idmutasi',$row['idmutasi'])->update($dataStatus,true); 
-                UpdtSaldoHelper::updateTambahSaldoNamaLimbah($row['idlimbah'],$row['jumlah']);
-               
-           
+                
+                if($row['hiddenTransaksi']=='validasi'){
+                    $dataStatus=array( 
+                        'validated'        => date('Y-m-d'),
+                        'validated_by'        => $row['np'],
+                        );
+                        $updateStatus=DB::table('tr_statusmutasi')->where('idmutasi',$row['idmutasi'])->update($dataStatus,true); 
+                        $updateHeaderValidasi=DB::table('tr_headermutasi')->where('id',$row['idmutasi'])->update($dataStatus,true); 
+                }else{
+                    $dataDetail = array(
+                        'idmutasi'      => $row['idmutasi'],
+                        'idlimbah'		=>  $row['idlimbah'],
+                        'tgl'			    =>  $row['tgl'],
+                        'idasallimbah'	    =>  $row['idasallimbah']	, 
+                        'idjenislimbah'       => $row['idjenislimbah'],
+                        'idstatus'            =>  2	, 
+                        'jumlah'	        =>  $row['jumlah'], 
+                        'limbah3r'	        =>  $row['limbah3r'],
+                        'created_at'        => date('Y-m-d'),
+                        'np'                   =>$row['np'],
+                        'created_by'            =>$username,
+                       
+                    );
+                    $dataStatus=array(
+                        'idstatus'          =>  2	,
+                        'updated_at'        => date('Y-m-d'),
+                        'changed_by'        => $row['np'],
+                        );
+                        $insertDetail=DB::table('tr_detailmutasi')->insert($dataDetail,true); 
+                        $insertStatus=DB::table('tr_statusmutasi')->where('idmutasi',$row['idmutasi'])->update($dataStatus,true); 
+                        UpdtSaldoHelper::updateTambahSaldoNamaLimbah($row['idlimbah'],$row['jumlah']);
+                }
+                 
 
          }
          return response()->json(['success' => 'Data Berhasil Di Simpan']);
@@ -303,6 +326,7 @@ class PemohonController extends Controller
             return response()->json(['error' => 'Data Gagal Disimpan']);
         }
     }
+     
     public function update(Request $request)
     {
          
