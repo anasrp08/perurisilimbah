@@ -194,6 +194,9 @@ class FormLimbahController extends Controller
             ->join('md_jenislimbah', 'tr_headermutasi.idjenislimbah', '=', 'md_jenislimbah.id')
             ->select('tr_headermutasi.no_surat',
             'tr_headermutasi.created_at as tgldibuat',
+            'tr_headermutasi.jumlah',
+            'tr_headermutasi.keterangan',
+            'tr_headermutasi.maksud',
             'md_jenislimbah.jenislimbah',
             'md_namalimbah.namalimbah',
             'md_penghasillimbah.seksi',
@@ -201,7 +204,7 @@ class FormLimbahController extends Controller
             'tr_headermutasi.np',
             'tr_headermutasi.validated',
             'tr_headermutasi.validated_by',
-           )
+           ) 
            ->where('tr_headermutasi.id_transaksi','=',$id)->get(); 
         //    dd($id);
            $penerima=DB::table('tr_detailmutasi')
@@ -220,6 +223,7 @@ class FormLimbahController extends Controller
         $ttdPengawas=$dataFormulirLimbah[0]->validated_by;
         $ttdMenyerahkan=$dataFormulirLimbah[0]->np;
         $listLimbah=$dataFormulirLimbah;
+        // dd($listLimbah);
 
         $pdf = PDF::loadview('formulir.form',[
             'no_surat'=>$no_surat,
