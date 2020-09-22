@@ -62,6 +62,12 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div id="formnosurat" class="form-group">
+                            <label for="nosurat">Maksud</label>
+                            <input type="text" name="maksud" id="maksud" class="form-control"
+                                placeholder="Maksud">
+                            {{-- <small class="text-danger">{{ $errors->nosurat->first() }}</small> --}}
+                        </div>
 
                         <!-- no surat -->
 
@@ -86,7 +92,7 @@
                                 {{-- <option value="-" selected="selected">Pilih Salah Satu</option> --}}
                                 <option value="" disabled selected>-</option>
                                 @foreach($np as $data)
-                                <option value="{{$data->np}}">{{$data->np}} </option>
+                                <option value="{{$data->np}}">{{$data->np}}-{{$data->nama}} </option>
                                 @endforeach
                             </select>
                         </div>

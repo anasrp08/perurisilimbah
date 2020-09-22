@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Laratrust\LaratrustFacade as Laratrust;
 use App\Helpers\QueryHelper; 
+use App\Helpers\UpdKaryawanHelper; 
 use App\Http\Requests;
 use App\Jadwal;
 use App\Helpers\AppHelper;
@@ -55,8 +56,10 @@ class HomeController extends Controller
             //     return view('dashboard.admin',[
             //         // 'year'=>$year
             //     ]);
+            UpdKaryawanHelper::updatePegawai();
             return view('dashboard.dashboard');
         } else {
+            UpdKaryawanHelper::updatePegawai();
             return view('pemohon.create', QueryHelper::getDropDown());
         }
 

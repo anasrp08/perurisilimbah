@@ -42,6 +42,9 @@ class FormLimbahController extends Controller
             'md_penghasillimbah.seksi',
             'md_jenislimbah.jenislimbah',
            )
+        //    ->where('tr_detailmutasi.np','')
+           ->where('tr_detailmutasi.idstatus','2')
+           ->whereNotNull('tr_headermutasi.validated')
            ->groupBy('tr_headermutasi.id_transaksi')
            ->orderBy('tr_headermutasi.created_at', 'desc');
  
@@ -210,6 +213,14 @@ class FormLimbahController extends Controller
            $penerima=DB::table('tr_detailmutasi')
            ->where('id_transaksi','=',$id)
            ->where('idstatus','2')->first(); 
+
+           $detailPenerima=DB::table('tbl_np')
+           ->where('np','=',$penerima->np)->first();
+           $detailPengawas=DB::table('tbl_np')
+           ->where('np','=',$dataFormulirLimbah[0]->validated_by)->first();
+           $detailPenyerah=DB::table('tbl_np')
+           ->where('np','=',$dataFormulirLimbah[0]->np)->first();
+
         //    dd($penerima);
 
         // dd($dataFormulirLimbah);
@@ -233,9 +244,9 @@ class FormLimbahController extends Controller
             'dikirimke'=> $dikirimke,
             'maksud'=> $maksud,
             'listlimbah'=>$listLimbah,
-            'ttdPenerima'=> $ttdPenerima,
-            'ttdPengawas'=> $ttdPengawas,
-            'ttdMenyerahkan'=> $ttdMenyerahkan, 
+            'ttdPenerima'=> $detailPenerima,
+            'ttdPengawas'=> $detailPengawas,
+            'ttdMenyerahkan'=> $detailPenyerah, 
             
         ])->setPaper('a4','portrait'); 
         return $pdf->stream($no_surat.".pdf"); 

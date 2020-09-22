@@ -417,7 +417,7 @@
                         }).data()
                         console.log(data1.toArray())
                         if (data1.count() == 0) {
-                            toastr.warning('Ada Order Yang Sudah Rilis / Selesai', 'Warning', {
+                            toastr.warning('Ada Order Yang Belum Dipilih', 'Warning', {
                                 timeOut: 5000
                             });
                         } else {

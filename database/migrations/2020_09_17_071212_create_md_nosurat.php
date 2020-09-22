@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTblNp extends Migration
+class CreateMdNosurat extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateTblNp extends Migration
      */
     public function up()
     {
-        Schema::create('tbl_np', function (Blueprint $table) {
+        Schema::create('md_nosurat', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('np');
-            $table->string('nama')->nullable();
-            $table->string('jabatan')->nullable();
-            $table->string('unitkerja')->nullable();
+            $table->string('no');
+            $table->string('unit_kerja')->nullable();
+            $table->string('bulan')->nullable();
+            $table->string('tahun')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateTblNp extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tbl_np');
+        Schema::dropIfExists('md_nosurat');
     }
 }

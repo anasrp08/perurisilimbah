@@ -68,7 +68,7 @@ Route::resource('report', 'ReportLimbahController');
 
 Route::get('formulir/viewlist', 'FormLimbahController@viewIndex')->name('formulir.listview');
 Route::post('formulir/daftar', 'FormLimbahController@index')->name('formulir.daftar');
-Route::get('lampirankerja/cetak/{id}', 'FormLimbahController@cetakFormulir')->name('formulir.cetak'); 
+Route::get('formulir/cetak/{id}', 'FormLimbahController@cetakFormulir')->name('formulir.cetak'); 
 // Route::get('/footballerdetail/GeneratePDFBA/{id}','JadwalController@GeneratePDFBA');
 Route::resource('formulir', 'FormLimbahController');
 

@@ -11,11 +11,13 @@ use App\Helpers\AppHelper;
 use App\Helpers\QueryHelper; 
 use App\Helpers\UpdtSaldoHelper; 
 use App\Helpers\AuthHelper; 
+
  
 use Redirect;
 use Validator;
 use Response;
 use DB;
+// use File;
 use PDF;
  
 
@@ -112,8 +114,10 @@ class PemohonController extends Controller
     }
     public function viewEntri()
     {
-        //
-        // dd(QueryHelper::getDropDown());
+        //contoh koneksi ke eproc
+        // $users = DB::connection('pgsql')->table('prcmts')->select('number')->get();
+        // dd($users);
+        
         return view('pemohon.create',QueryHelper::getDropDown());
     }
     public function viewProses()
@@ -163,7 +167,37 @@ class PemohonController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-   
+    public function noSurat($idAsalLimbah){
+
+        $noSuratUnitKerja=DB::table('md_nosurat')->where('unit_kerja',$idAsalLimbah)->first(); 
+
+        $unitKerja=$noSuratUnitKerja->unit_kerja;
+        $currMonth=date("m");
+        $currYear=date("Y"); 
+        $nomor=(int)$noSuratUnitKerja->no;
+        function numberToRomanRepresentation($number)
+        {
+            
+            $map = array('M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1);
+            $returnValue = '';
+            while ($number > 0) {
+                foreach ($map as $roman => $int) {
+                    if ($number >= $int) {
+                        $number -= $int;
+                        $returnValue .= $roman;
+                        break;
+                    }
+                }
+            }
+            return $returnValue;
+        }
+        $no=sprintf('%03d', $nomor);
+       
+        $concatFormat=$no."/".$unitKerja."/".numberToRomanRepresentation($currMonth)."/". $currYear;
+        $nomor++;
+        DB::table('md_nosurat')->update(['no' => $nomor]); 
+        return  $concatFormat; 
+    }
     public function store(Request $request)
     {
  
@@ -171,20 +205,27 @@ class PemohonController extends Controller
         $username=AuthHelper::getAuthUser()[0]->email;
         $getRequest=json_decode($request->getContent(), true);
         $dataRequest=$getRequest['Data']; 
-        // dd($username);
+        $dataHeader=$getRequest['Header'];
+        // dd($dataHeader); 
+       
         $countDataReq=count($dataRequest); 
         $error=null;
         $getLastTransaksi=DB::table('tr_headermutasi')->latest('id')->first();
         if($getLastTransaksi==null){
             $getLastTransaksi=0 ;
         }
+         
+        $idAsalLimbah=$dataRequest[0]['asal_limbah'];
+        $noSurat=$this->noSurat($idAsalLimbah);
         
         $getLastTransaksi++;
         // dd($getLastTransaksi);  
          foreach($dataRequest as $row){
+
             $dataHeader = array(
                 'id_transaksi'      =>  $getLastTransaksi,
-                'idlimbah'		    =>  $row['nama_limbah'],
+                'no_surat'          =>  $noSurat,
+                'idlimbah'		    =>  $row['nama_limbah'], 
                 'tgl'			    =>  AppHelper::convertDate($row['tgl']),
                 'idasallimbah'	    =>  $row['asal_limbah']	, 
                 'idjenislimbah'     =>  $row['jenis_limbah'],
@@ -193,6 +234,7 @@ class PemohonController extends Controller
                 'limbah3r'	        =>  $row['limbah_3r'],
                 'keterangan'	        =>  $row['keterangan'],
                  'np'                   =>$row['np'],
+                 'maksud'                   =>$dataHeader,
                 'created_by'            =>$username, 
                 'created_at'            => date('Y-m-d')
                
@@ -214,6 +256,7 @@ class PemohonController extends Controller
                
             );
             $dataDetail=array( 
+                'id_transaksi'      =>  $getLastTransaksi,
                 'idmutasi'      => $insertHeader,
                 'idlimbah'		=>  $row['nama_limbah'],  
                 'idstatus'            =>  1	, 
@@ -296,6 +339,7 @@ class PemohonController extends Controller
                         $updateHeaderValidasi=DB::table('tr_headermutasi')->where('id',$row['idmutasi'])->update($dataStatus,true); 
                 }else{
                     $dataDetail = array(
+                        'id_transaksi'      =>  $row['id_transaksi'],
                         'idmutasi'      => $row['idmutasi'],
                         'idlimbah'		=>  $row['idlimbah'],
                         'tgl'			    =>  $row['tgl'],

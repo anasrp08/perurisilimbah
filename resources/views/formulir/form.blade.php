@@ -73,7 +73,10 @@
         td.headerow2left {
             font-size: 13pt;
             text-align: right;
-            padding: 10px;
+            padding-right: 40px; 
+            /* border:2px solid black; */
+            margin-left: 10rem;
+            
         }
 
         td.headerow2right {
@@ -166,7 +169,7 @@
             border-right-style: solid;
             border-right-width: thin;
             
-            text-align: left;
+            text-align: center;
         }
 
         
@@ -304,20 +307,21 @@
             </tr>
 
             <tr>
-                <td class="headerow2left" colspan="5">
+                <td class="headerow2left" colspan="6">
                     Nomor :
                 </td>
+                
 
                 <td class="headerow2right" colspan="4">
                     {{$no_surat}}
                 </td>
             </tr>
             <tr>
-                <td class="headerow2left" colspan="5">
+                <td class="headerow2left" colspan="6">
                     Tanggal :
                 </td>
 
-                <td class="headerow2right" colspan="4">
+                <td class="headerow2right" colspan="5">
                     {{$tanggal}}
                 </td>
             </tr>
@@ -326,18 +330,7 @@
         <table class="table2">
 
 
-            <tr>
-                <td class="headerow3left" colspan="3">
-                    Nama Limbah
-                </td>
-                <td class="headerow3center" colspan="1">
-                    :
-                </td>
-                <td class="headerow3right" colspan="4">
-                    {{$jenislimbah}}
-                </td>
-
-            </tr>
+             
             <tr>
                 <td class="headerow3left" colspan="3">
                     Jenis Limbah
@@ -402,9 +395,7 @@
                 <th class="headeruji" style='width:3%;' colspan="1">No.</th>
                 <th class="headeruji" colspan="5">Nama Barang</th>
                 <th class="headeruji" style='width:15%;' colspan="2">Jumlah</th>
-                <th class="headeruji" style='width:20%;' colspan="2">Keterangan</th>
-
-
+                <th class="headeruji" style='width:20%;' colspan="2">Keterangan</th> 
             </tr>
             @foreach($listlimbah as $data)
             <tr>
@@ -455,7 +446,7 @@
                     :
                 </td>
                 <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
-                    Anas
+                    {{$ttdPenerima->nama}}
                 </td>
                 {{-- </td> --}}
                 {{-- <td class="itemuji"> --}}
@@ -466,7 +457,7 @@
                     :
                 </td>
                 <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
-                    Anas
+                    {{$ttdPengawas->nama}}
                 </td>
                 {{-- </td> --}}
                 {{-- <td class="itemuji"> --}}
@@ -477,7 +468,7 @@
                     :
                 </td>
                 <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
-                    Anas
+                    {{$ttdMenyerahkan->nama}}
                 </td>
                 {{-- </td> --}}
 
@@ -491,7 +482,7 @@
                     :
                 </td>
                 <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
-                    {{$ttdPenerima}}
+                    {{$ttdPenerima->np}}
                 </td>
                 {{-- </td> --}}
                 {{-- <td class="itemuji"> --}}
@@ -502,7 +493,7 @@
                     :
                 </td>
                 <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
-                    {{$ttdPengawas}}
+                    {{$ttdPengawas->np}}
                 </td>
                 {{-- </td> --}}
                 {{-- <td class="itemuji"> --}}
@@ -513,7 +504,7 @@
                     :
                 </td>
                 <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
-                    {{$ttdMenyerahkan}}
+                    {{$ttdMenyerahkan->np}}
                 </td>
                 {{-- </td> --}}
 
@@ -527,7 +518,7 @@
                     :
                 </td>
                 <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
-                    Seksi Operasional Limbah
+                    {{$ttdPenerima->unitkerja}}
                 </td>
                 {{-- </td> --}}
                 {{-- <td class="itemuji"> --}}
@@ -538,7 +529,7 @@
                     :
                 </td>
                 <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
-                    Seksi Operasional Limbah
+                    {{$ttdPengawas->unitkerja}}
                 </td>
                 {{-- </td> --}}
                 {{-- <td class="itemuji"> --}}
@@ -549,7 +540,7 @@
                     :
                 </td>
                 <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
-                    Seksi Operasional Limbah
+                    {{$ttdMenyerahkan->unitkerja}}
                 </td>
                 {{-- </td> --}}
 

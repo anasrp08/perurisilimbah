@@ -249,7 +249,7 @@
                 createDropdown("np", counter,
                     ' <option value="" disabled selected>-</option>' +
                     '@foreach($np as $data)' +
-                    '<option value="{{$data->id}}" >{{$data->np}}</option>' +
+                    '<option value="{{$data->np}}" >{{$data->np}}</option>' +
                     '@endforeach' +
                     '</select>'),
                 createInputTextEnabled("tgl", counter, ""),
@@ -330,13 +330,12 @@
                     }
 
                 });
+                
+                 
 
-                // var idJadwal = {
-                //     idjadwal: idjadwal
-                // }
                 jsonData["Data"] = output
-                // jsonData["idJadwal"] = idJadwal
-                console.log(jsonData)
+                jsonData["Header"] = $("#maksud").val() 
+                // console.log(jsonData)
 
 
                 $.ajax({

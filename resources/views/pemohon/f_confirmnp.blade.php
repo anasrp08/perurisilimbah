@@ -15,7 +15,7 @@
                         {{-- <option value="-" selected="selected">Pilih Salah Satu</option> --}}
                         <option value="" disabled selected>-</option>
                         @foreach($np as $data)
-                        <option value="{{$data->np}}">{{$data->np}} </option>
+                        <option value="{{$data->np}}">{{$data->np}}-{{$data->nama}} </option>
                         @endforeach
                     </select>
                 </div>

@@ -21,7 +21,7 @@
 
                 </table>
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col-sm-12">
                         <!-- radio -->
                         <label for="radioPrimary1">
                             Pemrosesan Limbah
@@ -47,68 +47,58 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <div class="form-group nonpihakketiga">
                                     <label>Tanggal Proses</label>
-                                    <input type="text" id="prosesdate" name="prosesdate" class="formproses form-control float-right"
-                                        autocomplete="off">
+                                    <input type="text" id="prosesdate" name="prosesdate"
+                                        class="formproses form-control float-right" autocomplete="off">
                                 </div>
-                                <div class="form-group pihakketiga" >
-                                        <label>No. Manifest</label>
-                                        <input type="text" id="nomanifest" name="nomanifest"
-                                            class="formproses form-control float-right" autocomplete="off">
-                                    </div>
-                                    <div class="form-group pihakketiga">
-                                        <label>No. Kendaraan</label>
-                                        <input type="text" id="nokendaraan" name="nokendaraan"
-                                            class="formproses form-control float-right" autocomplete="off">
-                                    </div>
-                            </div> 
-                                <div class="col-sm-6">
-                                    <div class="form-group nonpihakketiga">
-                                        <label>Nomor Pegawai</label>
-                                        <select name="np" id="np" class="formproses form-control select2bs4"
-                                            style="width: 100%;">
-                                            {{-- <option value="-" selected="selected">Pilih Salah Satu</option> --}}
-                                            <option value="" disabled selected>-</option>
-                                            @foreach($np as $data)
-                                            <option value="{{$data->id}}">{{$data->np}} </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="form-group pihakketiga">
-                                        <label>Vendor Pengangkut</label>
-                                        <select name="vendor" id="vendor" class="formproses form-control select2bs4"
-                                            style="width: 100%;">
-                                            <option value="" disabled selected>-Pilih Vendor-</option>
-                                            @foreach($vendor as $data)
-                                            <option value="{{$data->id}}">{{$data->namavendor}} </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    {{-- <div class="form-group pihakketiga">
-                                        <label>Pengangkut</label>
-                                        <input type="text" id="pengangkut" name="pengangkut"
-                                            class="form-control float-right" autocomplete="off">
-                                    </div> --}}
-                                    <div class="form-group pihakketiga">
-                                        <label>No. SPBE</label>
-                                        <input type="text" id="nospbe" name="nospbe"
-                                            class="formproses form-control float-right" autocomplete="off">
-                                    </div>
+                                <div class="form-group pihakketiga">
+                                    <label>No. Manifest</label>
+                                    <input type="text" id="nomanifest" name="nomanifest"
+                                        class="formproses form-control float-right" autocomplete="off">
                                 </div>
-                             
 
-                        </div>
-                        {{-- <div class="row nonpihakketiga">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Tanggal Proses</label>
-                                    <input type="text" id="prosesdate" name="prosesdate" class="form-control float-right"
-                                        autocomplete="off">
+
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group nonpihakketiga">
+                                    <label>Nomor Pegawai</label>
+                                    <select name="np" id="np" class="formproses form-control select2bs4"
+                                        style="width: 100%;">
+                                        {{-- <option value="-" selected="selected">Pilih Salah Satu</option> --}}
+                                        <option value="" disabled selected>-</option>
+                                        @foreach($np as $data)
+                                        <option value="{{$data->np}}">{{$data->np}}-{{$data->nama}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group pihakketiga">
+                                    <label>Vendor Pengangkut</label>
+                                    <select name="vendor" id="vendor" class="formproses form-control select2bs4"
+                                        style="width: 100%;">
+                                        <option value="" disabled selected>-Pilih Vendor-</option>
+                                        @foreach($vendor as $data)
+                                        <option value="{{$data->id}}">{{$data->namavendor}} </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group pihakketiga">
+                                    <label>No. Kendaraan</label>
+                                    <input type="text" id="nokendaraan" name="nokendaraan"
+                                        class="formproses form-control float-right" autocomplete="off">
+                                </div>
+                                <div class="form-group pihakketiga" style="margin-top: 3.4rem;">
+                                    <label>No. SPBE</label>
+                                    <input type="text" id="nospbe" name="nospbe"
+                                        class="formproses form-control float-right" autocomplete="off">
                                 </div>
                             </div>
-                        </div> --}}
+
+                        </div>
                     </div>
 
 
