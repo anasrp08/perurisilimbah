@@ -1,12 +1,12 @@
 @if (Auth::check())
-@role(['admin'])
+@role(['admin','operator'])
 <li class="nav-item">
     <a href="{{ url('/') }}" class="nav-link">
         <i class="nav-icon fas fa-tachometer-alt"></i>
         <p>Dashboard</p>
     </a>
 </li>
-@endrole
+{{-- @endrole --}}
 {{-- @role(['admin','operator']) --}}
 <li class="nav-item has-treeview">
     <a href="#" class="nav-link">
@@ -36,7 +36,7 @@
     </ul>
 </li>
 {{-- @endrole --}}
-@role(['admin'])
+{{-- @role(['admin']) --}}
 <li class="nav-item has-treeview">
     <a href="#" class="nav-link">
         <i class="nav-icon fas fa-copy"></i>
@@ -129,6 +129,59 @@
         </li>
     </ul>
 </li> 
+@endrole
+@role(['unit kerja'])
+<<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-copy"></i>
+        <p>
+            Pengangkutan
+            <i class="fas fa-angle-left right"></i>
+            {{-- <span class="badge badge-info right">6</span> --}}
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('pemohon.entri') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Buat Permohonan</p>
+            </a>
+        </li>
+        
+        <li class="nav-item">
+            <a href="{{ route('pemohon.listview') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Daftar Permohonan</p>
+                {{-- <span class="badge badge-info right"></span> --}}
+            </a>
+        </li>
+
+    </ul>
+</li>
+@endrole
+@role(['pengawas'])
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-copy"></i>
+        <p>
+            Pengangkutan
+            <i class="fas fa-angle-left right"></i>
+            {{-- <span class="badge badge-info right">6</span> --}}
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+       
+        
+        <li class="nav-item">
+            <a href="{{ route('pemohon.listview') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Daftar Permohonan</p>
+                {{-- <span class="badge badge-info right"></span> --}}
+            </a>
+        </li>
+
+    </ul>
+</li>
 @endrole
   
     <li class="nav-item">

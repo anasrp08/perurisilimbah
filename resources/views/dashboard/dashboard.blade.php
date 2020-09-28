@@ -115,10 +115,7 @@
 @section('scripts')
 <script src="{{ asset('/adminlte3/chartjs/Chart.bundle.min.js') }}"></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/highcharts-more.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script> 
 
 <script>
     $(document).ready(function () {
@@ -185,85 +182,110 @@
                 }
             });
         }
-        var ctx = document.getElementById("penghasil").getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ["Seksi Proof", "Laboratorium", "Seksi Utilitas", "Seksi Cetak Nomor",
-                    "Seksi Cetak Dalam", "Seksi Cetak Rata", "Seksi Pengamanan Elektronik",
-                    "Seksi Penataan Hasil", "Seksi PPIC"
-                ],
-                datasets: [{
-                        label: 'Sludge',
-                        backgroundColor: "#caf270",
-                        data: [12, 59, 5, 56, 58, 12, 59, 87, 45],
-                    }, {
-                        label: 'Abu',
-                        backgroundColor: "#45c490",
-                        data: [12, 59, 5, 56, 58, 12, 59, 85, 23],
-                    }, {
-                        label: 'Limbah cair',
-                        backgroundColor: "#008d93",
-                        data: [12, 59, 5, 56, 58, 12, 59, 65, 51],
-                    }, {
-                        label: 'Kaleng',
-                        backgroundColor: "#007bff",
-                        data: [12, 59, 5, 56, 58, 12, 59, 12, 74],
-                    },
-                    {
-                        label: 'Sampah Kontaminasi',
-                        backgroundColor: "#ffc107",
-                        data: [12, 59, 5, 56, 58, 12, 59, 12, 74],
-                    },
-                    {
-                        label: 'Drum',
-                        backgroundColor: "#6610f2",
-                        data: [12, 59, 5, 56, 58, 12, 59, 12, 74],
-                    }
-                ],
-            },
-            options: {
-                tooltips: {
-                    displayColors: true,
-                    callbacks: {
-                        mode: 'x',
-                    },
-                },
-                scales: {
-                    xAxes: [{
-                        stacked: true,
-                        gridLines: {
-                            display: false,
-                        }
-                    }],
-                    yAxes: [{
-                        stacked: true,
-                        ticks: {
-                            beginAtZero: true,
+        
+        var myChart = new Chart(document.getElementById("penghasil"), {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                            label: "Jumlah Limbah",
+                            backgroundColor: "#ff5722",
+                            data: ''
                         },
-                        type: 'linear',
-                    }]
+                         
+                    ]
                 },
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                    position: 'bottom'
-                },
-            }
-        });
+                options: {
+                    scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true,
+                                    // stepSize: 1
+                                }
+                            }]
+                        }
+
+                }
+            });
+            // var ctx = document.getElementById("penghasil").getContext('2d');
+        // var myChart = new Chart(ctx, {
+        //     type: 'bar',
+        //     data: {
+        //         labels: ["Seksi Proof", "Laboratorium", "Seksi Utilitas", "Seksi Cetak Nomor",
+        //             "Seksi Cetak Dalam", "Seksi Cetak Rata", "Seksi Pengamanan Elektronik",
+        //             "Seksi Penataan Hasil", "Seksi PPIC"
+        //         ],
+        //         datasets: [{
+        //                 label: 'Sludge',
+        //                 backgroundColor: "#caf270",
+        //                 data: [12, 59, 5, 56, 58, 12, 59, 87, 45],
+        //             }, {
+        //                 label: 'Abu',
+        //                 backgroundColor: "#45c490",
+        //                 data: [12, 59, 5, 56, 58, 12, 59, 85, 23],
+        //             }, {
+        //                 label: 'Limbah cair',
+        //                 backgroundColor: "#008d93",
+        //                 data: [12, 59, 5, 56, 58, 12, 59, 65, 51],
+        //             }, {
+        //                 label: 'Kaleng',
+        //                 backgroundColor: "#007bff",
+        //                 data: [12, 59, 5, 56, 58, 12, 59, 12, 74],
+        //             },
+        //             {
+        //                 label: 'Sampah Kontaminasi',
+        //                 backgroundColor: "#ffc107",
+        //                 data: [12, 59, 5, 56, 58, 12, 59, 12, 74],
+        //             },
+        //             {
+        //                 label: 'Drum',
+        //                 backgroundColor: "#6610f2",
+        //                 data: [12, 59, 5, 56, 58, 12, 59, 12, 74],
+        //             }
+        //         ],
+        //     },
+        //     options: {
+        //         tooltips: {
+        //             displayColors: true,
+        //             callbacks: {
+        //                 mode: 'x',
+        //             },
+        //         },
+        //         scales: {
+        //             xAxes: [{
+        //                 stacked: true,
+        //                 gridLines: {
+        //                     display: false,
+        //                 }
+        //             }],
+        //             yAxes: [{
+        //                 stacked: true,
+        //                 ticks: {
+        //                     beginAtZero: true,
+        //                 },
+        //                 type: 'linear',
+        //             }]
+        //         },
+        //         responsive: true,
+        //         maintainAspectRatio: false,
+        //         legend: {
+        //             position: 'bottom'
+        //         },
+        //     }
+        // });
 
         var tps1 = createGauge('tps1','TPS I','m3','kapasitas')
-        updateChart(tps1)
-        var tps2 = createGauge('tps2','TPS II','m3','kapasitas')
-        updateChart(tps2)
-        var tps3 = createGauge('tps3','TPS III','m3','kapasitas')
-        updateChart(tps3)
-        var tps4 = createGauge('tps4','TPS IV','m3','kapasitas')
-        updateChart(tps4)
-        var tps5 = createGauge('tps5','TPS V','m3','kapasitas')
-        updateChart(tps5)
-        var tps6 = createGauge('tps6','TPS VI','m3','kapasitas')
-        updateChart(tps6)
+        
+        var tps2 = createGauge('tps2','TPS II','JB','kapasitas')
+        
+        var tps3 = createGauge('tps3','TPS III','JB','kapasitas')
+        
+        var tps4 = createGauge('tps4','TPS IV','-','kapasitas')
+        
+        var tps5 = createGauge('tps5','Kolam Limbah Cair','-','kapasitas')
+        
+        // var tps6 = createGauge('tps6','TPS VI','m3','kapasitas')
+        
 
         function createGauge(id,title,satuan,satuan2) {
             return Highcharts.chart(id, {
@@ -339,33 +361,132 @@
         }
 
             
-            function updateChart(chart) {
+            function updateChart(chart,value) {
                 if (!chart.renderer.forExport) {
-                    setInterval(function () {
-                        var point = chart.series[0].points[0],
-                            newVal,
-                            inc = Math.round((Math.random() - 0.5) * 20);
+                    var point = chart.series[0].points[0]
+                    point.update(value)
+                    
+                    // setInterval(function () {
+                    //     var point = chart.series[0].points[0],
+                    //         newVal,
+                    //         inc = Math.round((Math.random() - 0.5) * 20);
 
-                        newVal = point.y + inc;
-                        if (newVal < 0 || newVal > 200) {
-                            newVal = point.y - inc;
-                        }
+                    //     newVal = point.y + inc;
+                    //     if (newVal < 0 || newVal > 200) {
+                    //         newVal = point.y - inc;
+                    //     }
 
-                        point.update(newVal);
+                    //     point.update(newVal);
 
-                    }, 3000);
+                    // }, 3000);
                 }
             }
+            var pProv = {
+                    
+                    tahun: '2020'
+                }
+            $.ajax({
+                    url: "{{ route('dashboard.data') }}",
+                    method: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        "accept": "application/json",
+                        "Access-Control-Allow-Origin": "*"
+                    },
+                    data: pProv, 
+                    dataType: "json",
 
-            
+                    success: function (data) {
+                        var dataPenghasil=data.dataPenghasil
+                        var dataKuota=data.dataKuota
+                        var dataKapasitas=data.dataKapasitas
+                        var dataKadaluarsa=data.dataKadaluarsa
+                        console.log(data)
+ 
+                        updateData(cair, ["Konsumsi", "Sisa"], [dataKuota[0].konsumsi, dataKuota[0].sisa])
+                        updateData(sludge, ["Konsumsi", "Sisa"], [dataKuota[1].konsumsi, dataKuota[1].sisa])
+                        updateData(sk, ["Konsumsi", "Sisa"], [dataKuota[2].konsumsi, dataKuota[2].sisa])
+                        updateDataBar(myChart, dataPenghasil.labels, dataPenghasil.values)
 
-        updateData(cair, ["Terpakai", "Sisa"], [5000000000, 2000000000])
-        updateData(sludge, ["Terpakai", "Sisa"], [1100000000, 10000000])
-        updateData(sk, ["Terpakai", "Sisa"], [390000000, 720000000])
+                        updateChart(tps1,dataKapasitas[0].saldo)
+                        updateChart(tps2,dataKapasitas[1].saldo)
+                        updateChart(tps3,dataKapasitas[2].saldo)
+                        updateChart(tps4,dataKapasitas[3].saldo)
+                        updateChart(tps5,dataKapasitas[4].saldo)
+                        $('#datakadaluarsa').DataTable({
+                            data : dataKadaluarsa,
+                            columns : [
+                                { data : "namalimbah" },
+                                { data : "created_at",
+                                render: function (data, type, row) {
+                                if (data == null || data == "-" || data == "0000-00-00 00:00:00" ||
+                                        data == "NULL") {
+                                        return '<span>-</span>'
+                                    } else {
+                                        return moment(data).format('DD/MM/YYYY');
+                                    }
 
+                                }
+                                
+                                 },
+                                 { data : "created_at",
+                                render: function (data, type, row) {
+                                
+                                        return moment().format('DD/MM/YYYY');
+                                    
+
+                                }
+                                
+                                 },
+                                { data : "kadaluarsa" ,
+                                render: function (data, type, row) {
+                                if (data == null || data == "-" || data == "0000-00-00 00:00:00" ||
+                                        data == "NULL") {
+                                        return '<span>-</span>'
+                                    } else {
+                                        return moment(data).format('DD/MM/YYYY');
+                                    }
+
+                                }
+                                },
+                                { data : "namatps" },
+                                { data : "kadaluarsa",
+                                render: function (data, type, row) {
+                                    var curDate=moment().format('DD')
+                                    var curMonth=moment().format('MM')
+                                    var curYear=moment().format('YYYY')
+                                    var date3=moment(curDate, 'DD/MM/YYYY').add(3, 'days');
+                                    var date7=moment(curDate, 'DD/MM/YYYY').add(7, 'days');
+
+                                    var a = moment([curYear, curMonth, curDate]);
+                                    var b = moment([moment(data).format('YYYY'), moment(data).format('MM'), moment(data).format('DD')]);
+                                    var difference=b.diff(a, 'days') // 1
+                                    //diff di query berbeda dengan dif di moment js
+                                    // console.log(tes)
+                                    if (difference==4) {
+                                        return '<span class="badge badge-danger">Bahaya</span>'
+                                    } else {
+                                        return '<span class="badge badge-warning">Waspada</span>'
+                                    }
+
+                                }
+                                
+                                 }
+                            ]
+                        })
+                        // updateChart(dataKapasitas[6].saldo)
+                    }
+                });
+ 
         function updateData(chart, labels, data) {
             chart.data.labels = labels
             chart.data.datasets[0].backgroundColor = ["#f44336", "#4caf50"]
+            chart.data.datasets[0].data = data
+            chart.update();
+        }
+        function updateDataBar(chart, labels, data) {
+            chart.data.labels = labels
+            // chart.data.datasets[0].backgroundColor = ["#ff5722"]
             chart.data.datasets[0].data = data
             chart.update();
         }

@@ -209,7 +209,8 @@
             serverSide: true,
             scrollCollapse: true,
             scrollX: true,
-            dom: '<"right"B>rti<"clear">',
+            paging:true,
+            dom: '<"right"B>rtipl<"clear">',
             buttons: [{
                     text: 'Terima',
                     className: 'btn btn-success',
@@ -427,6 +428,7 @@
                                 // console.log(value)
                                 obj.limbah3r = data1[i].limbah3r;
                                 obj.tgl = data1[i].tgl;
+                                obj.id_transaksi = data1[i].id_transaksi;
                                 obj.idmutasi = data1[i].idmutasi;
                                 obj.idasallimbah = data1[i].idasallimbah;
                                 obj.idlimbah = data1[i].idlimbah;

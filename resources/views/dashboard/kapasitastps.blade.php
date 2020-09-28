@@ -57,16 +57,13 @@
                   </figure>
                   {{-- <div id="container" style="min-width: 310px; max-width: 400px; height: 300px; margin: 0 auto"></div> --}}
                 </div>
-                <div class="col-md-4">
+                {{-- <div class="col-md-4">
                   <figure class="highcharts-figure">
                     <div id="tps6"></div>
-                    {{-- <p class="highcharts-description">
-                      Chart showing use of multiple panes and axis plot bands with a gauge
-                      series. The chart is updated dynamically every few seconds.
-                    </p> --}}
+                    
                   </figure>
-                  {{-- <div id="container" style="min-width: 310px; max-width: 400px; height: 300px; margin: 0 auto"></div> --}}
-                </div>
+                  
+                </div> --}}
           </div>
                 
 

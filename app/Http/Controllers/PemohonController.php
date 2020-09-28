@@ -39,12 +39,13 @@ class PemohonController extends Controller
         if (request()->ajax()) { 
             $queryData=DB::table('tr_statusmutasi')
             ->join('md_namalimbah', 'tr_statusmutasi.idlimbah', '=', 'md_namalimbah.id')
-            
+            ->join('tr_headermutasi', 'tr_statusmutasi.idmutasi', '=', 'tr_headermutasi.id')
             ->join('md_statusmutasi', 'tr_statusmutasi.idstatus', '=', 'md_statusmutasi.id')
             // ->join('tr_detailmutasi', 'tr_statusmutasi.idmutasi', '=', 'tr_detailmutasi.idmutasi')
             ->join('md_penghasillimbah', 'tr_statusmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
             ->select('tr_statusmutasi.*',
             'md_namalimbah.namalimbah', 
+            'tr_headermutasi.id_transaksi',
             'md_namalimbah.jenislimbah', 
             'md_penghasillimbah.seksi',
             'md_statusmutasi.keterangan')
@@ -169,8 +170,9 @@ class PemohonController extends Controller
      */
     public function noSurat($idAsalLimbah){
 
+        // dd($idAsalLimbah);
         $noSuratUnitKerja=DB::table('md_nosurat')->where('unit_kerja',$idAsalLimbah)->first(); 
-
+        
         $unitKerja=$noSuratUnitKerja->unit_kerja;
         $currMonth=date("m");
         $currYear=date("Y"); 
@@ -204,26 +206,30 @@ class PemohonController extends Controller
         // AuthHelper::getAuthUser()[0]->email;
         $username=AuthHelper::getAuthUser()[0]->email;
         $getRequest=json_decode($request->getContent(), true);
+        // dd($getRequest);
         $dataRequest=$getRequest['Data']; 
-        $dataHeader=$getRequest['Header'];
+        $requestHeader=$getRequest['Header'];
         // dd($dataHeader); 
        
         $countDataReq=count($dataRequest); 
         $error=null;
         $getLastTransaksi=DB::table('tr_headermutasi')->latest('id')->first();
+
+        $lastTransactionNo=null;
         if($getLastTransaksi==null){
-            $getLastTransaksi=0 ;
+            $lastTransactionNo=1 ;
+        }else{
+            $lastTransactionNo=(int)$getLastTransaksi->id_transaksi;
+            $lastTransactionNo++;
         }
          
         $idAsalLimbah=$dataRequest[0]['asal_limbah'];
         $noSurat=$this->noSurat($idAsalLimbah);
-        
-        $getLastTransaksi++;
-        // dd($getLastTransaksi);  
+       
          foreach($dataRequest as $row){
 
             $dataHeader = array(
-                'id_transaksi'      =>  $getLastTransaksi,
+                'id_transaksi'      =>  $lastTransactionNo,
                 'no_surat'          =>  $noSurat,
                 'idlimbah'		    =>  $row['nama_limbah'], 
                 'tgl'			    =>  AppHelper::convertDate($row['tgl']),
@@ -234,29 +240,30 @@ class PemohonController extends Controller
                 'limbah3r'	        =>  $row['limbah_3r'],
                 'keterangan'	        =>  $row['keterangan'],
                  'np'                   =>$row['np'],
-                 'maksud'                   =>$dataHeader,
+                 'maksud'                   =>$requestHeader,
                 'created_by'            =>$username, 
                 'created_at'            => date('Y-m-d')
                
             );
             $insertHeader=DB::table('tr_headermutasi')->insertGetId($dataHeader,true);
+            // var_dump($insertHeader);
 
             $dataStatus = array(
-                'id_transaksi'      =>  $getLastTransaksi,
-                'idmutasi'      => $insertHeader,
-                'idlimbah'		=>  $row['nama_limbah'],  
-                'idstatus'            =>  1	, 
+                'id_transaksi'      =>  $lastTransactionNo,
+                'idmutasi'          =>  $insertHeader,
+                'idlimbah'		    =>  $row['nama_limbah'],  
+                'idstatus'          =>  1	, 
                 'jumlah'	        =>  $row['jmlhlimbah'],  
                 'idasallimbah'	    =>  $row['asal_limbah']	, 
-                'idjenislimbah'       => $row['jenis_limbah'],
+                'idjenislimbah'     =>  $row['jenis_limbah'],
                 'limbah3r'	        =>  $row['limbah_3r'],
                 'tgl'			    =>  AppHelper::convertDate($row['tgl']),
-                'created_at'        => date('Y-m-d'),
-                'created_by'            =>$username,
+                'created_at'        =>  date('Y-m-d'),
+                'created_by'        =>  $username,
                
             );
             $dataDetail=array( 
-                'id_transaksi'      =>  $getLastTransaksi,
+                'id_transaksi'      =>  $lastTransactionNo,
                 'idmutasi'      => $insertHeader,
                 'idlimbah'		=>  $row['nama_limbah'],  
                 'idstatus'            =>  1	, 

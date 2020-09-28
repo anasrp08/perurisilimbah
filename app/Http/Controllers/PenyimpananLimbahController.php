@@ -38,7 +38,7 @@ class PenyimpananLimbahController extends Controller
         if (request()->ajax()) {
             $queryData = DB::table('tr_statusmutasi')
                 ->join('md_namalimbah', 'tr_statusmutasi.idlimbah', '=', 'md_namalimbah.id')
-
+                ->join('tr_headermutasi', 'tr_statusmutasi.idmutasi', '=', 'tr_headermutasi.id')
                 ->join('md_statusmutasi', 'tr_statusmutasi.idstatus', '=', 'md_statusmutasi.id')
                 // ->join('tr_detailmutasi', 'tr_statusmutasi.idmutasi', '=', 'tr_detailmutasi.idmutasi')
                 ->join('md_penghasillimbah', 'tr_statusmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
@@ -46,6 +46,7 @@ class PenyimpananLimbahController extends Controller
                     'tr_statusmutasi.*',
                     'md_namalimbah.namalimbah',
                     'md_namalimbah.jenislimbah',
+                    'tr_headermutasi.id_transaksi',
                     'md_namalimbah.fisik',
                     'md_namalimbah.tipelimbah',
                     'md_penghasillimbah.seksi',
@@ -226,6 +227,7 @@ class PenyimpananLimbahController extends Controller
                         $nopack;
                     }
                     $dataPacking = array(
+                        'id_transaksi'      =>  $row['id_transaksi'],
                         'no_packing'            =>  $nopack[0],
                         'kode_pack'            => $nopack[1],
                         'idmutasi'            => $row['idmutasi'],
@@ -236,9 +238,10 @@ class PenyimpananLimbahController extends Controller
                         'kadaluarsa'            => date('Y-m-d', strtotime("+ 90 day")),
                         'created_at'            => date('Y-m-d'),
                         'np'                   =>$row['np'],
-                        'changed_by'            =>$username,
+                        'created_by'            =>$username, 
                     );
                     $dataDetail = array(
+                        'id_transaksi'      =>  $row['id_transaksi'],
                         'idmutasi'            => $row['idmutasi'],
                         'idlimbah'            => $row['idlimbah'],
                         'idjenislimbah'            => $row['idjenislimbah'],
@@ -254,10 +257,12 @@ class PenyimpananLimbahController extends Controller
     
                     );
                     $dataStatus = array(
+                        'id_transaksi'      =>  $row['id_transaksi'],
                         'idstatus'            =>  $row['idstatus'],
                         'updated_at'        => date('Y-m-d'),
                         'idtps' => $nopack[2],
                         'changed_by'            =>$username,
+                        'np'                   =>$row['np'],
 
                     );
                     $dataTPS = array('idtps' => $nopack[2]);
@@ -270,6 +275,7 @@ class PenyimpananLimbahController extends Controller
                         $nopackcair;
                     }
                     $dataPacking = array(
+                        'id_transaksi'      =>  $row['id_transaksi'],
                         'no_packing'            =>  $nopackcair[0],
                         'kode_pack'            => $nopackcair[1],
                         'idmutasi'            => $row['idmutasi'],
@@ -279,8 +285,11 @@ class PenyimpananLimbahController extends Controller
                         'idstatus'            => $row['idstatus'],
                         'kadaluarsa'            => date('Y-m-d', strtotime("+ 90 day")),
                         'created_at'            => date('Y-m-d'),
+                        'created_by'            =>$username,
+                        'np'                   =>$row['np'],
                     );
                     $dataDetail = array(
+                        'id_transaksi'      =>  $row['id_transaksi'],
                         'idmutasi'            => $row['idmutasi'],
                         'idlimbah'            => $row['idlimbah'],
                         'idjenislimbah'            => $row['idjenislimbah'],
@@ -290,13 +299,19 @@ class PenyimpananLimbahController extends Controller
                         'tgl'            => $row['tgl'],
                         'jumlah'            => $row['jumlah'],
                         'limbah3r'            => $row['limbah3r'],
-                        'created_at'        => date('Y-m-d')
+                        'created_at'        => date('Y-m-d'),
+                        'created_by'            =>$username,
+                        'np'                   =>$row['np'],
+
     
                     );
                     $dataStatus = array(
+                        'id_transaksi'          =>  $row['id_transaksi'],
                         'idstatus'            =>  $row['idstatus'],
-                        'updated_at'        => date('Y-m-d'),
-                        'idtps' => $nopackcair[2]
+                        'updated_at'            => date('Y-m-d'),
+                        'idtps'                 => $nopackcair[2],
+                        'np'                   =>$row['np'],
+                        'changed_by'            =>$username,
                     );
                     $dataTPS = array('idtps' => $nopackcair[2]);
                     UpdtSaldoHelper::updateTambahSaldoTPS($nopackcair[2], $row['jumlah']);

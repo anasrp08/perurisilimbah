@@ -25,6 +25,18 @@ class UsersSeeder extends Seeder
         $beacukaiRole->display_name = "Operator";
         $beacukaiRole->save();
 
+        $unitKerjaRole = new Role();
+        $unitKerjaRole->name = "unit kerja";
+        $unitKerjaRole->display_name = "Unit Kerja";
+        $unitKerjaRole->save();
+
+        $satpamRole = new Role();
+        $satpamRole->name = "pengawas";
+        $satpamRole->display_name = "Pengawas";
+        $satpamRole->save();
+
+
+
          
 
         // Create Admin sample
@@ -48,6 +60,26 @@ class UsersSeeder extends Seeder
         $bc->is_verified = 1;
         $bc->save();
         $bc->attachRole($beacukaiRole);
+
+        $uk = new User();
+        $uk->name = 'Unit Kerja';
+        $uk->email = 'unitkerja@limbahperuri';
+        
+        $uk->password = bcrypt('unitkerja123');
+        $uk->avatar = "operator_avatar.png";
+        $uk->is_verified = 1;
+        $uk->save();
+        $uk->attachRole($unitKerjaRole);
+
+        $pengawas = new User();
+        $pengawas->name = 'Pengawas';
+        $pengawas->email = 'pengawas@limbahperuri';
+        
+        $pengawas->password = bcrypt('pengawas123');
+        $pengawas->avatar = "operator_avatar.png";
+        $pengawas->is_verified = 1;
+        $pengawas->save();
+        $pengawas->attachRole($satpamRole);
 
       
     }

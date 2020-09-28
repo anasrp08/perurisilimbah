@@ -117,7 +117,7 @@
             serverSide: true,
             scrollCollapse: true,
             scrollX: true,
-            dom: 'rti<"clear">',
+        //    dom: '<"right"B>rtipl<"clear">',
 
             columnDefs: [{
                     className: 'text-center',
@@ -373,6 +373,7 @@
                 // console.log(value)
                 obj.limbah3r = data[i].limbah3r;
                 obj.tgl = data[i].tgl;
+                obj.id_transaksi = data[i].id_transaksi;
                 obj.idmutasi = data[i].idmutasi;
                 obj.idasallimbah = data[i].idasallimbah;
                 obj.idlimbah = data[i].idlimbah;

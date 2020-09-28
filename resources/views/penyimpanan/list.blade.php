@@ -101,7 +101,8 @@
             serverSide: true,
             scrollCollapse: true,
             scrollX: true,
-            dom: '<"right"B>rti<"clear">',
+            paging:true,
+            dom: '<"right"B>rtipl<"clear">',
             buttons: [
                  
                 {
@@ -271,6 +272,7 @@
                             obj.limbah3r = data1[i].limbah3r;
                             obj.tgl = data1[i].tgl;
                             obj.idmutasi = data1[i].idmutasi;
+                            obj.id_transaksi = data1[i].id_transaksi;
                             obj.idasallimbah = data1[i].idasallimbah;
                             obj.idlimbah = data1[i].idlimbah;
                             obj.idstatus = 4;
@@ -301,6 +303,7 @@
                             obj.limbah3r = data1[i].limbah3r;
                             obj.tgl = data1[i].tgl;
                             obj.idmutasi = data1[i].idmutasi;
+                            obj.id_transaksi = data1[i].id_transaksi;
                             obj.idasallimbah = data1[i].idasallimbah;
                             obj.idlimbah = data1[i].idlimbah;
                             obj.idstatus = 3;

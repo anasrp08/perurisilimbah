@@ -37,6 +37,7 @@ class PemrosesanLimbahController extends Controller
         if (request()->ajax()) {
             $queryData = DB::table('tr_packing')
                 ->join('tr_headermutasi','tr_packing.idmutasi','=','tr_headermutasi.id')
+                // ->join('tr_headermutasi', 'tr_packing.idmutasi', '=', 'tr_headermutasi.id')
                 ->join('md_namalimbah', 'tr_packing.idlimbah', '=', 'md_namalimbah.id')
                 ->join('md_tps', 'tr_packing.idtps', '=', 'md_tps.id')
                 ->join('tr_statusmutasi', 'tr_packing.idmutasi', '=', 'tr_statusmutasi.idmutasi')
@@ -45,6 +46,7 @@ class PemrosesanLimbahController extends Controller
                     'tr_packing.no_packing',
                     // 'tr_headermutasi.jumlah',
                     // 'md_namalimbah.namalimbah',
+                    'tr_headermutasi.id_transaksi',
                     'md_tps.namatps',
                     'md_statusmutasi.keterangan',
                     'tr_packing.*',
@@ -109,6 +111,7 @@ class PemrosesanLimbahController extends Controller
             foreach ($dataRequest as $row) {
                 
                 $dataDetail = array(
+                    'id_transaksi'      =>  $row['id_transaksi'],
                     'idmutasi'            => $row['idmutasi'],
                     'idlimbah'            => $row['idlimbah'],
                     'idjenislimbah'            => $row['idjenislimbah'],
@@ -124,6 +127,7 @@ class PemrosesanLimbahController extends Controller
 
                 );
                 $dataStatus = array(
+                    'id_transaksi'      =>  $row['id_transaksi'],
                     'idstatus'            =>  $row['idstatus'],
                     'updated_at'        => date('Y-m-d'),
                     'idtps' => $row['idtps'],
@@ -131,6 +135,7 @@ class PemrosesanLimbahController extends Controller
                     'changed_by'            =>$username,
                 );
                 $dataPacking = array(
+                    'id_transaksi'      =>  $row['id_transaksi'],
                     'no_packing'            =>  $row['no_packing'],
                     // 'kode_pack'            => $row['kode_pack'],
                     'idmutasi'            => $row['idmutasi'],
