@@ -106,7 +106,8 @@ class HomeController extends Controller
         ->join('md_namalimbah','tr_headermutasi.idlimbah','md_namalimbah.id')
         ->join('md_penghasillimbah','tr_headermutasi.idasallimbah','md_penghasillimbah.id')
         ->select(DB::raw('sum(tr_headermutasi.jumlah) as jumlah'),'md_penghasillimbah.seksi')
-        ->where('tr_headermutasi.created_at','2020-09-25')
+        ->whereYear('tr_headermutasi.created_at', date('Y'))
+        ->whereMonth('tr_headermutasi.created_at', date('m'))
         ->groupBy('md_penghasillimbah.seksi')
         ->get(); 
 
@@ -197,7 +198,24 @@ class HomeController extends Controller
     {
          
         $dataKuota=$this->dashboardKuotaLimbah($request->tahun);
-        $dataKadaluarsa=$this->dashboardToBeKadaluarsa();  
+        $dataKadaluarsa=$this->dashboardToBeKadaluarsa();
+        $dataNotifikasi=$this->dashboardToBeKadaluarsa(); 
+        $arrNotifikasi=new \stdClass(); 
+        $arrIsi=[];
+        
+        // $dataIsi=$dataNotifikasi->groupBy('kadaluarsa')->keys()->toArray();
+        $dataNotif=$dataNotifikasi->groupBy('kadaluarsa')->values()->toArray();
+        // $datavalues=$dataPenghasil->keyBy('jumlah')->keys();
+        for($i=0;$i<count($dataNotif);$i++){
+            // $arrNotifikasi->isi=count($dataNotif[$i]);
+            array_push($arrIsi,count($dataNotif[$i]));
+            // dd($dataJumlah);
+
+        }
+        $arrNotifikasi->keys=$dataNotifikasi->groupBy('kadaluarsa')->keys()->toArray();
+        $arrNotifikasi->values=$arrIsi;
+        // dd($arrNotifikasi);
+        // dd($dataNotifikasi);
         $dataKapasitas=$this->dashboardKapasitas();
 
         $dataPenghasil=$this->dashboardPenghasil();
@@ -207,6 +225,37 @@ class HomeController extends Controller
             'dataKapasitas'=>$dataKapasitas,
             'dataPenghasil'=>$dataPenghasil,
             'dataKadaluarsa'=>$dataKadaluarsa, 
+            'dataNotifikasi'=>$arrNotifikasi, 
+            ]);
+    }
+    public function dataNotifikasi(Request $request)
+    {
+         
+        $arrNotifikasi=new \stdClass(); 
+        $arrIsi=[];
+        $dataNotifikasi=$this->dashboardToBeKadaluarsa(); 
+        if(count($dataNotifikasi) == 0){
+            $arrNotifikasi=null;
+        }else{
+           
+            
+            // $dataIsi=$dataNotifikasi->groupBy('kadaluarsa')->keys()->toArray();
+            $dataNotif=$dataNotifikasi->groupBy('kadaluarsa')->values()->toArray();
+            // $datavalues=$dataPenghasil->keyBy('jumlah')->keys();
+            for($i=0;$i<count($dataNotif);$i++){
+                // $arrNotifikasi->isi=count($dataNotif[$i]);
+                array_push($arrIsi,count($dataNotif[$i]));
+                // dd($dataJumlah);
+    
+            }
+            $arrNotifikasi->keys=$dataNotifikasi->groupBy('kadaluarsa')->keys()->toArray();
+            $arrNotifikasi->values=$arrIsi;
+        }
+        
+        
+         
+        return response()->json([ 
+            'dataNotifikasi'=>$arrNotifikasi, 
             ]);
     }
 }

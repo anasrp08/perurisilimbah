@@ -50,27 +50,28 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="far fa-bell"></i>
-                        <span class="badge badge-warning navbar-badge">15</span>
+                        <span class="badge badge-danger navbar-badge" id="jumlahnotif">0</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-item dropdown-header">15 Notifications</span>
+                        <span class="dropdown-item dropdown-header" id='jmlhnotif'>0</span>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-envelope mr-2"></i> 4 new messages
-                            <span class="float-right text-muted text-sm">3 mins</span>
+                        <a href="#" class="dropdown-item" id='warning_msg'>
+                            <i class="fas fa-envelope mr-2"></i> -
+                            {{-- <span class="float-right text-muted text-sm">3 mins</span> --}}
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-users mr-2"></i> 8 friend requests
-                            <span class="float-right text-muted text-sm">12 hours</span>
+                        <a href="#" class="dropdown-item" id='danger_msg'>
+                            <i class="fas fa-users mr-2"></i> -
+                            {{-- <span class="float-right text-muted text-sm">12 hours</span> --}}
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
+                        {{-- <a href="#" class="dropdown-item">
                             <i class="fas fa-file mr-2"></i> 3 new reports
                             <span class="float-right text-muted text-sm">2 days</span>
                         </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+                        <div class="dropdown-divider"></div> --}}
+                        <a href="{{route('pemrosesan.listview')}}" class="dropdown-item dropdown-footer">Lihat Semua
+                            Data</a>
                     </div>
                 </li>
                 <li class="nav-item">
@@ -191,6 +192,60 @@
         <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
         <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.bootstrap4.min.js"></script>
         <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                var pProv = {
+
+                    tahun: '2020'
+                }
+                $.ajax({
+                    url: "{{ route('notifikasi.data') }}",
+                    method: "POST",
+                    headers: {
+
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        "accept": "application/json",
+                        "Access-Control-Allow-Origin": "*"
+                    },
+                    data: pProv,
+                    dataType: "json",
+
+                    success: function (data) {
+                        console.log(data)
+                        var cekdata = data.dataNotifikasi
+                        if (cekdata == null) {
+                            $('#jumlahnotif').text(0)
+                        } else {
+                            var dataValues = data.dataNotifikasi.values
+                            // console.log(dataValues.length)
+                            var dataTangal = data.dataNotifikasikeys
+                            var arrSum = parseInt(0)
+                            for (i = 0; i < dataValues.length; i++) {
+                                // console.log(dataValues[i])
+                                arrSum += parseInt(dataValues[i])
+                            } 
+                            $('#jumlahnotif').text(arrSum)
+                            $('#jmlhnotif').text(arrSum + ' Notifikasi')
+                            $('#warning_msg').text(dataValues[0] +
+                                ' Limbah Kadaluarsa Dalam 3 Hari')
+                            $('#danger_msg').text(dataValues[1] + ' Limbah Kadaluarsa Dalam 7 Hari')
+
+                            toastr.error(arrSum+' Limbah akan kadaluarsa', 'Perhatian', {
+                                timeOut: 5000
+                            });
+                        }
+
+
+
+
+
+                    }
+
+                });
+            })
+
+        </script>
+
 
 
 
@@ -199,5 +254,6 @@
         <!-- Page specific script -->
 
         @yield('scripts')
-</body> 
+</body>
+
 </html>

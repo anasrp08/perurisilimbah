@@ -274,20 +274,21 @@
         //     }
         // });
 
-        var tps1 = createGauge('tps1','TPS I','m3','kapasitas')
+        var tps1 = createGauge('tps1','TPS I','m3','kapasitas',150,20,75,120)
+            
+        var tps2 = createGauge('tps2','TPS II','JB','kapasitas',125,20,65,90)
         
-        var tps2 = createGauge('tps2','TPS II','JB','kapasitas')
+        var tps3 = createGauge('tps3','TPS III','JB','kapasitas',125,20,65,90)
         
-        var tps3 = createGauge('tps3','TPS III','JB','kapasitas')
+        var tps4 = createGauge('tps4','TPS IV','-','kapasitas',50955,50,30000,45000)
         
-        var tps4 = createGauge('tps4','TPS IV','-','kapasitas')
+        var tps5 = createGauge('tps5','Kolam Limbah Cair','-','kapasitas',250,40,150,220)
         
-        var tps5 = createGauge('tps5','Kolam Limbah Cair','-','kapasitas')
         
         // var tps6 = createGauge('tps6','TPS VI','m3','kapasitas')
         
 
-        function createGauge(id,title,satuan,satuan2) {
+        function createGauge(id,title,satuan,satuan2,maxkapasitas,thicklength,save,warning) {
             return Highcharts.chart(id, {
 
                     chart: {
@@ -315,18 +316,18 @@
                     // the value axis
                     yAxis: {
                         min: 0,
-                        max: 200,
+                        max: maxkapasitas,
 
                         minorTickInterval: 'auto',
-                        minorTickWidth: 1,
+                        minorTickWidth: 2,
                         minorTickLength: 10,
                         minorTickPosition: 'inside',
                         minorTickColor: '#666',
 
-                        tickPixelInterval: 30,
-                        tickWidth: 2,
+                        tickPixelInterval: thicklength ,
+                        tickWidth: 1,
                         tickPosition: 'inside',
-                        tickLength: 10,
+                        tickLength: 15,
                         tickColor: '#666',
                         labels: {
                             step: 2,
@@ -335,19 +336,21 @@
                         title: {
                             text: satuan2
                         },
-                        plotBands: [{
+                        plotBands: [
+                            {
                             from: 0,
-                            to: 120,
+                            to: save,
                             color: '#55BF3B' // green
                         }, {
-                            from: 120,
-                            to: 160,
+                            from: save,
+                            to: warning,
                             color: '#DDDF0D' // yellow
                         }, {
-                            from: 160,
-                            to: 200,
+                            from: warning,
+                            to: maxkapasitas,
                             color: '#DF5353' // red
-                        }]
+                        }
+                        ]
                     },
 
                     series: [{
@@ -408,11 +411,11 @@
                         updateData(sk, ["Konsumsi", "Sisa"], [dataKuota[2].konsumsi, dataKuota[2].sisa])
                         updateDataBar(myChart, dataPenghasil.labels, dataPenghasil.values)
 
-                        updateChart(tps1,dataKapasitas[0].saldo)
-                        updateChart(tps2,dataKapasitas[1].saldo)
-                        updateChart(tps3,dataKapasitas[2].saldo)
-                        updateChart(tps4,dataKapasitas[3].saldo)
-                        updateChart(tps5,dataKapasitas[4].saldo)
+                        updateChart(tps1,dataKapasitas[0].saldo,150)
+                        updateChart(tps2,dataKapasitas[1].saldo,125)
+                        updateChart(tps3,dataKapasitas[2].saldo,125)
+                        updateChart(tps4,dataKapasitas[3].saldo,50955)
+                        updateChart(tps5,dataKapasitas[4].saldo,250)
                         $('#datakadaluarsa').DataTable({
                             data : dataKadaluarsa,
                             columns : [

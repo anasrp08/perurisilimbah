@@ -20,6 +20,8 @@ Auth::routes();
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::post('/dashboard/data', 'HomeController@dataDashboard')->name('dashboard.data');
+Route::post('/dashboard/notifikasi', 'HomeController@dataNotifikasi')->name('notifikasi.data');
+
 Route::get('/limbah/entri', 'LimbahController@viewEntri')->name('limbah.entri');
 // Route::get('/limbah/update', 'LimbahController@Update')->name('limbah.update');
 Route::get('/limbah/proses', 'LimbahController@viewProses')->name('limbah.proses');
