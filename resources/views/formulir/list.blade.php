@@ -128,7 +128,7 @@
             console.log(dataRow)
             var url =
                 '{{ route("formulir.cetak",[":id"])}}';
-            url = url.replace(":id", dataRow.id);
+            url = url.replace(":id", dataRow.id_transaksi);
            
 
             document.location.href = url;

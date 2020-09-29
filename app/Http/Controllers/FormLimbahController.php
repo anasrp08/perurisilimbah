@@ -208,11 +208,13 @@ class FormLimbahController extends Controller
             'tr_headermutasi.validated',
             'tr_headermutasi.validated_by',
            ) 
+           ->where('tr_detailmutasi.idstatus','=','2')
            ->where('tr_headermutasi.id_transaksi','=',$id)->get(); 
         //    dd($id);
            $penerima=DB::table('tr_detailmutasi')
            ->where('id_transaksi','=',$id)
            ->where('idstatus','2')->first(); 
+        //    dd();
 
            $detailPenerima=DB::table('tbl_np')
            ->where('np','=',$penerima->np)->first();

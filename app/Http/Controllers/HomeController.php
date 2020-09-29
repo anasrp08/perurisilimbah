@@ -228,12 +228,72 @@ class HomeController extends Controller
             'dataNotifikasi'=>$arrNotifikasi, 
             ]);
     }
+    public function persentage($kapasitasjumlah,$presentage){
+
+        $dataCalculate=round(($kapasitasjumlah * (int)$presentage) / (int)100);
+        // dd( $dataCalculate);
+
+        return $dataCalculate;
+
+    }
     public function dataNotifikasi(Request $request)
     {
          
         $arrNotifikasi=new \stdClass(); 
+        $arrKadaluarsa3=new \stdClass(); 
+        $arrKadaluarsa7=new \stdClass(); 
         $arrIsi=[];
+        $notifKapasitas=new \stdClass(); 
+        $arrKapasitas=[];
+
         $dataNotifikasi=$this->dashboardToBeKadaluarsa(); 
+        $dataKapasitas=DB::table('md_tps')
+        ->get();
+        // dd($dataKapasitas);
+
+        for($i=0;$i<count($dataKapasitas);$i++){
+
+            $saldo=(int)$dataKapasitas[$i]->saldo;
+            
+            $kapasitasjumlah=(int)$dataKapasitas[$i]->kapasitasjumlah;
+            // dd($saldo >= $this->persentage($kapasitasjumlah,90));
+            if($saldo >= $this->persentage($kapasitasjumlah,75) && $saldo <= $this->persentage($kapasitasjumlah,90)){
+                $notifKapasitas=array(
+                    'saldo'=>$saldo,
+                    'tps'=>$dataKapasitas[$i]->namatps,
+                    'status'=>'Waspada',
+                    'kapasitas'=>$dataKapasitas[$i]->kapasitasjumlah,
+                );
+                // $notifKapasitas->saldo=$saldo;
+                // $notifKapasitas->tps=$dataKapasitas[$i]->namatps;
+                // $notifKapasitas->status='Waspada';
+             
+                array_push($arrKapasitas,$notifKapasitas);
+                // dd($arrKapasitas);
+
+            }else if($saldo >= $this->persentage($kapasitasjumlah,90)){
+                $notifKapasitas=array(
+                    'saldo'=>$saldo,
+                    'tps'=>$dataKapasitas[$i]->namatps,
+                    'status'=>'Bahaya',
+                    'kapasitas'=>$dataKapasitas[$i]->kapasitasjumlah,
+                );
+                // $notifKapasitas->saldo=$saldo;
+                // $notifKapasitas->tps=$dataKapasitas[$i]->namatps;
+                // $notifKapasitas->status='Bahaya';
+
+                array_push($arrKapasitas,$notifKapasitas); 
+                // dd($notifKapasitas);
+            }else{
+                $notifKapasitas=null;
+                // array_push($arrKapasitas,$notifKapasitas);
+            }
+
+            
+
+        }
+        // dd($arrKapasitas);
+
         if(count($dataNotifikasi) == 0){
             $arrNotifikasi=null;
         }else{
@@ -242,12 +302,26 @@ class HomeController extends Controller
             // $dataIsi=$dataNotifikasi->groupBy('kadaluarsa')->keys()->toArray();
             $dataNotif=$dataNotifikasi->groupBy('kadaluarsa')->values()->toArray();
             // $datavalues=$dataPenghasil->keyBy('jumlah')->keys();
-            for($i=0;$i<count($dataNotif);$i++){
+           
+            // for($i=0;$i<count($dataNotif);$i++){
                 // $arrNotifikasi->isi=count($dataNotif[$i]);
-                array_push($arrIsi,count($dataNotif[$i]));
+                $arrKadaluarsa3=array(
+                    'tanggal'=>$dataNotif[0][0]->kadaluarsa,
+                    'jumlah'=>count($dataNotif[0]),
+                    'status'=>'Waspada'
+                );
+
+                $arrKadaluarsa7=array(
+                    'tanggal'=>$dataNotif[1][0]->kadaluarsa,
+                    'jumlah'=>count($dataNotif[1]),
+                    'status'=>'Bahaya'
+                );
+
+                array_push($arrIsi,$arrKadaluarsa3);
+                array_push($arrIsi,$arrKadaluarsa7);
                 // dd($dataJumlah);
     
-            }
+            // }
             $arrNotifikasi->keys=$dataNotifikasi->groupBy('kadaluarsa')->keys()->toArray();
             $arrNotifikasi->values=$arrIsi;
         }
@@ -256,6 +330,7 @@ class HomeController extends Controller
          
         return response()->json([ 
             'dataNotifikasi'=>$arrNotifikasi, 
+            'notifikasiKapasitas'=>$arrKapasitas, 
             ]);
     }
 }

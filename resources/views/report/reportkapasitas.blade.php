@@ -55,6 +55,7 @@
                     <th>Kapasitas Area</th>
                     <th>Kapasitas Jumlah</th>
                     <th>Saldo</th> 
+                    <th>Status</th> 
                     <th>Tgl. Update</th> 
                 </tr>
             </thead>
@@ -150,6 +151,29 @@
                 {
                     data: 'saldo',
                     name: 'saldo',
+
+                },
+                {
+                    data: 'saldo',
+                    name: 'saldo',
+                    render: function (data, type, row) {
+                        // console.log()
+                        var kap_danger=Math.round(parseInt(row.kapasitasjumlah) * parseInt(90) / parseInt(100))
+                        var kap_warning=Math.round(parseInt(row.kapasitasjumlah) * parseInt(75) / parseInt(100))
+                        // console.log(kap_danger)
+                        console.log(kap_warning)
+                        // console.log(parseInt(row.saldo) > kap_warning && (row.saldo < kap_danger ) )
+                        if(parseInt(row.saldo) >= kap_warning && row.saldo <= kap_danger ){
+                            return '<span class="badge badge-warning">Waspada</span>' 
+                        }else if(parseInt(row.saldo) > kap_danger){
+                            return '<span class="badge badge-danger">Bahaya</span>'
+                        }else{
+                            return '<span class="badge badge-success">Aman</span>'
+                        }
+
+                         
+
+                    }
 
                 },
                 {

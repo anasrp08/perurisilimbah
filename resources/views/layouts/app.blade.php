@@ -52,26 +52,26 @@
                         <i class="far fa-bell"></i>
                         <span class="badge badge-danger navbar-badge" id="jumlahnotif">0</span>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-item dropdown-header" id='jmlhnotif'>0</span>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item" id='warning_msg'>
-                            <i class="fas fa-envelope mr-2"></i> -
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right "id='divkapasitas'>
+                        {{-- <span class="dropdown-item dropdown-header" id='jmlhnotif'>0</span> --}}
+                        {{-- <div class="dropdown-divider"></div> --}}
+                        {{-- <a href="#" class="dropdown-item" id='warning_msg'> --}}
+                            {{-- <i class="fas fa-envelope mr-2"></i> - --}}
                             {{-- <span class="float-right text-muted text-sm">3 mins</span> --}}
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item" id='danger_msg'>
-                            <i class="fas fa-users mr-2"></i> -
+                        {{-- </a> --}}
+                        {{-- <div class="dropdown-divider"></div> --}}
+                        {{-- <a href="#" class="dropdown-item" id='danger_msg'> --}}
+                            {{-- <i class="fas fa-users mr-2"></i> - --}}
                             {{-- <span class="float-right text-muted text-sm">12 hours</span> --}}
-                        </a>
-                        <div class="dropdown-divider"></div>
+                        {{-- </a> --}}
+                        {{-- <div class="dropdown-divider" ></div> --}}
                         {{-- <a href="#" class="dropdown-item">
-                            <i class="fas fa-file mr-2"></i> 3 new reports
-                            <span class="float-right text-muted text-sm">2 days</span>
-                        </a>
-                        <div class="dropdown-divider"></div> --}}
-                        <a href="{{route('pemrosesan.listview')}}" class="dropdown-item dropdown-footer">Lihat Semua
-                            Data</a>
+                            <i class="fas fa-file mr-2" id='kapasitas'></i> 3 new reports --}}
+                            {{-- <span class="float-right text-muted text-sm">2 days</span> --}}
+                        {{-- </a> --}}
+                        {{-- <div class="dropdown-divider"></div> --}}
+                        {{-- <a href="{{route('pemrosesan.listview')}}" class="dropdown-item dropdown-footer">Lihat Semua
+                            Data</a> --}}
                     </div>
                 </li>
                 <li class="nav-item">
@@ -213,26 +213,55 @@
                     success: function (data) {
                         console.log(data)
                         var cekdata = data.dataNotifikasi
-                        if (cekdata == null) {
+                        var dataKapasitas = data.notifikasiKapasitas
+                        var arrSum = parseInt(0)
+                        var arrSumKadaluarsa = parseInt(0)
+                        var arrKapasitas = parseInt(0)
+                        if (cekdata == null && dataKapasitas.length ==0) {
                             $('#jumlahnotif').text(0)
+                             $('#divkapasitas').append('<a href="#" class="dropdown-item">'+
+                                    '</i>Tidak Ada Notifikasi</a>');
                         } else {
-                            var dataValues = data.dataNotifikasi.values
-                            // console.log(dataValues.length)
+                            if (cekdata != null){
+                                var dataValues = data.dataNotifikasi.values
+                            var dataKapasitas = data.notifikasiKapasitas 
                             var dataTangal = data.dataNotifikasikeys
-                            var arrSum = parseInt(0)
-                            for (i = 0; i < dataValues.length; i++) {
-                                // console.log(dataValues[i])
-                                arrSum += parseInt(dataValues[i])
-                            } 
-                            $('#jumlahnotif').text(arrSum)
-                            $('#jmlhnotif').text(arrSum + ' Notifikasi')
-                            $('#warning_msg').text(dataValues[0] +
-                                ' Limbah Kadaluarsa Dalam 3 Hari')
-                            $('#danger_msg').text(dataValues[1] + ' Limbah Kadaluarsa Dalam 7 Hari')
+                            console.log(dataValues)
+                            for (i = 0; i < dataValues.length; i++) { 
+                                arrSum += parseInt(dataValues[i].jumlah)
+                                arrSumKadaluarsa +=parseInt(dataValues[i].jumlah)
 
-                            toastr.error(arrSum+' Limbah akan kadaluarsa', 'Perhatian', {
+                                $('#divkapasitas').append('<a href="#" class="dropdown-item">'+
+                                    '<i class="far fa-bell"></i> '+dataValues[i].jumlah+" Limbah <br>Kadaluarsa Tanggal "+moment(dataValues[i].tanggal).format('DD/MM/YYYY')+'</a>');
+                            } 
+                            toastr.error(arrSumKadaluarsa+' Limbah akan kadaluarsa', 'Perhatian', {
+                                timeOut: 5000
+                            }); 
+                            }else{
+                                // $('#divkapasitas').append('<a href="#" class="dropdown-item">'+
+                                //     '<i class="far fa-bell"></i>-</a>');
+                            }
+                            
+                             
+                            if(dataKapasitas.length != 0){
+                                arrSum += dataKapasitas.length
+                                arrKapasitas += dataKapasitas.length
+                                for(j = 0; j < dataKapasitas.length; j++){
+                                    $('#divkapasitas').append('<a href="#" class="dropdown-item">'+
+                                    '<i class="far fa-bell"></i> '+dataKapasitas[j].tps+' - '+dataKapasitas[j].saldo+'/'+dataKapasitas[j].kapasitas+" <br>Status "+dataKapasitas[j].status+'</a>');
+                                    
+                                }
+                                toastr.error(arrKapasitas+' Kapasitas Akan Penuh', 'Perhatian', {
                                 timeOut: 5000
                             });
+                            }else{
+                                // $('#divkapasitas').append('<a href="#" class="dropdown-item">'+
+                                //     '<i class="far fa-bell"></i>-</a>');
+                            }
+                            
+                            $('#jumlahnotif').text(arrSum) 
+                            $('#jmlhnotif').text(arrSum + ' Notifikasi') 
+                           
                         }
 
 
