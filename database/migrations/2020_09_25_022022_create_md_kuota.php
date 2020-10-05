@@ -16,6 +16,7 @@ class CreateMdKuota extends Migration
         Schema::create('md_kuota', function (Blueprint $table) {
             $table->bigIncrements('id'); 
             $table->string('tipe_limbah');
+            $table->decimal('jumlah',20,0)->nullable();
             $table->decimal('konsumsi',20,0)->nullable();
             $table->decimal('sisa',20,0)->nullable();
             $table->year('tahun')->nullable();

@@ -35,6 +35,7 @@ class HomeController extends Controller
     {
         // dd(DB::table('cemori.tbl_status')->get());
         // dd(Laratrust::hasRole('Pengawas'));
+        // dd(Laratrust::hasRole('operator'));
         if (Laratrust::hasRole('admin') || Laratrust::hasRole('operator')) {
 
             //     // $getYear = DB::table('desain_tahun')->orderBy('tahun','desc')->get();

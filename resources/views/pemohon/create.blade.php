@@ -361,9 +361,13 @@
                         }
                         if (data.success) {
                             toastr.success(data.success, 'Tersimpan', {
-                                timeOut: 5000
+                                timeOut: 3000
                             });
-                            // location.reload();
+                            setTimeout(function () {
+                                window.location.reload();
+
+                            }, 4000);
+                            
                             // $('#counterentries').text(data.count);
 
                             // $('#saveentri').text('Simpan');

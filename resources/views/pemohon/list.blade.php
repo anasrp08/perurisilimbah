@@ -174,6 +174,7 @@
 @section('scripts')
 <script>
     $(document).ready(function () {
+     
         $('#entridate').datepicker({
             uiLibrary: 'bootstrap4',
             format: 'dd/mm/yyyy',
@@ -202,6 +203,7 @@
             $('#daftar_pemohon').DataTable().ajax.reload();
 
         })
+        
 
 
         var table = $('#daftar_pemohon').DataTable({
@@ -211,10 +213,15 @@
             scrollX: true,
             paging:true,
             dom: '<"right"B>rtipl<"clear">',
-            buttons: [{
+            buttons: [
+                {
                     text: 'Terima',
-                    className: 'btn btn-success',
+                    className: 'terima btn btn-success',
                     action: function (e, dt, node, config) {
+                        // console.log(dt)
+                        // console.log(config)
+                        // console.log(e)
+                        // console.log(node)
                         $('#title_konfirmasi').text('Diterima Oleh: ')
                         $('#hidden_transaksi').val('terima')
                         $('#modalconfirm').modal('show')
@@ -225,7 +232,7 @@
                 },
                 {
                     text: 'Validasi',
-                    className: 'btn btn-info',
+                    className: 'validasi btn btn-info',
                     action: function (e, dt, node, config) {
                         $('#title_konfirmasi').text('Divalidasi Oleh: ')
                         $('#hidden_transaksi').val('validasi')
@@ -238,12 +245,12 @@
                 {
                     extend: "selectAll",
                     text: 'Pilih Semua',
-                    className: 'btn btn-default',
+                    className: 'semua btn btn-default',
                 },
                 {
                     extend: 'selectNone',
                     text: 'Batal Pilih Semua',
-                    className: 'btn btn-default',
+                    className: 'batal btn btn-default',
                 },
             ],
             columnDefs: [{
@@ -389,6 +396,28 @@
                 // }
             ]
         });
+        var buttonTerima = table.buttons( ['.terima'] );
+        var buttonValidasi = table.buttons( ['.validasi'] );
+        var buttonDatatable = table.buttons( ['.batal','.semua'] );
+        
+
+        var roleUser = '<?php echo Laratrust::hasRole("admin") ?>'
+        var roleUnitKerja = '<?php echo Laratrust::hasRole("unit kerja") ?>'
+        var rolePengawas = '<?php echo Laratrust::hasRole("pengawas") ?>'
+        var roleOperator = '<?php echo Laratrust::hasRole("operator") ?>'
+        if(roleUnitKerja == 1){
+            buttonTerima.disable();
+            buttonValidasi.disable();
+            buttonDatatable.disable();
+        }else if(rolePengawas==1){
+            buttonTerima.disable();
+        }else if(roleOperator==1){
+            buttonValidasi.disable();
+        }
+        // console.log(loginInstansi)
+
+        // buttons.disable();
+        
 
         // new $.fn.dataTable.FixedColumns(table, {
         //     leftColumns: 3,

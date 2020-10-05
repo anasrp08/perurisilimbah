@@ -104,6 +104,23 @@ class ReportLimbahController extends Controller
         
         return view('report.reportkontrakb3',QueryHelper::getDropDown());
     }
+    public function indexKontrak(Request $request)
+    {
+        if (request()->ajax()) {
+            $queryData = DB::table('md_kuota')->get();
+            
+            // dd( $queryData);
+            return datatables()->of($queryData)
+
+                ->addIndexColumn()
+                // ->addColumn('action', 'action_butt_pemohon')
+                // ->rawColumns(['action'])
+
+                ->make(true);
+        }
+         
+        // return view('report.reportkapasitas',QueryHelper::getDropDown());
+    }
     public function viewIndexPenghasil()
     {
         //

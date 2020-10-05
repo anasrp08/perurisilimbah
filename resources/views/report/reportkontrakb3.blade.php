@@ -36,45 +36,20 @@
                 Download Excel</button>
     </div>
     <div class="card-body">
-        <table id="daftarlimbah" class="table table-bordered table-striped">
+        <table id="daftarlimbah" class="table table-bordered table-striped" style="width: 100%;">
             <thead>
                 <tr>
                     <th>No. </th> 
                     <th>Tipe Limbah</th>
-                    <th>Kontrak</th>
+                    <th>Total</th>
                     <th>Konsumsi</th>
-                    <th>Sisa</th> 
+                    <th>Sisa</th>
+                    <th>Tahun</th> 
                     <th>Status</th> 
                     {{-- <th width="30%">Action</th> --}}
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>1</td> 
-                    <td>Limbah Cair B3</td>
-                    <td>7000000000</td>
-                    <td>5000000000</td>
-                    <td>2000000000</td>  
-                    <td><span class="badge badge-success">Aman</span></td>
-                </tr>
-                <tr>
-                    <td>2</td> 
-                    <td>Limbah Sampah Kontaminasi</td>
-                    <td>1110000000</td>
-                    <td>1100000000</td>
-                    <td>10000000</td>  
-                    <td><span class="badge badge-warning">waspada</span></td> 
-                </tr>
-                <tr>
-                    <td>3</td> 
-                    <td>Sludge</td>
-                    <td>1110000000</td>
-                    <td>390000000</td>
-                    <td>720000000</td>  
-                    <td><span class="badge badge-danger">bahaya</span></td>
-                </tr>
-                
-            </tbody>
+             
         </table>
     </div>
 </div>
@@ -152,130 +127,104 @@
         })
 
 
-        // var table = $('#daftarlimbah').DataTable({
-        //     processing: true,
-        //     serverSide: true,
-        //     scrollCollapse: true,
-        //     scrollX: true,
+        var table = $('#daftarlimbah').DataTable({
+            processing: true,
+            serverSide: true,
+            scrollCollapse: true,
+            scrollX: true,
 
-        //     columnDefs: [{
-        //             className: 'text-center',
-        //             targets: [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        //         },
-        //         {
-        //             className: 'dt-body-nowrap',
-        //             targets: -1
-        //         }
-        //     ],
-        //     language: {
-        //         emptyTable: "Tidak Ada Data"
-        //     },
-        //     search: {
-        //         caseInsensitive: false
-        //     },
-        //     ajax: {
-        //         url: "{{ route('limbah.list') }}",
-        //         type: "POST",
-        //         headers: {
-        //             'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        //         },
-        //         data: function (d) {
-
-
-        //             d.jenislimbah = $(":input[name=f_jenislimbah]").val();
-        //             d.namalimbah = $(":input[name=f_nmlimbah]").val();
-        //             d.tglinput = $('#f_tglinput').val();
-        //             d.mutasi = $(":input[name=f_status]").val();
-        //             d.fisik = $(":input[name=f_fisiklimbah]").val();
-        //             d.asallimbah = $(":input[name=f_asallimbah]").val();
-        //             d.tpslimbah = $(":input[name=f_tpslimbah]").val();
-        //             d.limbah3r = $(":input[name=f_limbah3r]").val();
+            columnDefs: [{
+                    className: 'text-center',
+                    targets: [1, 2, 3]
+                },
+                {
+                    className: 'dt-body-nowrap',
+                    targets: -1
+                }
+            ],
+            language: {
+                emptyTable: "Tidak Ada Data"
+            },
+            search: {
+                caseInsensitive: false
+            },
+            ajax: {
+                url: "{{ route('kontrak.data') }}",
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                data: function (d) {
 
 
-        //         }
-        //     },
-        //     bFilter: false,
-        //     columns: [{
-        //             data: 'DT_RowIndex',
-        //             name: 'DT_RowIndex',
-        //             orderable: false,
-        //             searchable: false
-        //         },
-        //         {
-        //             data: 'tgl',
-        //             name: 'tgl',
-        //             render: function (data, type, row) {
-        //                 if (data == null || data == "-" || data == "0000-00-00 00:00:00" || data == "NULL") {
-        //                     return '<span>-</span>'
-        //                 } else {
-        //                     return moment(data).format('DD/MM/YYYY');
-        //                 }
+                    // d.jenislimbah = $(":input[name=f_jenislimbah]").val();
+                    // d.namalimbah = $(":input[name=f_nmlimbah]").val();
+                    // d.tglinput = $('#f_tglinput').val();
+                    // d.mutasi = $(":input[name=f_status]").val();
+                    // d.fisik = $(":input[name=f_fisiklimbah]").val();
+                    // d.asallimbah = $(":input[name=f_asallimbah]").val();
+                    // d.tpslimbah = $(":input[name=f_tpslimbah]").val();
+                    // d.limbah3r = $(":input[name=f_limbah3r]").val();
 
-        //             }
-        //         },
-        //         {
-        //             data: 'namalimbah',
-        //             name: 'namalimbah'
-        //         },
-        //         {
-        //             data: 'jumlah',
-        //             name: 'jumlah'
-        //         },
-        //         // {
-        //         //     data: 'satuan',
-        //         //     name: 'satuan'
-        //         // },
-        //         {
-        //             data: 'jenislimbah',
-        //             name: 'jenislimbah',
 
-        //         },
-        //         {
-        //             data: 'fisik',
-        //             name: 'fisik'
-
-        //         },
-        //         // {
-        //         //     data: 'limbah3r',
-        //         //     name: 'limbah3r'
-
-        //         // },
-
-        //         {
-        //             data: 'mutasi',
-        //             name: 'mutasi',
-        //             render: function (data, type, row) {
-
-        //                 if (data == 'Input') {
-        //                     return '<span class="badge badge-info">' + data + '</span>'
-        //                 } else {
-        //                     return '<span class="badge badge-success">' + data + '</span>'
-        //                 }
-        //             }
-        //         },
-        //         {
-        //             data: 'tps',
-        //             name: 'tps',
+                }
+            },
+            bFilter: false,
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'tipe_limbah',
+                    name: 'tipe_limbah',
                     
-        //         },
+                },
+                {
+                    data: 'konsumsi',
+                    name: 'konsumsi',
+                    render: function (data, type, row) {
+                        var totalKuota=parseInt(row.konsumsi) + parseInt(row.sisa)
+                        return totalKuota
+                    }
+                },
+                {
+                    data: 'konsumsi',
+                    name: 'konsumsi'
+                },
+                {
+                    data: 'sisa',
+                    name: 'sisa'
+                },
+                
+                {
+                    data: 'tahun',
+                    name: 'tahun'
 
-        //         {
-        //             data: 'created_at',
-        //             name: 'created_at',
-        //             render: function (data, type, row) {
+                },
 
-        //                 return moment(data).format('DD/MM/YYYY');
+                {
+                    data: 'sisa',
+                    name: 'sisa',
+                    render: function (data, type, row) {
+                        var totalKuota=parseInt(row.konsumsi) + parseInt(row.sisa)
+                        var kuota_danger=Math.round(parseInt(totalKuota) * parseInt(90) / parseInt(100))
+                        var kuota_warning=Math.round(parseInt(totalKuota) * parseInt(75) / parseInt(100))
+                        if(parseInt(row.konsumsi) >= kuota_warning && parseInt(row.konsumsi) <= kuota_danger ){
+                            return '<span class="badge badge-warning">Waspada</span>' 
+                        }else if(parseInt(row.konsumsi) > kuota_danger){
+                            return '<span class="badge badge-danger">Bahaya</span>'
+                        }else{
+                            return '<span class="badge badge-success">Aman</span>'
+                        }
 
-        //             }
-        //         },
-        //         {
-        //             data: 'action',
-        //             name: 'action',
-        //             orderable: false
-
-        //         }
-        //     ]
-        // });
+                         
+                    }
+                },
+                
+            ]
+        });
 
         // new $.fn.dataTable.FixedColumns(table, {
         //     leftColumns: 3,

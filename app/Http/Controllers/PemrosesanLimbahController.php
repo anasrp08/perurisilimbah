@@ -16,7 +16,7 @@ use Validator;
 use Response;
 use DB;
 use PDF;
- 
+use PDO;
 
 class PemrosesanLimbahController extends Controller
 {
@@ -95,6 +95,58 @@ class PemrosesanLimbahController extends Controller
         }
          
     }
+    public function updateSaldoKuota($tipelimbah,$jenislimbah,$jumlah){
+        if($jenislimbah==1){
+            if($tipelimbah=='Limbah Cair'){
+                $dataKuota = DB::table('md_kuota')->where('tipe_limbah', 'Limbah Cair B3')->first();
+                $konsumsi= $dataKuota->konsumsi;
+                $sisa= $dataKuota->sisa;
+                $konsumsi +=  $jumlah;
+                $sisa -=  $jumlah;
+                $dataUpdate=array(
+                    'konsumsi' => $konsumsi,
+                    'sisa' => $sisa
+
+                );
+
+                $queryUpdate = DB::table('md_kuota')->where('tipe_limbah', 'Limbah Cair B3')->update($dataUpdate);
+
+            }else if($tipelimbah=='Sampah Kontaminasi'){
+                $dataKuota = DB::table('md_kuota')->where('tipe_limbah', 'Limbah S.K')->first();
+                $konsumsi= $dataKuota->konsumsi;
+                $sisa= $dataKuota->sisa;
+                $konsumsi +=  $jumlah;
+                $sisa -=  $jumlah;
+                $dataUpdate=array(
+                    'konsumsi' => $konsumsi,
+                    'sisa' => $sisa
+
+                );
+
+                $queryUpdate = DB::table('md_kuota')->where('tipe_limbah', 'Limbah S.K')->update($dataUpdate);
+            }else if($tipelimbah=='Sludge'){
+                $dataKuota = DB::table('md_kuota')->where('tipe_limbah', 'Limbah Sludge')->first();
+                $konsumsi= $dataKuota->konsumsi;
+                $sisa= $dataKuota->sisa;
+                $konsumsi +=  $jumlah;
+                $sisa -=  $jumlah;
+                $dataUpdate=array(
+                    'konsumsi' => $konsumsi,
+                    'sisa' => $sisa
+
+                );
+
+                $queryUpdate = DB::table('md_kuota')->where('tipe_limbah', 'Limbah Sludge')->update($dataUpdate);
+            }
+
+
+        }else{
+
+        }
+        
+
+
+    }
     public function proses(Request $request)
     {
         $username=AuthHelper::getAuthUser()[0]->email;
@@ -156,12 +208,13 @@ class PemrosesanLimbahController extends Controller
                 );
 
                 
-
-
                 $insertDetail = DB::table('tr_detailmutasi')->insert($dataDetail, true);
                 $insertStatus = DB::table('tr_statusmutasi')->where('idmutasi', $row['idmutasi'])->update($dataStatus);
                 $insertPacking = DB::table('tr_packing')->where('idmutasi', $row['idmutasi'])->update($dataPacking);
-                $updHeader = DB::table('tr_headermutasi')->where('id', $row['idmutasi'])->update($dataTPS);
+                $this->updateSaldoKuota($row['tipelimbah'],$row['idjenislimbah'],$row['jumlah']);
+                // $updHeader = DB::table('tr_headermutasi')->where('id', $row['idmutasi'])->update($dataTPS);
+
+                
                 // $updHeader = DB::table('tr_headermutasi')->where('id', $row['idmutasi'])->update($dataTPS);
                 // UpdtSaldoHelper::updateTambahSaldoNamaLimbah($row['idlimbah'],$row['jumlah']);
                 UpdtSaldoHelper::updateKurangSaldoTPS($row['idtps'], $row['jumlah']);

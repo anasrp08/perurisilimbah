@@ -65,6 +65,7 @@ Route::post('penghasil/daftar', 'ReportLimbahController@indexPenghasil')->name('
 
 
 Route::get('/kontrak/viewlist', 'ReportLimbahController@viewIndexKontrak')->name('kontrak.listview');
+Route::post('/kontrak/data', 'ReportLimbahController@indexKontrak')->name('kontrak.data');
 Route::get('/penghasil/viewlist', 'ReportLimbahController@viewIndexPenghasil')->name('penghasil.listview');
 Route::get('/limbah/viewlist', 'ReportLimbahController@viewIndex')->name('limbah.listview');
 Route::resource('report', 'ReportLimbahController');
