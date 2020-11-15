@@ -81,6 +81,14 @@
         
     </ul>
 </li>
+<li class="nav-item">
+    <a href="{{ route('kontrak.listview') }}" class="nav-link">
+        <i class="far fa-circle nav-icon"></i>
+        <p>Kuota Anggaran B3</p>
+    </a>
+     
+</li> 
+
 <li class="nav-item has-treeview">
     <a href="#" class="nav-link">
         <i class="nav-icon fas fa-chart-pie"></i>
@@ -115,12 +123,7 @@
             </a>
         </li>
         
-        <li class="nav-item">
-            <a href="{{ route('kontrak.listview') }}" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Report Kontrak B3</p>
-            </a>
-        </li>
+       
         <li class="nav-item">
             <a href="{{ route('penghasil.listview') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>

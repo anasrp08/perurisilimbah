@@ -33,6 +33,9 @@ class CreateTrMutasilimbah extends Migration
             $table->string('no_kendaraan')->nullable();
             $table->date('tgl'); 
             $table->integer('jumlah');  
+            $table->bigInteger('idsatuan')->unsigned()->nullable();
+            $table->foreign('idsatuan')->references('id')->on('md_satuan')->onDelete('cascade');
+             
             $table->string('limbah3r')->nullable();
             $table->string('np')->nullable();
             $table->date('validated')->nullable();

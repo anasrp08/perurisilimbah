@@ -20,6 +20,8 @@ Auth::routes();
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::post('/dashboard/data', 'HomeController@dataDashboard')->name('dashboard.data');
+Route::post('/dashboard/data_kadaluarsa', 'HomeController@dashboardToBeKadaluarsa1')->name('dashboard.kadaluarsa');
+
 Route::post('/dashboard/notifikasi', 'HomeController@dataNotifikasi')->name('notifikasi.data');
 
 Route::get('/limbah/entri', 'LimbahController@viewEntri')->name('limbah.entri');
@@ -57,6 +59,7 @@ Route::post('report/list', 'ReportLimbahController@index')->name('limbah.list');
 Route::post('report/update', 'ReportLimbahController@update') -> name('limbah.update');
 Route::get('neraca/viewlist', 'ReportLimbahController@viewIndexNeraca')->name('neraca.listview');
 Route::post('neraca/daftar', 'ReportLimbahController@indexNeraca')->name('neraca.daftar');
+Route::post('neraca/detail', 'ReportLimbahController@detailNeraca')->name('neraca.detail');
 Route::get('/kadaluarsa/viewlist', 'ReportLimbahController@viewIndexKadaluarsa')->name('kadaluarsa.listview');
 Route::get('/kapasitas/viewlist', 'ReportLimbahController@viewIndexKapasitas')->name('kapasitas.listview');
 Route::post('kapasitas/daftar', 'ReportLimbahController@indexKapasitas')->name('kapasitas.daftar');
@@ -64,10 +67,16 @@ Route::get('penghasil/viewlist', 'ReportLimbahController@viewIndexPenghasil')->n
 Route::post('penghasil/daftar', 'ReportLimbahController@indexPenghasil')->name('penghasil.daftar');
 
 
-Route::get('/kontrak/viewlist', 'ReportLimbahController@viewIndexKontrak')->name('kontrak.listview');
-Route::post('/kontrak/data', 'ReportLimbahController@indexKontrak')->name('kontrak.data');
+
 Route::get('/penghasil/viewlist', 'ReportLimbahController@viewIndexPenghasil')->name('penghasil.listview');
-Route::get('/limbah/viewlist', 'ReportLimbahController@viewIndex')->name('limbah.listview');
+// Route::get('/limbah/viewlist', 'ReportLimbahController@viewIndex')->name('limbah.listview');
+
+// Route::get('/limbah/kuota_anggaran', 'ReportLimbahController@viewIndexKontrak')->name('kuota.listview');
+Route::get('/kontrak/viewlist', 'ReportLimbahController@viewIndexKontrak')->name('kontrak.listview');
+Route::post('/kontrak/data', 'ReportLimbahController@indexKontrak')->name('kontrak.data'); 
+Route::post('/kontrak/kuota_anggaran/save', 'ReportLimbahController@storeAnggaran')->name('kontrak.save_anggaran');
+Route::post('/kontrak/kuota_anggaran/update', 'ReportLimbahController@updateAnggaran')->name('kontrak.update_anggaran');
+Route::post('/kontrak/kuota_anggaran/konsumsi', 'ReportLimbahController@updateKonsumsi')->name('kontrak.konsumsi_anggaran');
 Route::resource('report', 'ReportLimbahController');
 
 Route::get('formulir/viewlist', 'FormLimbahController@viewIndex')->name('formulir.listview');

@@ -47,6 +47,7 @@
             format: 'dd/mm/yyyy',
             todayHighlight: true
         });
+        
         $('.select2bs4').select2({
             theme: 'bootstrap4'
         })
@@ -69,10 +70,10 @@
 
         });
      
-        $("#namalimbah").change(function () {
-            getDropdown('{{ route("limbah.getsatuan")}}', "", $(this).val(), "satuan")
+        // $("#namalimbah").change(function () {
+        //     getDropdown('{{ route("limbah.getsatuan")}}', "", $(this).val(), "satuan")
 
-        });
+        // });
  
         function getDropdown(paramUrl, param1, param2, idkomponen) {
 
@@ -90,8 +91,7 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     data: paramData,
-                    success: function (data) {
-                        console.log(data)
+                    success: function (data) { 
                         // if(data==''){
 
                         // }
@@ -102,8 +102,7 @@
                 paramData = {
                     idlimbah: param2
 
-                }
-                 console.log(param2)
+                } 
                 $.ajax({
                     url: paramUrl,
                     method: 'POST',
@@ -187,6 +186,7 @@
                 $("#namalimbah").val(),
                 $("#limbahasal").val(),
                 $("#limbah3r").val(),
+                $("#satuan").val(),
 
             ]
 
@@ -237,6 +237,7 @@
                     "nama_limbah",
                     "asal_limbah",
                     "limbah_3r",
+                    "satuan",
                 ]
 
             ]
@@ -276,6 +277,12 @@
                     '</select>'),
 
                 createInputTextEnabled("jmlhlimbah", counter, ""),
+                createDropdown("satuan", counter,
+                    ' <option value="" disabled selected>-</option>' +
+                    '@foreach($satuanLimbah as $data)' +
+                    '<option value="{{$data->id}}" >{{$data->satuan}}</option>' +
+                    '@endforeach' +
+                    '</select>'),
                 createDropdown("limbah_3r", counter,
                     '<option value="" selected="selected">-</option>' +
                     '<option value="Ya">Ya</option>' +
@@ -323,6 +330,7 @@
                         obj.asal_limbah = $("select[name=asal_limbah]", this).val();
                         obj.jmlhlimbah = $(":input[name=jmlhlimbah]", this).val();
                         obj.limbah_3r = $("select[name=limbah_3r]", this).val();
+                        obj.satuan = $("select[name=satuan]", this).val();
                         obj.np = $("select[name=np]", this).val();
                         obj.keterangan = $(":input[name=keterangan]", this).val();
                         // console.log(obj)

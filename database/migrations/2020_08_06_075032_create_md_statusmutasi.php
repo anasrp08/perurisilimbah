@@ -16,6 +16,7 @@ class CreateMdStatusmutasi extends Migration
         Schema::create('md_statusmutasi', function (Blueprint $table) {
             $table->bigIncrements('id'); 
             $table->string('keterangan');
+            $table->string('mutasi');
             $table->timestamps();
         });
     }

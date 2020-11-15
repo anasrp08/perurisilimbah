@@ -13,6 +13,7 @@ use App\Role;
 use DB;
 use Illuminate\Support\Facades\Auth;
 use PDO;
+use DateTime;
 
 class HomeController extends Controller
 {
@@ -57,8 +58,10 @@ class HomeController extends Controller
             //     return view('dashboard.admin',[
             //         // 'year'=>$year
             //     ]);
+            $penghasilLimbah=DB::table('md_penghasillimbah')->get();
             UpdKaryawanHelper::updatePegawai();
-            return view('dashboard.dashboard');
+            return view('dashboard.dashboard',[
+                'penghasilLimbah'=>$penghasilLimbah]);
             
         } else if(Laratrust::hasRole('unit kerja') ) {
             UpdKaryawanHelper::updatePegawai();
@@ -80,18 +83,12 @@ class HomeController extends Controller
         // $countKadaluarsa=DB::table('tr_packing')
         // ->where()
     }
-    public function dashboardKuotaLimbah($tahun){ 
-        $dataKuota=DB::table('md_kuota')->where('tahun',$tahun)->get(); 
+    public function dashboardKuotaLimbah($period){ 
+        $date=DateTime::createFromFormat("m/Y", $period);
+        $month= $date->format('m');
+        $year=$date->format('Y'); 
 
-        // $arrKuota=new \stdClass();
-        
-
-        // // $datatoArray=$dataPenghasil->groupBy('seksi');
-        // $datalabel=$dataKuota->keyBy('seksi')->keys();
-        // $datavalues=$dataPenghasil->keyBy('jumlah')->keys();
-        // // dd($datavalues);
-        // $arrKuota->labels=$datalabel;
-        // $arrKuota->values=$datavalues;
+        $dataKuota=DB::table('md_kuota')->where('tahun',$year)->get();  
 
         return $dataKuota;
     }
@@ -101,26 +98,30 @@ class HomeController extends Controller
 
         return $dataKapasitas;
     }
-    public function dashboardPenghasil(){
+    public function dashboardPenghasil($request){
 
+         
+        $date=DateTime::createFromFormat("m/Y", $request->period);
+        $month= $date->format('m');
+        $year=$date->format('Y'); 
         $dataPenghasil=DB::table('tr_headermutasi')
         ->join('md_namalimbah','tr_headermutasi.idlimbah','md_namalimbah.id')
         ->join('md_penghasillimbah','tr_headermutasi.idasallimbah','md_penghasillimbah.id')
-        ->select(DB::raw('sum(tr_headermutasi.jumlah) as jumlah'),'md_penghasillimbah.seksi')
-        ->whereYear('tr_headermutasi.created_at', date('Y'))
-        ->whereMonth('tr_headermutasi.created_at', date('m'))
-        ->groupBy('md_penghasillimbah.seksi')
-        ->get(); 
-
+        ->select(DB::raw('sum(tr_headermutasi.jumlah) as jumlah'),'tr_headermutasi.idlimbah','md_namalimbah.namalimbah')
+        ->whereYear('tr_headermutasi.created_at', $year)
+        ->whereMonth('tr_headermutasi.created_at', $month)
+        ->where('tr_headermutasi.idasallimbah', $request->unit_kerja)
+        ->groupBy('tr_headermutasi.idasallimbah','tr_headermutasi.idlimbah')
+        ->get();   
         $arrPenghasil=new \stdClass();
         
-
-        // $datatoArray=$dataPenghasil->groupBy('seksi');
-        $datalabel=$dataPenghasil->keyBy('seksi')->keys();
+ 
+        $datalabel=$dataPenghasil->keyBy('namalimbah')->keys();
         $datavalues=$dataPenghasil->keyBy('jumlah')->keys();
         // dd($datavalues);
         $arrPenghasil->labels=$datalabel;
         $arrPenghasil->values=$datavalues;
+        // dd($arrPenghasil);
 //         $dataValue=$datatoArray->values();
 //         $dataSludge=[];
 //         $dataAbu=[];
@@ -188,17 +189,37 @@ class HomeController extends Controller
 
         $dataKadaluarsa=DB::table('tr_packing')
         ->join('md_namalimbah','tr_packing.idlimbah','md_namalimbah.id')
+        ->join('tr_headermutasi','tr_headermutasi.id','tr_packing.idmutasi')
         ->join('md_tps','tr_packing.idtps','md_tps.id')
-        ->select('md_namalimbah.namalimbah','tr_packing.created_at','tr_packing.kadaluarsa','md_tps.namatps')
+        ->select('md_namalimbah.namalimbah','tr_packing.created_at','tr_packing.kadaluarsa','md_tps.namatps',DB::raw('sum(tr_headermutasi.jumlah) as jumlah'))
         ->whereRaw('DATE(kadaluarsa) = DATE_ADD(CURDATE(), INTERVAL 7 DAY) OR DATE(kadaluarsa) = DATE_ADD(CURDATE(), INTERVAL 3 DAY)')->get(); 
         // dd($dataKadaluarsa);
         return $dataKadaluarsa;
 
     }
+    public function dashboardToBeKadaluarsa1(){
+
+        $dataKadaluarsa=DB::table('tr_packing')
+        ->join('md_namalimbah','tr_packing.idlimbah','md_namalimbah.id')
+        ->join('tr_headermutasi','tr_headermutasi.id','tr_packing.idmutasi')
+        ->join('md_tps','tr_packing.idtps','md_tps.id')
+        ->select('md_namalimbah.namalimbah','tr_packing.created_at','tr_packing.kadaluarsa','md_tps.namatps',DB::raw('sum(tr_headermutasi.jumlah) as jumlah'))
+        ->whereRaw('DATE(kadaluarsa) = DATE_ADD(CURDATE(), INTERVAL 7 DAY) OR DATE(kadaluarsa) = DATE_ADD(CURDATE(), INTERVAL 3 DAY)')->get(); 
+        // dd($dataKadaluarsa);
+        // return $dataKadaluarsa;
+        return datatables()->of($dataKadaluarsa)
+
+        // ->addIndexColumn()
+        // ->addColumn('action', 'action_butt_pemohon')
+        // ->rawColumns(['action'])
+
+        ->make(true);
+
+    }
     public function dataDashboard(Request $request)
     {
          
-        $dataKuota=$this->dashboardKuotaLimbah($request->tahun);
+        $dataKuota=$this->dashboardKuotaLimbah($request->period);
         $dataKadaluarsa=$this->dashboardToBeKadaluarsa();
         $dataNotifikasi=$this->dashboardToBeKadaluarsa(); 
         $arrNotifikasi=new \stdClass(); 
@@ -214,13 +235,10 @@ class HomeController extends Controller
 
         }
         $arrNotifikasi->keys=$dataNotifikasi->groupBy('kadaluarsa')->keys()->toArray();
-        $arrNotifikasi->values=$arrIsi;
-        // dd($arrNotifikasi);
-        // dd($dataNotifikasi);
+        $arrNotifikasi->values=$arrIsi; 
         $dataKapasitas=$this->dashboardKapasitas();
 
-        $dataPenghasil=$this->dashboardPenghasil();
-        // $dataKadaluarsa=$this->dashboardToBeKadaluarsa(); 
+        $dataPenghasil=$this->dashboardPenghasil($request); 
         return response()->json([
             'dataKuota'=>$dataKuota,
             'dataKapasitas'=>$dataKapasitas,

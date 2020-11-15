@@ -14,8 +14,10 @@
                             <th>No. </th>
                             <th>Nama Limbah</th>
                             <th>Jumlah</th>
+                            <th>Satuan</th>
                             <th>Tipe Limbah</th>
                             <th>Jenis Limbah</th>
+                            <th>Jumlah Proses</th>
                         </tr>
                     </thead>
 

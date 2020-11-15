@@ -40,6 +40,7 @@
                     <th>Tanggal Permohonan</th>
                     <th>Nama Limbah</th>
                     <th>Jumlah</th>
+                    <th>Satuan</th>
                     <th>Asal Limbah</th>
                     <th>Jenis Limbah (B3/Non)</th>
                     <th>Fisik</th>
@@ -188,6 +189,10 @@
                 {
                     data: 'jumlah',
                     name: 'jumlah'
+                },
+                {
+                    data: 'satuan',
+                    name: 'satuan'
                 },
                 {
                     data: 'seksi',

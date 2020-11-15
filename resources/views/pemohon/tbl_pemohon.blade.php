@@ -15,6 +15,7 @@
                         <th>Jenis Limbah (B3/Non)</th> 
                         <th>Unit Penghasil</th>  
                         <th>Jumlah</th>
+                        <th>Satuan</th>
                         <th>Limbah 3R</th>
                         <th>Keterangan</th>
                         {{-- <th>Action</th> --}}

@@ -19,6 +19,7 @@
             <thead>
                 <tr>
                   <th>Nama Limbah</th>
+                  <th>Jumlah</th>
                   <th>Tanggal Masuk</th>
                   <th>Tanggal Sekarang</th>
                   <th>Tanggal Kadaluarsa</th>

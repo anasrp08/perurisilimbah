@@ -20,6 +20,7 @@ class CreateMdKuota extends Migration
             $table->decimal('konsumsi',20,0)->nullable();
             $table->decimal('sisa',20,0)->nullable();
             $table->year('tahun')->nullable();
+            $table->string('np');
             $table->timestamps();
         }); 
     }

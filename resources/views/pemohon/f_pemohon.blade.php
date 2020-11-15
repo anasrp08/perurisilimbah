@@ -14,11 +14,43 @@
                     <div class="col-md-4">
                         <div class="form-group">
 
-                            <label>Tanggal Masuk</label>
+                            <label>Tanggal Permohonan</label>
                             <input type="text" id="entridate" name="entridate" class="entridate form-control float-right"
                                 autocomplete="off">
                         </div>
                         <div id="formnosurat" class="form-group">
+                        
+                            <label for="nosurat">Jumlah Limbah</label>
+                            <div class="input-group input-group mb-3">
+                                <input type="number" name="jmlhlimbah" id="jmlhlimbah" class="form-control">
+                            <div class="input-group-prepend">
+                                <select name="satuan" id="satuan" class="form-control select2bs4"
+                                style="width: 100%;">
+                                <option value="" disabled selected>-Pilih Satuan-</option>
+                                @foreach($satuanLimbah as $data)
+                                <option value="{{$data->id}}">{{$data->satuan}} </option>
+                                @endforeach
+                            </select>
+
+                              {{-- <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+                                Action
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li class="dropdown-item"><a href="#">Action</a></li>
+                                <li class="dropdown-item"><a href="#">Another action</a></li>
+                                <li class="dropdown-item"><a href="#">Something else here</a></li>
+                                <li class="dropdown-divider"></li>
+                                <li class="dropdown-item"><a href="#">Separated link</a></li>
+                              </ul> --}}
+
+
+                            </div>
+                            <!-- /btn-group -->
+                            
+                          </div>
+                        </div>
+
+                        {{-- <div id="formnosurat" class="form-group">
                             <label for="nosurat">Jumlah Limbah</label>
                             <div class="input-group input-group">
                                 <input type="number" name="jmlhlimbah" id="jmlhlimbah" class="form-control">
@@ -27,7 +59,7 @@
                                 </span>
                             </div>
 
-                        </div>
+                        </div> --}}
                         <div id="formnosurat" class="form-group">
                             <label for="nosurat">Keterangan</label>
                             <input type="text" name="keterangan" id="keterangan" class="form-control"

@@ -55,7 +55,7 @@
                     <th>Kode Pack</th>
                     <th>TPS</th>
                     <th>Tipe Limbah</th>
-                    <th>Status</th>
+                    {{-- <th>Status</th> --}}
                    
 
                 </tr>
@@ -121,7 +121,7 @@
 
             columnDefs: [{
                     className: 'text-center',
-                    targets: [1, 2, 3, 4, 5, 6]
+                    targets: [1, 2, 3, 4, 5]
                 },
                 {
                     className: 'dt-body-nowrap',
@@ -203,43 +203,43 @@
                     name: 'tipelimbah',
 
                 },
-                {
-                    data: 'keterangan',
-                    name: 'keterangan',
-                    render: function (data, type, row) {
-                        // console.log()
-                        switch (row.idstatus) {
-                            case "1":
-                                return '<span class="badge badge-warning">'+data+'</span>'
-                                break;
-                                case "2":
-                                return '<span class="badge badge-success">'+data+'</span>'
-                                break;
-                                case "3":
-                                return '<span class="badge badge-info">'+data+'</span>'
-                                break;
-                                case "4":
-                                return '<span class="badge badge-secondary">'+data+'</span>'
-                                break;  
-                                case "5":
-                                return '<span class="badge badge-info">'+data+'</span>'
-                                break;
-                                case "6":
-                                return '<span class="badge badge-primary">'+data+'</span>'
-                                break;
-                                case "7":
-                                return '<span class="badge badge-danger">'+data+'</span>'
-                                break; 
+                // {
+                //     data: 'keterangan',
+                //     name: 'keterangan',
+                //     render: function (data, type, row) {
+                //         // console.log()
+                //         switch (row.idstatus) {
+                //             case "1":
+                //                 return '<span class="badge badge-warning">'+data+'</span>'
+                //                 break;
+                //                 case "2":
+                //                 return '<span class="badge badge-success">'+data+'</span>'
+                //                 break;
+                //                 case "3":
+                //                 return '<span class="badge badge-info">'+data+'</span>'
+                //                 break;
+                //                 case "4":
+                //                 return '<span class="badge badge-secondary">'+data+'</span>'
+                //                 break;  
+                //                 case "5":
+                //                 return '<span class="badge badge-info">'+data+'</span>'
+                //                 break;
+                //                 case "6":
+                //                 return '<span class="badge badge-primary">'+data+'</span>'
+                //                 break;
+                //                 case "7":
+                //                 return '<span class="badge badge-danger">'+data+'</span>'
+                //                 break; 
                         
-                            default:
-                                break;
-                        }
+                //             default:
+                //                 break;
+                //         }
                          
                          
 
-                    }
+                //     }
 
-                },
+                // },
 
               
 
@@ -301,6 +301,10 @@
                         data: 'jumlah',
                         name: 'jumlah'
                     },
+                    {
+                        data: 'nama_satuan',
+                        name: 'nama_satuan'
+                    },
 
                     {
                         data: 'tipelimbah',
@@ -309,6 +313,10 @@
                     {
                         data: 'jenislimbah',
                         name: 'jenislimbah'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action'
                     },
 
                 ]
@@ -327,8 +335,7 @@
                 arrValue.push($('#prosesdate').val())
                 arrValue.push($('#vendor').val())
                 arrValue.push($('#nomanifest').val())
-                arrValue.push($('#nokendaraan').val())
-                
+                arrValue.push($('#nokendaraan').val()) 
                 arrValue.push($('#nospbe').val())
                 
                 if($('#radioPrimary1').is(':checked')) { 
@@ -362,20 +369,29 @@
         function formatedData(data,arrValue) {
             var output = [];
             var jsonData = {}
-            var dataSelected = []
-            console.log(arrValue)
+            var dataNonInput = []
+            var output1=[]
+            // console.log(arrValue)
             console.log(data.toArray())
-
+             
+            $("#detail_pack tbody tr").each(function () {
+                var obj = {};
+                obj.jmlh_proses= $(":input[name=jmlh_proses]", this).val();
+                output1.push(obj);
+                // dataNonInput
+            }) 
 
             for (i = 0; i < data.count(); i++) {
 
                 var obj = {};
                 // console.log(value)
+                
                 obj.limbah3r = data[i].limbah3r;
                 obj.tgl = data[i].tgl;
                 obj.id_transaksi = data[i].id_transaksi;
                 obj.idmutasi = data[i].idmutasi;
                 obj.idasallimbah = data[i].idasallimbah;
+                obj.idsatuan = data[i].idsatuan;
                 obj.idlimbah = data[i].idlimbah;
                 obj.idstatus = arrValue[5];
                 obj.fisik = data[i].fisik;
@@ -384,12 +400,16 @@
                 obj.tipelimbah = data[i].tipelimbah;
                 obj.idjenislimbah = data[i].idjenislimbah;
                 obj.jumlah = data[i].jumlah;
+                obj.jmlh_proses = output1[i].jmlh_proses;
                 obj.limbah3r = data[i].limbah3r;
                 obj.tglproses = arrValue[0];
                 obj.idvendor = arrValue[1];
                 obj.nomanifest = arrValue[2];
                 obj.nokendaraan = arrValue[3];
                 obj.nospbe = arrValue[4];
+                obj.status_lama = data[i].idstatus;
+                // obj.jumlah_lama = data[i].idstatus;
+
                 obj.np = $('#np').val();
                 output.push(obj);
                 jsonData["detail"] = output 

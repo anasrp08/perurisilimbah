@@ -42,6 +42,7 @@ class PenyimpananLimbahController extends Controller
                 ->join('md_statusmutasi', 'tr_statusmutasi.idstatus', '=', 'md_statusmutasi.id')
                 // ->join('tr_detailmutasi', 'tr_statusmutasi.idmutasi', '=', 'tr_detailmutasi.idmutasi')
                 ->join('md_penghasillimbah', 'tr_statusmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
+                ->join('md_satuan', 'tr_statusmutasi.idsatuan', '=', 'md_satuan.id')
                 ->select(
                     'tr_statusmutasi.*',
                     'md_namalimbah.namalimbah',
@@ -50,7 +51,8 @@ class PenyimpananLimbahController extends Controller
                     'md_namalimbah.fisik',
                     'md_namalimbah.tipelimbah',
                     'md_penghasillimbah.seksi',
-                    'md_statusmutasi.keterangan'
+                    'md_statusmutasi.keterangan',
+                    'md_satuan.satuan'
                 )
                 ->where('tr_statusmutasi.idstatus', 2)
                 ->orderBy('tr_statusmutasi.updated_at', 'desc');

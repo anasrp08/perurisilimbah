@@ -147,6 +147,7 @@
                     <th>Tanggal</th>
                     <th>Nama Limbah</th>
                     <th>Jumlah</th>
+                    <th>Satuan</th>
                     <th>Asal Limbah</th>
                     <th>Jenis Limbah (B3/Non)</th>
                     <th>Status</th> 
@@ -314,6 +315,10 @@
                     name: 'jumlah'
                 },
                 {
+                    data: 'satuan',
+                    name: 'satuan'
+                },
+                {
                     data: 'seksi',
                     name: 'seksi'
                 },
@@ -464,6 +469,7 @@
                                 obj.idstatus = data1[i].idstatus;
                                 obj.idjenislimbah = data1[i].idjenislimbah;
                                 obj.jumlah = data1[i].jumlah;
+                                obj.satuan = data1[i].idsatuan;
                                 obj.np = $('#np').val();
                                 obj.hiddenTransaksi = $('#hidden_transaksi').val();
 

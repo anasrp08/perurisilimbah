@@ -10,7 +10,7 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ asset('/adminlte3/plugins/fontawesome-free/css/all.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('/adminlte3/plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('/adminlte3/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
@@ -21,8 +21,20 @@
     <link rel="stylesheet" href="{{ asset('/adminlte3/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('/adminlte3/plugins/toastr/toastr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/adminlte3/plugins/daterangepicker/daterangepicker.css') }}">
+
+    
+
+    <link rel="stylesheet" href="{{ asset('/adminlte3/plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
     <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.1/css/select.bootstrap4.min.css">
+    
+    
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.bootstrap4.min.css">
+    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.bootstrap4.min.css"> --}}
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/rowgroup/1.1.2/css/rowGroup.bootstrap4.min.css">
+    
 
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
@@ -166,13 +178,11 @@
             <strong>Copyright &copy; {!! date("Y") !!} <a href="#">Peruri</a>.</strong> All rights reserved.
         </footer>
 
-
-        {{-- <link rel="stylesheet" href="../../plugins/"> --}}
-        <script src="{{ asset('/adminlte3/plugins/jquery/jquery.min.js') }}"></script>
+        {{-- <script src="{{ asset('/adminlte3/plugins/jquery/jquery.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('/adminlte3/plugins/moment/moment.min.js') }}"></script>
         <script src="{{ asset('/adminlte3/plugins/daterangepicker/daterangepicker.js') }}"></script>
-        {{-- <script src="{{ asset('/adminlte3/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}">
-        --}}
+        <script src="{{ asset('/adminlte3/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}">
+       
         </script>
         <!-- Bootstrap -->
         <script src="{{ asset('/adminlte3/plugins/select2/js/select2.full.min.js') }}"></script>
@@ -191,13 +201,48 @@
         <script src="{{ asset('/adminlte3/plugins/moment/moment.min.js')}}"></script>
         <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
         <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.bootstrap4.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script> --}}
+
+        
+        {{-- <link rel="stylesheet" href="../../plugins/"> --}}
+        <script src="{{ asset('/adminlte3/plugins/jquery/jquery.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('/adminlte3/plugins/moment/moment.min.js') }}"></script>
+        <script src="{{ asset('/adminlte3/plugins/daterangepicker/daterangepicker.js') }}"></script>
+        <script src="{{ asset('/adminlte3/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}">
+        </script>
+        <!-- Bootstrap -->
+        <script src="{{ asset('/adminlte3/plugins/select2/js/select2.full.min.js') }}"></script>
+        <script src="{{ asset('/adminlte3/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        <!-- jQuery UI -->
+        <script src="{{ asset('/adminlte3/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
+        <!-- AdminLTE App -->
+        <script src="{{ asset('/adminlte3/dist/js/adminlte.min.js') }}"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="{{ asset('/adminlte3/dist/js/demo.js') }}"></script>
+        <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+        <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="{{ asset('/adminlte3/plugins/toastr/toastr.min.js') }}"></script> 
+
+        <script src="{{ asset('/adminlte3/plugins/datatables/jquery.dataTables.js') }}"></script>
+        <script src="{{ asset('/adminlte3/plugins/datatables-bs4/js/dataTables.bootstrap4.js') }}"></script>
+       
+       
+        
+        <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.bootstrap4.min.js"></script>
         <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+        {{-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script> --}}
+        <script src=" https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+        <script src="https://cdn.datatables.net/rowgroup/1.1.2/js/dataTables.rowGroup.min.js"></script>
+        
         <script>
             $(document).ready(function () {
                 var pProv = {
 
                     tahun: '2020'
                 }
+                // notifikasi.data
                 $.ajax({
                     url: "{{ route('notifikasi.data') }}",
                     method: "POST",

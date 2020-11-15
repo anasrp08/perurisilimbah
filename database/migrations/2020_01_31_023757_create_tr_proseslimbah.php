@@ -30,6 +30,9 @@ class CreateTrProseslimbah extends Migration
             $table->foreign('idtps')->references('id')->on('md_tps')->onDelete('cascade');
             $table->date('tgl'); 
             $table->integer('jumlah');  
+            $table->bigInteger('idsatuan')->unsigned()->nullable();
+            $table->foreign('idsatuan')->references('id')->on('md_satuan')->onDelete('cascade');
+            $table->integer('jumlah_out');  
             $table->string('np')->nullable();
             $table->string('created_by')->nullable();
             $table->string('changed_by')->nullable();

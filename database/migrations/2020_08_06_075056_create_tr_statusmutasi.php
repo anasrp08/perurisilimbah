@@ -29,6 +29,10 @@ class CreateTrStatusmutasi extends Migration
             $table->bigInteger('idjenislimbah')->unsigned()->nullable();
             $table->foreign('idjenislimbah')->references('id')->on('md_jenislimbah')->onDelete('cascade');
             $table->integer('jumlah'); 
+            
+            $table->bigInteger('idsatuan')->unsigned()->nullable();
+            $table->foreign('idsatuan')->references('id')->on('md_satuan')->onDelete('cascade');
+            $table->integer('jumlah_out'); 
             $table->string('limbah3r'); 
             $table->date('tgl'); 
             $table->string('np')->nullable();

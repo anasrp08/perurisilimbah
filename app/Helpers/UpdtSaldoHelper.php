@@ -53,6 +53,31 @@ class UpdtSaldoHelper
         $queryUpdate=DB::table('md_tps')->where('id','=',$tps)->update($updateJumlah);
  
     }
+
+    public static function updateTambahSaldoBulanan($tps,$saldo){
+        $saldoTPS=DB::table('md_tps')->where('id','=',$tps)->first();
+        // dd($queryNamaLimbah);
+        $jumlah=$saldoTPS->saldo;
+        $jumlah=$jumlah+(int)$saldo; 
+        $updateJumlah = array ( 
+            'saldo'	        =>  (int)$jumlah, 
+            'updated_at'=>date('Y-m-d')
+        );
+        $queryUpdate=DB::table('md_tps')->where('id','=',$tps)->update($updateJumlah);
+ 
+    }
+    public static function updateKurangSaldoBulanan($tps,$saldo){
+        $saldoTPS=DB::table('md_tps')->where('id','=',$tps)->first();
+        // dd($queryNamaLimbah);
+        $jumlah=$saldoTPS->saldo;
+        $jumlah=$jumlah-(int)$saldo; 
+        $updateJumlah = array ( 
+            'saldo'	        =>  (int)$jumlah, 
+            'updated_at'=>date('Y-m-d')
+        );
+        $queryUpdate=DB::table('md_tps')->where('id','=',$tps)->update($updateJumlah);
+ 
+    }
      
     
      
