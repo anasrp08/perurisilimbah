@@ -1,5 +1,5 @@
 <div class="modal fade" id="modaldetail">
-    <div class="modal-dialog modal-lg" style="width:70%;">
+    <div class="modal-dialog modal-lg" style="width:100%;">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Detail Pack</h4>
@@ -8,7 +8,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <table id="detail_pack" class="table table-hover table-bordered" style="width:100%">
+                <table id="detail_pack" class="table table-hover table-bordered" >
                     <thead>
                         <tr>
                             <th>No. </th>
@@ -20,6 +20,15 @@
                             <th>Jumlah Proses</th>
                         </tr>
                     </thead>
+                    <tfoot>
+                        <tr>
+                            <th colspan="2" style="text-align:right">Total:</th>
+                            <th><th/>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
 
                 </table>
                 <div class="row">

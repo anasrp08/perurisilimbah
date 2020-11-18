@@ -55,7 +55,7 @@ class PenyimpananLimbahController extends Controller
                     'md_satuan.satuan'
                 )
                 ->where('tr_statusmutasi.idstatus', 2)
-                ->orderBy('tr_statusmutasi.updated_at', 'desc');
+                ->orderBy('tr_statusmutasi.tgl', 'asc');
 
             // if(!empty($request->tglinput)){
 
@@ -220,14 +220,22 @@ class PenyimpananLimbahController extends Controller
         $dataDetail = null;
         $nopack = null; 
         $nopackcair = null;  
+        $first = true;
+        $dateKadaluarsa=null;
         try {
             foreach ($dataRequest as $row) {
+                if($first){
+                    $dateKadaluarsa=date('Y-m-d', strtotime("+ 90 day",strtotime($row['tgl'])));
+                    // dd($dateKadaluarsa);
+                    $first=false;
+                }
                 if ($row['fisik'] == 'Padat') {
                     if($nopack==null){
                         $nopack = $this->toTPSCategory($row);
                     }else{
                         $nopack;
                     }
+                    
                     $dataPacking = array(
                         'id_transaksi'      =>  $row['id_transaksi'],
                         'no_packing'            =>  $nopack[0],
@@ -237,7 +245,7 @@ class PenyimpananLimbahController extends Controller
                         'idtps'            => $nopack[2],
                         'tipelimbah'            => $row['tipelimbah'],
                         'idstatus'            => $row['idstatus'],
-                        'kadaluarsa'            => date('Y-m-d', strtotime("+ 90 day")),
+                        'kadaluarsa'            => $dateKadaluarsa,
                         'created_at'            => date('Y-m-d'),
                         'np'                   =>$row['np'],
                         'created_by'            =>$username, 

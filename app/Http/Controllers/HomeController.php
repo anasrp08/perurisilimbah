@@ -59,9 +59,13 @@ class HomeController extends Controller
             //         // 'year'=>$year
             //     ]);
             $penghasilLimbah=DB::table('md_penghasillimbah')->get();
+            $namaLimbah=DB::table('md_namalimbah')->get();
             UpdKaryawanHelper::updatePegawai();
             return view('dashboard.dashboard',[
-                'penghasilLimbah'=>$penghasilLimbah]);
+                'penghasilLimbah'=>$penghasilLimbah,
+                'namaLimbah'=>$namaLimbah
+                ] 
+            );
             
         } else if(Laratrust::hasRole('unit kerja') ) {
             UpdKaryawanHelper::updatePegawai();
@@ -100,27 +104,38 @@ class HomeController extends Controller
     }
     public function dashboardPenghasil($request){
 
-         
         $date=DateTime::createFromFormat("m/Y", $request->period);
         $month= $date->format('m');
         $year=$date->format('Y'); 
-        $dataPenghasil=DB::table('tr_headermutasi')
-        ->join('md_namalimbah','tr_headermutasi.idlimbah','md_namalimbah.id')
-        ->join('md_penghasillimbah','tr_headermutasi.idasallimbah','md_penghasillimbah.id')
-        ->select(DB::raw('sum(tr_headermutasi.jumlah) as jumlah'),'tr_headermutasi.idlimbah','md_namalimbah.namalimbah')
-        ->whereYear('tr_headermutasi.created_at', $year)
-        ->whereMonth('tr_headermutasi.created_at', $month)
-        ->where('tr_headermutasi.idasallimbah', $request->unit_kerja)
-        ->groupBy('tr_headermutasi.idasallimbah','tr_headermutasi.idlimbah')
-        ->get();   
-        $arrPenghasil=new \stdClass();
+        $dataChart=[];
+
+        for($i=1;$i<=12;$i++){
+            $dataPenghasil[$i]=DB::table('tr_headermutasi')
+            ->join('md_namalimbah','tr_headermutasi.idlimbah','md_namalimbah.id')
+            ->join('md_penghasillimbah','tr_headermutasi.idasallimbah','md_penghasillimbah.id')
+            ->select(DB::raw('sum(tr_headermutasi.jumlah) as jumlah'))
+            ->whereYear('tr_headermutasi.created_at', $year)
+            ->whereMonth('tr_headermutasi.created_at', $i)
+            ->where('tr_headermutasi.idasallimbah', $request->unit_kerja)
+            ->where('tr_headermutasi.idlimbah', $request->namalimbah)
+            // ->groupBy('tr_headermutasi.idasallimbah','tr_headermutasi.idlimbah','tr_headermutasi.created_at')
+            ->first();
+            if($dataPenghasil[$i]->jumlah == null){
+                $dataPenghasil[$i]->jumlah=0;
+            }    
+            array_push($dataChart,(int)$dataPenghasil[$i]->jumlah); 
+
+        }
+        // dd($dataChart);
+        
+        // $arrPenghasil=new \stdClass();
         
  
-        $datalabel=$dataPenghasil->keyBy('namalimbah')->keys();
-        $datavalues=$dataPenghasil->keyBy('jumlah')->keys();
+        // $datalabel=$dataPenghasil->keyBy('namalimbah')->keys();
+        // $datavalues=$dataPenghasil->keyBy('jumlah')->keys();
         // dd($datavalues);
-        $arrPenghasil->labels=$datalabel;
-        $arrPenghasil->values=$datavalues;
+        // $arrPenghasil->labels=$datalabel;
+        // $arrPenghasil->values=$datavalues;
         // dd($arrPenghasil);
 //         $dataValue=$datatoArray->values();
 //         $dataSludge=[];
@@ -183,7 +198,7 @@ class HomeController extends Controller
 //         }
 
         // dd($arrPenghasil);
-        return $arrPenghasil;
+        return $dataChart;
     }
     public function dashboardToBeKadaluarsa(){
 

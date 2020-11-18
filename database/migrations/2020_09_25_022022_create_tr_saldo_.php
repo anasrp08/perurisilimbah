@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMdKuota extends Migration
+class CreateTrSaldo extends Migration
 {
     /**
      * Run the migrations.
@@ -35,6 +35,6 @@ class CreateMdKuota extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('md_kuota');
+        Schema::dropIfExists('tr_saldo');
     }
 }

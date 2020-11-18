@@ -21,6 +21,9 @@
     .nonpihakketiga {
         display: none;
     }
+    .modal-lg {
+    max-width: 55% !important;
+}
 
 </style>
 
@@ -54,10 +57,7 @@
                     <th>Tanggal Kadaluarsa</th>
                     <th>Kode Pack</th>
                     <th>TPS</th>
-                    <th>Tipe Limbah</th>
-                    {{-- <th>Status</th> --}}
-                   
-
+                    <th>Tipe Limbah</th> 
                 </tr>
             </thead>
 
@@ -203,44 +203,7 @@
                     name: 'tipelimbah',
 
                 },
-                // {
-                //     data: 'keterangan',
-                //     name: 'keterangan',
-                //     render: function (data, type, row) {
-                //         // console.log()
-                //         switch (row.idstatus) {
-                //             case "1":
-                //                 return '<span class="badge badge-warning">'+data+'</span>'
-                //                 break;
-                //                 case "2":
-                //                 return '<span class="badge badge-success">'+data+'</span>'
-                //                 break;
-                //                 case "3":
-                //                 return '<span class="badge badge-info">'+data+'</span>'
-                //                 break;
-                //                 case "4":
-                //                 return '<span class="badge badge-secondary">'+data+'</span>'
-                //                 break;  
-                //                 case "5":
-                //                 return '<span class="badge badge-info">'+data+'</span>'
-                //                 break;
-                //                 case "6":
-                //                 return '<span class="badge badge-primary">'+data+'</span>'
-                //                 break;
-                //                 case "7":
-                //                 return '<span class="badge badge-danger">'+data+'</span>'
-                //                 break; 
-                        
-                //             default:
-                //                 break;
-                //         }
-                         
-                         
-
-                //     }
-
-                // },
-
+                
               
 
             ]
@@ -277,7 +240,15 @@
                 // scrollY: "300px",
                 // scrollCollapse: true,
                 // scrollX: true,
-
+                columnDefs: [{
+                    className: 'text-center',
+                    targets: [1, 2, 3]
+                },
+                {
+                    className: 'dt-body-nowrap',
+                    targets: -1
+                }
+            ],
                 ajax: {
                     url: '{{ route("pemrosesan.detaillist")}}',
                     type: "POST",
@@ -319,7 +290,33 @@
                         name: 'action'
                     },
 
-                ]
+                ],
+                footerCallback: function ( row, data, start, end, display ) {
+            var api = this.api(), data;
+ 
+            // Remove the formatting to get integer data for summation
+            var intVal = function ( i ) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '')*1 :
+                    typeof i === 'number' ?
+                        i : 0;
+            };
+ 
+            // Total over all pages
+            total = api
+                .column( 2 )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+  
+            
+ 
+            // Update footer
+            $( api.column( 2 ).footer() ).html(
+                  total 
+            );
+        }
 
             })
             $('#modaldetail').modal('show')
@@ -376,16 +373,18 @@
              
             $("#detail_pack tbody tr").each(function () {
                 var obj = {};
+                
                 obj.jmlh_proses= $(":input[name=jmlh_proses]", this).val();
                 output1.push(obj);
                 // dataNonInput
             }) 
 
             for (i = 0; i < data.count(); i++) {
-
                 var obj = {};
-                // console.log(value)
-                
+                console.log(output1[i].jmlh_proses)
+                if(output1[i].jmlh_proses == '' || output1[i].jmlh_proses == 0){
+                    continue;
+                }else{
                 obj.limbah3r = data[i].limbah3r;
                 obj.tgl = data[i].tgl;
                 obj.id_transaksi = data[i].id_transaksi;
@@ -413,6 +412,11 @@
                 obj.np = $('#np').val();
                 output.push(obj);
                 jsonData["detail"] = output 
+                }
+                
+                // console.log(value)
+                
+                
             }
             console.log(jsonData)
             packLimbah(jsonData)

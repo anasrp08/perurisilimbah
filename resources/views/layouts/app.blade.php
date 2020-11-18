@@ -206,6 +206,7 @@
         
         {{-- <link rel="stylesheet" href="../../plugins/"> --}}
         <script src="{{ asset('/adminlte3/plugins/jquery/jquery.min.js') }}"></script>
+        
         <script type="text/javascript" src="{{ asset('/adminlte3/plugins/moment/moment.min.js') }}"></script>
         <script src="{{ asset('/adminlte3/plugins/daterangepicker/daterangepicker.js') }}"></script>
         <script src="{{ asset('/adminlte3/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}">
@@ -228,14 +229,16 @@
        
        
         
-        <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.bootstrap4.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+        
+        
+        
         {{-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script> --}}
         <script src=" https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
         <script src="https://cdn.datatables.net/rowgroup/1.1.2/js/dataTables.rowGroup.min.js"></script>
-        
+        <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+        {{-- <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.bootstrap4.min.js"></script> --}}
+        <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
         <script>
             $(document).ready(function () {
                 var pProv = {

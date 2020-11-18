@@ -11,7 +11,7 @@
         </div><!-- /.card-header -->
         <div class="card-body">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-group">
 
                         <label>Periode</label>
@@ -20,13 +20,24 @@
                     </div>
                 </div>
             
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="form-group">
-                    <label>Asal Limbah</label>
+                    <label>Penghasil Limbah</label>
                     <select name="limbahasal" id="limbahasal" class="form-control select2bs4" style="width: 100%;">
                         <option value="" disabled selected>-Pilih Asal Limbah-</option>
                         @foreach($penghasilLimbah as $data)
                         <option value="{{$data->id}}">{{$data->seksi}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Nama Limbah</label>
+                    <select name="namalimbah" id="namalimbah" class="form-control select2bs4" style="width: 100%;">
+                        <option value="" disabled selected>-Pilih Nama Limbah-</option>
+                        @foreach($namaLimbah as $data)
+                        <option value="{{$data->id}}">{{$data->namalimbah}}</option>
                         @endforeach
                     </select>
                 </div>

@@ -201,124 +201,26 @@
                 }
             });
         }
-
         var myChart = new Chart(document.getElementById("penghasil_all"), {
-            type: 'bar',
-            data: {
-                labels: [],
-                datasets: [{
-                        label: "Jumlah Limbah",
-                        backgroundColor: "#007bff",
-                        data: ''
-                    },
-
-                ]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            // stepSize: 1
-                        }
-                    }]
+                type: 'bar',
+                data: {
+                    labels: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli",
+                        "Agustus",
+                        "September", "Oktober", "November", "Desember"
+                    ],
+                    datasets: [{
+                            label: "Jumlah Limbah",
+                            backgroundColor: "#007bff",
+                            data: ''
+                        },
+                         
+                    ]
+                },
+                options: {
+                 
                 }
-
-            }
-        });
-        //delete
-        // var myChart = new Chart(document.getElementById("penghasil_unit_kerja"), {
-        //     type: 'bar',
-        //     data: {
-        //         labels: [],
-        //         datasets: [{
-        //                 label: "Jumlah Limbah",
-        //                 backgroundColor: "#ff5722",
-        //                 data: ''
-        //             },
-
-        //         ]
-        //     },
-        //     options: {
-        //         scales: {
-        //             yAxes: [{
-        //                 ticks: {
-        //                     beginAtZero: true,
-        //                     // stepSize: 1
-        //                 }
-        //             }]
-        //         }
-
-        //     }
-        // });
-
-        // var ctx = document.getElementById("penghasil").getContext('2d');
-        // var myChart = new Chart(ctx, {
-        //     type: 'bar',
-        //     data: {
-        //         labels: ["Seksi Proof", "Laboratorium", "Seksi Utilitas", "Seksi Cetak Nomor",
-        //             "Seksi Cetak Dalam", "Seksi Cetak Rata", "Seksi Pengamanan Elektronik",
-        //             "Seksi Penataan Hasil", "Seksi PPIC"
-        //         ],
-        //         datasets: [{
-        //                 label: 'Sludge',
-        //                 backgroundColor: "#caf270",
-        //                 data: [12, 59, 5, 56, 58, 12, 59, 87, 45],
-        //             }, {
-        //                 label: 'Abu',
-        //                 backgroundColor: "#45c490",
-        //                 data: [12, 59, 5, 56, 58, 12, 59, 85, 23],
-        //             }, {
-        //                 label: 'Limbah cair',
-        //                 backgroundColor: "#008d93",
-        //                 data: [12, 59, 5, 56, 58, 12, 59, 65, 51],
-        //             }, {
-        //                 label: 'Kaleng',
-        //                 backgroundColor: "#007bff",
-        //                 data: [12, 59, 5, 56, 58, 12, 59, 12, 74],
-        //             },
-        //             {
-        //                 label: 'Sampah Kontaminasi',
-        //                 backgroundColor: "#ffc107",
-        //                 data: [12, 59, 5, 56, 58, 12, 59, 12, 74],
-        //             },
-        //             {
-        //                 label: 'Drum',
-        //                 backgroundColor: "#6610f2",
-        //                 data: [12, 59, 5, 56, 58, 12, 59, 12, 74],
-        //             }
-        //         ],
-        //     },
-        //     options: {
-        //         tooltips: {
-        //             displayColors: true,
-        //             callbacks: {
-        //                 mode: 'x',
-        //             },
-        //         },
-        //         scales: {
-        //             xAxes: [{
-        //                 stacked: true,
-        //                 gridLines: {
-        //                     display: false,
-        //                 }
-        //             }],
-        //             yAxes: [{
-        //                 stacked: true,
-        //                 ticks: {
-        //                     beginAtZero: true,
-        //                 },
-        //                 type: 'linear',
-        //             }]
-        //         },
-        //         responsive: true,
-        //         maintainAspectRatio: false,
-        //         legend: {
-        //             position: 'bottom'
-        //         },
-        //     }
-        // });
-
+            });
+         
         var tps1 = createGauge('tps1', 'TPS I', 'm3', 'kapasitas', 150, 20, 75, 120)
 
         var tps2 = createGauge('tps2', 'TPS II', 'JB', 'kapasitas', 125, 20, 65, 90)
@@ -410,7 +312,8 @@
         var paramData = {
 
             period: $('#period').val(),
-            unit_kerja: $('#limbahasal').val()
+            unit_kerja: $('#limbahasal').val(),
+            namalimbah:$('#namalimbah').val()
         }
         getDataGrafik(paramData)
         
@@ -418,7 +321,8 @@
             var paramData = {
 
                 period: $('#period').val(),
-                unit_kerja: $('#limbahasal').val()
+                unit_kerja: $('#limbahasal').val(),
+                namalimbah:$('#namalimbah').val()
             }
             getDataGrafik(paramData)
             // updateChart(chart, value,paramData)
@@ -427,7 +331,18 @@
         $('#period').on('change', function () {
             var paramData = {
                 period: $('#period').val(),
-                unit_kerja: $('#limbahasal').val()
+                unit_kerja: $('#limbahasal').val(),
+                namalimbah:$('#namalimbah').val()
+            }
+            getDataGrafik(paramData)
+            // updateChart(chart, value,paramData)
+
+        })
+        $('#namalimbah').on('change', function () {
+            var paramData = {
+                period: $('#period').val(),
+                unit_kerja: $('#limbahasal').val(),
+                namalimbah:$('#namalimbah').val()
             }
             getDataGrafik(paramData)
             // updateChart(chart, value,paramData)
@@ -440,19 +355,7 @@
                 var point = chart.series[0].points[0]
                 point.update(value)
 
-                // setInterval(function () {
-                //     var point = chart.series[0].points[0],
-                //         newVal,
-                //         inc = Math.round((Math.random() - 0.5) * 20);
-
-                //     newVal = point.y + inc;
-                //     if (newVal < 0 || newVal > 200) {
-                //         newVal = point.y - inc;
-                //     }
-
-                //     point.update(newVal);
-
-                // }, 3000);
+                 
             }
         }
 
@@ -473,7 +376,7 @@
                     var dataPenghasil = data.dataPenghasil
                     var dataKuota = data.dataKuota
                     var dataKapasitas = data.dataKapasitas
-                    var dataKadaluarsa = data.dataKadaluarsa
+                    var dataKadaluarsa = data.dataKadaluarsa 
 
                     updateData(cair, ["Konsumsi", "Sisa"], [dataKuota[0].konsumsi, dataKuota[0]
                         .sisa])
@@ -481,16 +384,14 @@
                         .sisa
                     ])
                     updateData(sk, ["Konsumsi", "Sisa"], [dataKuota[2].konsumsi, dataKuota[2].sisa])
-                    updateDataBar(myChart, dataPenghasil.labels, dataPenghasil.values)
+                    updateDataBar(myChart, dataPenghasil)
 
                     updateChart(tps1, dataKapasitas[0].saldo, 150)
                     updateChart(tps2, dataKapasitas[1].saldo, 125)
                     updateChart(tps3, dataKapasitas[2].saldo, 125)
                     updateChart(tps4, dataKapasitas[3].saldo, 50955)
                     updateChart(tps5, dataKapasitas[4].saldo, 250)
-                    // tableKadaluarsa(dataKadaluarsa)
-
-                    // updateChart(dataKapasitas[6].saldo)
+                    
                 }
             });
         }
@@ -509,18 +410,9 @@
                         name:"namalimbah"
                     },
                     {
-                        data: "created_at",
-                        name:"created_at",
-                        render: function (data, type, row) {
-                            if (data == null || data == "-" || data ==
-                                "0000-00-00 00:00:00" ||
-                                data == "NULL") {
-                                return '<span>-</span>'
-                            } else {
-                                return moment(data).format('DD/MM/YYYY');
-                            }
-
-                        }
+                        data: "jumlah",
+                        name:"jumlah",
+                        
 
                     },
                     {
@@ -528,7 +420,13 @@
                         name:"created_at",
                         render: function (data, type, row) {
 
-                            return moment().format('DD/MM/YYYY');
+                            if (data == null || data == "-" || data == "0000-00-00 00:00:00" || data == "NULL") {
+                                // console.log(data)    
+                                return '<span>-</span>'
+
+                            } else {
+                                return moment(data).format('DD/MM/YYYY');
+                            }
 
 
                         }
@@ -575,11 +473,13 @@
                             ]);
                             var difference = b.diff(a, 'days') // 1
                             //diff di query berbeda dengan dif di moment js
-                            // console.log(tes)
+                            
                             if (difference == 4) {
                                 return '<span class="badge badge-danger">Bahaya</span>'
-                            } else {
+                            } else if(difference == 8) {
                                 return '<span class="badge badge-warning">Waspada</span>'
+                            }else{
+                                return '-'
                             }
 
                         }
@@ -596,11 +496,11 @@
             chart.update();
         }
 
-        function updateDataBar(chart, labels, data) {
-            chart.data.labels = labels
+        function updateDataBar(chart, data) {
+            // chart.data.labels = labels
             // chart.data.datasets[0].backgroundColor = ["#ff5722"]
             chart.data.datasets[0].data = data
-            chart.update();
+            chart.update(); 
         }
 
         function thousands_separators(num) {

@@ -367,7 +367,7 @@
                     rowGroup: {
                         startRender: function ( rows, group ) {
                             return $('<tr/>')
-                    .append( '<td colspan="2">Sisa Saldo Bulan Lalu:</td>' )
+                    .append( '<td colspan="2">Sisa Saldo :</td>' )
                     .append( '<td>'+rowData.saldoLimbah+' '+rowData.satuan+'</td>' )
                     .append( '<td/>' )
                     .append( '<td/>' )

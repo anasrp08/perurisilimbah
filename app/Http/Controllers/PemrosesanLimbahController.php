@@ -169,7 +169,7 @@ class PemrosesanLimbahController extends Controller
     }
     public function proses(Request $request)
     {
-        // dd($request->all());
+        // dd($request->all());``
         $username=AuthHelper::getAuthUser()[0]->email;
         $getRequest = json_decode($request->getContent(), true);
 

@@ -32,8 +32,8 @@
     <div class="card-header">
         <button type="button" name="refresh" id="refresh" class="btn btn-success "><i class="fa  fa-refresh"></i>
             Refresh</button>
-        <button type="button" name="download" id="download" class="btn btn-success "><i class="fa  fa-refresh"></i>
-            Download Excel</button>
+        {{-- <button type="button" name="download" id="download" class="btn btn-success "><i class="fa  fa-refresh"></i>
+            Download Excel</button> --}}
         <button type="button" name="tambah" id="tambah" class="btn btn-success "><i class="fa  fa-plus"></i>
             Tambah Data Kuota Anggaran</button>
         {{-- <button type="button" name="transaksi" id="transaksi" class="btn btn-success "><i class="fa  fa-save"></i>
@@ -214,10 +214,10 @@
                         toastr.success(data.success, 'Tersimpan', {
                             timeOut: 2000
                         });
-                        $('#tipelimbah').val('').change()
-                        $('#tahun').val('')
-                        $('#total').val('')
-                        $('#np').val('')
+                        $('#add_tipelimbah').val('').change()
+                        $('#add_tahun').val('')
+                        $('#add_total').val('')
+                        $('#add_np').val('').change()
                         $('#simpan_data').text('Simpan');
                         $('#daftar_kuota').DataTable().ajax.reload();
                         setTimeout(function () {

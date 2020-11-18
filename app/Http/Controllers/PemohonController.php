@@ -56,7 +56,8 @@ class PemohonController extends Controller
                 )
                 ->where('tr_statusmutasi.idstatus', 1) 
                 ->orderBy('tr_statusmutasi.created_at', 'desc'); 
-                if(AuthHelper::getAuthUser([0])->display_name == 'Pengawas'){
+                // dd(AuthHelper::getAuthUser()[0]->display_name);
+                if(AuthHelper::getAuthUser()[0]->display_name == 'Pengawas'){
                     $queryData->orWhere('tr_statusmutasi.validated_by', null);
                 }
             $queryData = $queryData->get(); 

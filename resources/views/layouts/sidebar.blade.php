@@ -132,9 +132,49 @@
         </li>
     </ul>
 </li> 
+
+{{-- <li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-chart-pie"></i>
+        <p>
+            Master Data
+            <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('formulir.listview') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Master Data User</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('neraca.listview') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Master Data Nama Limbah</p>
+            </a>
+        </li>
+        
+        <li class="nav-item">
+            <a href="{{ route('kapasitas.listview') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Report Kapasitas</p>
+            </a>
+        </li>
+        
+       
+        <li class="nav-item">
+            <a href="{{ route('penghasil.listview') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Report Penghasil Limbah</p>
+            </a>
+        </li>
+    </ul>
+</li>  --}}
+
 @endrole
 @role(['unit kerja'])
-<<li class="nav-item has-treeview">
+<li class="nav-item has-treeview">
     <a href="#" class="nav-link">
         <i class="nav-icon fas fa-copy"></i>
         <p>
