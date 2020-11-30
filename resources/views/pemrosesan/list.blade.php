@@ -21,9 +21,10 @@
     .nonpihakketiga {
         display: none;
     }
+
     .modal-lg {
-    max-width: 55% !important;
-}
+        max-width: 55% !important;
+    }
 
 </style>
 
@@ -57,7 +58,7 @@
                     <th>Tanggal Kadaluarsa</th>
                     <th>Kode Pack</th>
                     <th>TPS</th>
-                    <th>Tipe Limbah</th> 
+                    <th>Tipe Limbah</th>
                 </tr>
             </thead>
 
@@ -117,7 +118,7 @@
             serverSide: true,
             scrollCollapse: true,
             scrollX: true,
-        //    dom: '<"right"B>rtipl<"clear">',
+            //    dom: '<"right"B>rtipl<"clear">',
 
             columnDefs: [{
                     className: 'text-center',
@@ -163,21 +164,23 @@
                     data: 'kadaluarsa',
                     name: 'kadaluarsa',
                     render: function (data, type, row) {
-                        var currDate=moment().format('DD/MM/YYYY');
-                        var day7=moment(data).subtract(7,'d').format('DD/MM/YYYY');
-                        
-                        var day3=moment(data).subtract(3,'d').format('DD/MM/YYYY');
+                        var currDate = moment().format('DD/MM/YYYY');
+                        var day7 = moment(data).subtract(7, 'd').format('DD/MM/YYYY');
+
+                        var day3 = moment(data).subtract(3, 'd').format('DD/MM/YYYY');
                         // console.log(currDate.to(day3));
                         // console.log(currDate)
-                        if(currDate==day7){
-                            return '<h5><span class="badge badge-warning">'+moment(data).format('DD/MM/YYYY')+'</span></h5>'
-                        }else if(currDate==day3){
-                            return '<h5><span class="badge badge-danger">'+moment(data).format('DD/MM/YYYY')+'</span></h5>'
-                        }else{
+                        if (currDate == day7) {
+                            return '<h5><span class="badge badge-warning">' + moment(data)
+                                .format('DD/MM/YYYY') + '</span></h5>'
+                        } else if (currDate == day3) {
+                            return '<h5><span class="badge badge-danger">' + moment(data)
+                                .format('DD/MM/YYYY') + '</span></h5>'
+                        } else {
                             return moment(data).format('DD/MM/YYYY');
                         }
 
-                        
+
 
                     }
                 },
@@ -203,8 +206,8 @@
                     name: 'tipelimbah',
 
                 },
-                
-              
+
+
 
             ]
         });
@@ -216,6 +219,14 @@
                     $('.pihakketiga').hide()
                     break;
                 case 'netralisir':
+                    $('.nonpihakketiga').show()
+                    $('.pihakketiga').hide()
+                    break;
+                case 'evaporator':
+                    $('.nonpihakketiga').show()
+                    $('.pihakketiga').hide()
+                    break;
+                case 'incinerator_statis':
                     $('.nonpihakketiga').show()
                     $('.pihakketiga').hide()
                     break;
@@ -241,14 +252,14 @@
                 // scrollCollapse: true,
                 // scrollX: true,
                 columnDefs: [{
-                    className: 'text-center',
-                    targets: [1, 2, 3]
-                },
-                {
-                    className: 'dt-body-nowrap',
-                    targets: -1
-                }
-            ],
+                        className: 'text-center',
+                        targets: [1, 2, 3]
+                    },
+                    {
+                        className: 'dt-body-nowrap',
+                        targets: -1
+                    }
+                ],
                 ajax: {
                     url: '{{ route("pemrosesan.detaillist")}}',
                     type: "POST",
@@ -291,32 +302,33 @@
                     },
 
                 ],
-                footerCallback: function ( row, data, start, end, display ) {
-            var api = this.api(), data;
- 
-            // Remove the formatting to get integer data for summation
-            var intVal = function ( i ) {
-                return typeof i === 'string' ?
-                    i.replace(/[\$,]/g, '')*1 :
-                    typeof i === 'number' ?
-                        i : 0;
-            };
- 
-            // Total over all pages
-            total = api
-                .column( 2 )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-  
-            
- 
-            // Update footer
-            $( api.column( 2 ).footer() ).html(
-                  total 
-            );
-        }
+                footerCallback: function (row, data, start, end, display) {
+                    var api = this.api(),
+                        data;
+
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function (i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                            i : 0;
+                    };
+
+                    // Total over all pages
+                    total = api
+                        .column(2)
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+
+
+                    // Update footer
+                    $(api.column(2).footer()).html(
+                        total
+                    );
+                }
 
             })
             $('#modaldetail').modal('show')
@@ -325,98 +337,108 @@
         $('#proses').click(function () {
             var data = $('#detail_pack').DataTable().rows().data()
             var radio
-            
-            
-            var arrValue=[]
-            
-                arrValue.push($('#prosesdate').val())
-                arrValue.push($('#vendor').val())
-                arrValue.push($('#nomanifest').val())
-                arrValue.push($('#nokendaraan').val()) 
-                arrValue.push($('#nospbe').val())
-                
-                if($('#radioPrimary1').is(':checked')) { 
-                    radio= $('#radioPrimary1').val()
-                    }else if($('#radioPrimary2').is(':checked')){
-                        radio=$('#radioPrimary2').val()
-                    }else if($('#radioPrimary3').is(':checked')){
-                        radio=$('#radioPrimary3').val()
-                    }
-                    // console.log(radio)
-                switch (radio) {
-                    case 'ketiga':
-                    arrValue.push(5)
-                        break;
-                        case 'incinerator':
-                    arrValue.push(6)
-                        break;
-                        case 'netralisir':
-                    arrValue.push(7)
-                        break;
-                    default:
-                    // arrValue.push(7)
-                        break;
-                }
-             
 
-            formatedData(data,arrValue)
+
+            var arrValue = []
+
+            arrValue.push($('#prosesdate').val())
+            arrValue.push($('#vendor').val())
+            arrValue.push($('#nomanifest').val())
+            arrValue.push($('#nokendaraan').val())
+            arrValue.push($('#nospbe').val())
+
+            if ($('#radioPrimary1').is(':checked')) {
+                radio = $('#radioPrimary1').val()
+            } else if ($('#radioPrimary2').is(':checked')) {
+                radio = $('#radioPrimary2').val()
+            } else if ($('#radioPrimary3').is(':checked')) {
+                radio = $('#radioPrimary3').val()
+            }else if ($('#radioPrimary4').is(':checked')) {
+                radio = $('#radioPrimary4').val()
+            }else if ($('#radioPrimary5').is(':checked')) {
+                radio = $('#radioPrimary5').val()
+            }
+            // console.log(radio)
+            switch (radio) {
+                case 'ketiga':
+                    arrValue.push(5)
+                    break;
+                case 'incinerator':
+                    arrValue.push(6)
+                    break;
+                case 'netralisir':
+                    arrValue.push(7)
+                    break;
+                case 'evaporator':
+                    arrValue.push(8)
+                    break;
+                case 'incinerator_statis':
+                    arrValue.push(9)
+                    break;
+                default:
+                    // arrValue.push(7)
+                    break;
+            }
+
+
+            formatedData(data, arrValue)
 
         })
 
-        function formatedData(data,arrValue) {
+        function formatedData(data, arrValue) {
             var output = [];
             var jsonData = {}
             var dataNonInput = []
-            var output1=[]
+            var output1 = []
             // console.log(arrValue)
             console.log(data.toArray())
-             
+
             $("#detail_pack tbody tr").each(function () {
                 var obj = {};
-                
-                obj.jmlh_proses= $(":input[name=jmlh_proses]", this).val();
+
+                obj.jmlh_proses = $(":input[name=jmlh_proses]", this).val();
                 output1.push(obj);
                 // dataNonInput
-            }) 
+            })
 
             for (i = 0; i < data.count(); i++) {
                 var obj = {};
                 console.log(output1[i].jmlh_proses)
-                if(output1[i].jmlh_proses == '' || output1[i].jmlh_proses == 0){
+                if (output1[i].jmlh_proses == '' || output1[i].jmlh_proses == 0) {
                     continue;
-                }else{
-                obj.limbah3r = data[i].limbah3r;
-                obj.tgl = data[i].tgl;
-                obj.id_transaksi = data[i].id_transaksi;
-                obj.idmutasi = data[i].idmutasi;
-                obj.idasallimbah = data[i].idasallimbah;
-                obj.idsatuan = data[i].idsatuan;
-                obj.idlimbah = data[i].idlimbah;
-                obj.idstatus = arrValue[5];
-                obj.fisik = data[i].fisik;
-                obj.idtps = data[i].idtps;
-                obj.no_packing = data[i].no_packing;
-                obj.tipelimbah = data[i].tipelimbah;
-                obj.idjenislimbah = data[i].idjenislimbah;
-                obj.jumlah = data[i].jumlah;
-                obj.jmlh_proses = output1[i].jmlh_proses;
-                obj.limbah3r = data[i].limbah3r;
-                obj.tglproses = arrValue[0];
-                obj.idvendor = arrValue[1];
-                obj.nomanifest = arrValue[2];
-                obj.nokendaraan = arrValue[3];
-                obj.nospbe = arrValue[4];
-                obj.status_lama = data[i].idstatus;
-                // obj.jumlah_lama = data[i].idstatus;
+                } else {
+                    obj.limbah3r = data[i].limbah3r;
+                    obj.tgl = data[i].tgl;
+                    obj.id_transaksi = data[i].id_transaksi;
+                    obj.idmutasi = data[i].idmutasi;
+                    obj.idasallimbah = data[i].idasallimbah;
+                    obj.idsatuan = data[i].idsatuan;
+                    obj.idlimbah = data[i].idlimbah;
+                    obj.idstatus = arrValue[5];
+                    obj.fisik = data[i].fisik;
+                    obj.idtps = data[i].idtps;
+                    obj.no_packing = data[i].no_packing;
+                    obj.tipelimbah = data[i].tipelimbah;
+                    obj.idjenislimbah = data[i].idjenislimbah;
+                    obj.jumlah = data[i].jumlah;
+                    obj.jmlh_proses = output1[i].jmlh_proses;
+                    obj.limbah3r = data[i].limbah3r;
+                    obj.tglproses = arrValue[0];
+                    obj.idvendor = arrValue[1];
+                    obj.nomanifest = arrValue[2];
+                    obj.nokendaraan = arrValue[3];
+                    obj.nospbe = arrValue[4];
+                    obj.status_lama = data[i].idstatus;
+                    // obj.jumlah_lama = data[i].idstatus;
 
-                obj.np = $('#np').val();
-                output.push(obj);
-                jsonData["detail"] = output 
+                    obj.np = $('#np').val();
+                    output.push(obj);
+                    jsonData["detail"] = output
                 }
-                
+
                 // console.log(value)
-                
-                
+
+
             }
             console.log(jsonData)
             packLimbah(jsonData)
@@ -452,6 +474,8 @@
                         $('#modaldetail').modal('toggle')
                         $('#daftar_pack').DataTable().ajax.reload();
                         $('.formproses').val('');
+                        $('.radioPilihan').prop('checked', false); 
+                        $('#np').val('').change();
                         // $('#counterentries').text(data.count);
 
                         // $('#saveentri').text('Simpan');

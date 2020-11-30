@@ -39,21 +39,34 @@
                         </label>
                         <div class="form-group clearfix">
                             <div class="icheck-primary d-inline">
-                                <input type="radio" id="radioPrimary1" name="r1" value='incinerator'>
+                                <input type="radio" class='radioPilihan' id="radioPrimary1" name="r1" value='incinerator'>
                                 <label for="radioPrimary1">
                                     Incinerator
                                 </label>
                             </div>
                             <div class="icheck-primary d-inline">
-                                <input type="radio" id="radioPrimary2" name="r1" value='netralisir'>
+                                <input type="radio" class='radioPilihan' id="radioPrimary2" name="r1" value='netralisir'>
                                 <label for="radioPrimary2">
                                     Netralisir
                                 </label>
                             </div>
+                            
                             <div class="icheck-primary d-inline">
-                                <input type="radio" id="radioPrimary3" name="r1" value='ketiga'>
+                                <input type="radio" class='radioPilihan' id="radioPrimary3" name="r1" value='ketiga'>
                                 <label for="radioPrimary3">
                                     Pihak Ketiga
+                                </label>
+                            </div>
+                            <div class="icheck-primary d-inline">
+                                <input type="radio" class='radioPilihan' id="radioPrimary4" name="r1" value='evaporator'>
+                                <label for="radioPrimary4">
+                                    Evaporator
+                                </label>
+                            </div>
+                            <div class="icheck-primary d-inline">
+                                <input type="radio" class='radioPilihan' id="radioPrimary5" name="r1" value='incinerator_statis'>
+                                <label for="radioPrimary5">
+                                    Incinerator Statis
                                 </label>
                             </div>
                         </div>

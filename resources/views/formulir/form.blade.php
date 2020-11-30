@@ -456,9 +456,15 @@
                 <td class="ttdbottom" style=width:0.5rem;">
                     :
                 </td>
+                @if($ttdPengawas == null)
+                <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                    
+                </td>
+                @else
                 <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
                     {{$ttdPengawas->nama}}
                 </td>
+                @endif 
                 {{-- </td> --}}
                 {{-- <td class="itemuji"> --}}
                 <td class="ttdbottom" style=width:1rem;">
@@ -492,9 +498,15 @@
                 <td class="ttdbottom" style=width:0.5rem;">
                     :
                 </td>
+                @if($ttdPengawas == null)
+                <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                    
+                </td>
+                @else
                 <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
                     {{$ttdPengawas->np}}
                 </td>
+                @endif
                 {{-- </td> --}}
                 {{-- <td class="itemuji"> --}}
                 <td class="ttdbottom" style=width:1rem;">
@@ -528,9 +540,16 @@
                 <td class="ttdbottom" style=width:0.5rem;">
                     :
                 </td>
+                @if($ttdPengawas == null)
+                <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                    
+                </td>
+                @else
                 <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
                     {{$ttdPengawas->unitkerja}}
                 </td>
+                @endif
+                
                 {{-- </td> --}}
                 {{-- <td class="itemuji"> --}}
                 <td class="ttdbottom" style=width:1rem;">

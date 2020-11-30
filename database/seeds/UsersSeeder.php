@@ -42,8 +42,7 @@ class UsersSeeder extends Seeder
         // Create Admin sample
         $admin = new User();
         $admin->name = 'Admin Limbah';
-        $admin->email = 'admin@limbahperuri';
-        
+        $admin->email = 'admin@limbahperuri'; 
         $admin->password = bcrypt('admin123');
         $admin->avatar = "admin_avatar.jpg";
         $admin->is_verified = 1;
@@ -53,8 +52,7 @@ class UsersSeeder extends Seeder
         // Create Sample member
         $bc = new User();
         $bc->name = 'Operator';
-        $bc->email = 'operator@limbahperuri';
-        
+        $bc->email = 'operator@limbahperuri'; 
         $bc->password = bcrypt('operator123');
         $bc->avatar = "operator_avatar.png";
         $bc->is_verified = 1;
@@ -63,8 +61,7 @@ class UsersSeeder extends Seeder
 
         $uk = new User();
         $uk->name = 'Unit Kerja';
-        $uk->email = 'unitkerja@limbahperuri';
-        
+        $uk->email = 'unitkerja@limbahperuri'; 
         $uk->password = bcrypt('unitkerja123');
         $uk->avatar = "operator_avatar.png";
         $uk->is_verified = 1;
@@ -73,8 +70,7 @@ class UsersSeeder extends Seeder
 
         $pengawas = new User();
         $pengawas->name = 'Pengawas';
-        $pengawas->email = 'pengawas@limbahperuri';
-        
+        $pengawas->email = 'pengawas@limbahperuri'; 
         $pengawas->password = bcrypt('pengawas123');
         $pengawas->avatar = "operator_avatar.png";
         $pengawas->is_verified = 1;

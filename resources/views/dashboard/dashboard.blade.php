@@ -201,6 +201,7 @@
                 }
             });
         }
+        var namalimbah=null
         var myChart = new Chart(document.getElementById("penghasil_all"), {
                 type: 'bar',
                 data: {
@@ -217,7 +218,56 @@
                     ]
                 },
                 options: {
+                    scales: {
+            yAxes: [{
+                ticks: {
+                    // Include a dollar sign in the ticks
+                    callback: function(value, index, values) {
+                        var finalValue=null
+                                 var satuan=null
+                        if(namalimbah== 1 || namalimbah== 2 || namalimbah== 3 || namalimbah== 17 ||namalimbah== 20){
+                                    // finalValue=parseInt(formattedjumlah) / parseInt(1000)
+                                    satuan='m3'
+                                  }else{
+                                    // finalValue=parseInt(formattedjumlah) / parseInt(1000)
+                                    satuan='ton'
+                                  }
+
+                        return   value+' '+satuan;
+                    }
+                }
+            }]
+        },
+                    tooltips: {
+                        callbacks: {
+                            // title: function (tooltipItem, data) {
+                            //     return data['labels'][tooltipItem[0]['index']];
+                            // },
+                            label: function (tooltipItem, data) {
+                                var formattedjumlah = data['datasets'][0]['data'][tooltipItem['index']]
+                                 console.log(namalimbah)
+                                 var finalValue=null
+                                 var satuan=null
+                                  if(namalimbah== 1 || namalimbah== 2 || namalimbah== 3 || namalimbah== 17 ||namalimbah== 20){
+                                    finalValue=parseInt(formattedjumlah) / parseInt(1000)
+                                    satuan='m3'
+                                  }else{
+                                    finalValue=parseInt(formattedjumlah) / parseInt(1000)
+                                    satuan='ton'
+                                  }
+                                return formattedjumlah +' '+satuan
+                                // return data['datasets'];
+                            },
+                            // afterLabel: function (tooltipItem, data) {
+                            //     var dataset = data['datasets'][0];
+
+                               
+                            //     return "Presentase: " + '(' + dataset + '%)';
+                            //     // return data;
+                            // }
+                        },
                  
+                }
                 }
             });
          
@@ -324,11 +374,13 @@
                 unit_kerja: $('#limbahasal').val(),
                 namalimbah:$('#namalimbah').val()
             }
+            namalimbah=$('#namalimbah').val()
             getDataGrafik(paramData)
             // updateChart(chart, value,paramData)
 
         })
         $('#period').on('change', function () {
+            namalimbah=$('#namalimbah').val()
             var paramData = {
                 period: $('#period').val(),
                 unit_kerja: $('#limbahasal').val(),
@@ -339,6 +391,7 @@
 
         })
         $('#namalimbah').on('change', function () {
+            namalimbah=$('#namalimbah').val()
             var paramData = {
                 period: $('#period').val(),
                 unit_kerja: $('#limbahasal').val(),
@@ -433,6 +486,19 @@
 
                     },
                     {
+                        data: "created_at",
+                        name:"created_at",
+                        render: function (data, type, row) {
+
+                            
+                                return moment().format('DD/MM/YYYY');
+                            
+
+
+                        }
+
+                    },
+                    {
                         data: "kadaluarsa",
                         name:"kadaluarsa",
                         render: function (data, type, row) {
@@ -450,10 +516,7 @@
                         data: "namatps",
                         name:"namatps"
                     },
-                    {
-                        data: "jumlah",
-                        name:"jumlah"
-                    },
+                    
                     {
                         data: "kadaluarsa",
                         name:"kadaluarsa",
@@ -474,9 +537,9 @@
                             var difference = b.diff(a, 'days') // 1
                             //diff di query berbeda dengan dif di moment js
                             
-                            if (difference == 4) {
+                            if (difference == 3) {
                                 return '<span class="badge badge-danger">Bahaya</span>'
-                            } else if(difference == 8) {
+                            } else if(difference == 7) {
                                 return '<span class="badge badge-warning">Waspada</span>'
                             }else{
                                 return '-'

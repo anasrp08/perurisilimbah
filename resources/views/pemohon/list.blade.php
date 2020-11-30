@@ -144,6 +144,7 @@
             <thead>
                 <tr>
                     <th>No. </th>
+                    <th>No. Surat</th>
                     <th>Tanggal</th>
                     <th>Nama Limbah</th>
                     <th>Jumlah</th>
@@ -292,6 +293,11 @@
                     name: 'DT_RowIndex',
                     orderable: false,
                     searchable: false
+                },
+                
+                {
+                    data: 'no_surat',
+                    name: 'no_surat',
                 },
                 {
                     data: 'tgl',

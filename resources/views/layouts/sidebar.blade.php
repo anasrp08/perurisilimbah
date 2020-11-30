@@ -131,9 +131,8 @@
             </a>
         </li>
     </ul>
-</li> 
-
-{{-- <li class="nav-item has-treeview">
+</li>  
+<li class="nav-item has-treeview">
     <a href="#" class="nav-link">
         <i class="nav-icon fas fa-chart-pie"></i>
         <p>
@@ -141,14 +140,15 @@
             <i class="right fas fa-angle-left"></i>
         </p>
     </a>
+  
     <ul class="nav nav-treeview">
         <li class="nav-item">
-            <a href="{{ route('formulir.listview') }}" class="nav-link">
+            <a href="{{ route('user.index') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Master Data User</p>
+                <span>User Login</span>
             </a>
         </li>
-        <li class="nav-item">
+        {{-- <li class="nav-item">
             <a href="{{ route('neraca.listview') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Master Data Nama Limbah</p>
@@ -168,9 +168,9 @@
                 <i class="far fa-circle nav-icon"></i>
                 <p>Report Penghasil Limbah</p>
             </a>
-        </li>
+        </li> --}}
     </ul>
-</li>  --}}
+</li> 
 
 @endrole
 @role(['unit kerja'])

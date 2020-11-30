@@ -2,12 +2,13 @@
 
 namespace App;
 
-use Laratrust\Models\LaratrustRole;
+use Illuminate\Database\Eloquent\Model;
 
-class Role extends LaratrustRole
+class RoleUser extends Model
 {
     //
     protected $table = 'role_user';
+    public $timestamps = false;
     protected $fillable = [
         'role_id', 'user_id','user_type'
     ];

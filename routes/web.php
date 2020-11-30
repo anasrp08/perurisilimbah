@@ -89,4 +89,12 @@ Route::resource('formulir', 'FormLimbahController');
 Route::post('limbah/getnamalimbah', 'LimbahController@getNama')->name('limbah.getnama');
 Route::post('limbah/getsatuanlimbah', 'LimbahController@getSatuan')->name('limbah.getsatuan'); 
 
+
+
+Route::resource('user', 'MDUserController');
+Route::get('user/destroy/{id}', 'MDUserController@destroy');
+Route::post('user/userlist', 'MDUserController@index') -> name('user.list');
+Route::post('user/update', 'MDUserController@update') -> name('user.update');
+
+
 });

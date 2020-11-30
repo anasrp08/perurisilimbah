@@ -43,12 +43,13 @@ class PemohonController extends Controller
                 ->join('tr_headermutasi', 'tr_statusmutasi.idmutasi', '=', 'tr_headermutasi.id')
                 ->join('md_statusmutasi', 'tr_statusmutasi.idstatus', '=', 'md_statusmutasi.id')
                 ->join('md_satuan', 'tr_statusmutasi.idsatuan', '=', 'md_satuan.id')
-                // ->join('tr_detailmutasi', 'tr_statusmutasi.idmutasi', '=', 'tr_detailmutasi.idmutasi')
+                ->join('tr_detailmutasi', 'tr_statusmutasi.idmutasi', '=', 'tr_detailmutasi.idmutasi')
                 ->join('md_penghasillimbah', 'tr_statusmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
                 ->select(
                     'tr_statusmutasi.*',
                     'md_namalimbah.namalimbah',
                     'tr_headermutasi.id_transaksi',
+                    'tr_headermutasi.no_surat',
                     'md_namalimbah.jenislimbah',
                     'md_penghasillimbah.seksi',
                     'md_statusmutasi.keterangan',
@@ -58,7 +59,7 @@ class PemohonController extends Controller
                 ->orderBy('tr_statusmutasi.created_at', 'desc'); 
                 // dd(AuthHelper::getAuthUser()[0]->display_name);
                 if(AuthHelper::getAuthUser()[0]->display_name == 'Pengawas'){
-                    $queryData->orWhere('tr_statusmutasi.validated_by', null);
+                    $queryData->orWhere('tr_statusmutasi.validated_by', null)->where('tr_detailmutasi.idstatus', 9) ;
                 }
             $queryData = $queryData->get(); 
             return datatables()->of($queryData)

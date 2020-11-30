@@ -43,8 +43,8 @@ class FormLimbahController extends Controller
             'md_jenislimbah.jenislimbah',
            )
         //    ->where('tr_detailmutasi.np','')
-           ->where('tr_detailmutasi.idstatus','2')
-           ->whereNotNull('tr_headermutasi.validated')
+           ->where('tr_detailmutasi.idstatus','!=','1')
+        //    ->whereNotNull('tr_headermutasi.validated')
            ->groupBy('tr_headermutasi.id_transaksi')
            ->orderBy('tr_headermutasi.created_at', 'desc');
  

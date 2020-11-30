@@ -279,10 +279,12 @@
                                 arrSum += parseInt(dataValues[i].jumlah)
                                 arrSumKadaluarsa +=parseInt(dataValues[i].jumlah)
 
-                                $('#divkapasitas').append('<a href="#" class="dropdown-item">'+
+                                // $('#divkapasitas').append('<a href="#" class="dropdown-item">'+
+                                //     '<i class="far fa-bell"></i> '+dataValues[i].jumlah+" Limbah <br>Kadaluarsa Tanggal "+moment(dataValues[i].tanggal).format('DD/MM/YYYY')+'</a>');
+                                    $('#divkapasitas').append('<a href="#" class="dropdown-item">'+
                                     '<i class="far fa-bell"></i> '+dataValues[i].jumlah+" Limbah <br>Kadaluarsa Tanggal "+moment(dataValues[i].tanggal).format('DD/MM/YYYY')+'</a>');
                             } 
-                            toastr.error(arrSumKadaluarsa+' Limbah akan kadaluarsa', 'Perhatian', {
+                            toastr.error('Ada limbah akan kadaluarsa', 'Perhatian', {
                                 timeOut: 5000
                             }); 
                             }else{

@@ -9,8 +9,10 @@ use App\Helpers\UpdKaryawanHelper;
 use App\Http\Requests;
 use App\Jadwal;
 use App\Helpers\AppHelper;
+use App\Helpers\AuthHelper;
 use App\Role;
 use DB;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use PDO;
 use DateTime;
@@ -36,7 +38,7 @@ class HomeController extends Controller
     {
         // dd(DB::table('cemori.tbl_status')->get());
         // dd(Laratrust::hasRole('Pengawas'));
-        // dd(Laratrust::hasRole('operator'));
+        // dd(Laratrust::hasRole('operator')); 
         if (Laratrust::hasRole('admin') || Laratrust::hasRole('operator')) {
 
             //     // $getYear = DB::table('desain_tahun')->orderBy('tahun','desc')->get();
@@ -71,8 +73,8 @@ class HomeController extends Controller
             UpdKaryawanHelper::updatePegawai();
             // return view('pemohon.create', QueryHelper::getDropDown());
             return redirect()->route('pemohon.entri', QueryHelper::getDropDown());
-        }else if(Laratrust::hasRole('pengawas') ) {
-            // dd('tes');
+        }else if(Laratrust::hasRole('pengawas')) {
+            
             UpdKaryawanHelper::updatePegawai();
             return redirect()->route('pemohon.listview', QueryHelper::getDropDown());
             // return view('pemohon.list', QueryHelper::getDropDown());
@@ -204,11 +206,14 @@ class HomeController extends Controller
 
         $dataKadaluarsa=DB::table('tr_packing')
         ->join('md_namalimbah','tr_packing.idlimbah','md_namalimbah.id')
-        ->join('tr_headermutasi','tr_headermutasi.id','tr_packing.idmutasi')
+        ->join('tr_statusmutasi','tr_statusmutasi.id','tr_packing.idmutasi')
         ->join('md_tps','tr_packing.idtps','md_tps.id')
-        ->select('md_namalimbah.namalimbah','tr_packing.created_at','tr_packing.kadaluarsa','md_tps.namatps',DB::raw('sum(tr_headermutasi.jumlah) as jumlah'))
-        ->whereRaw('DATE(kadaluarsa) = DATE_ADD(CURDATE(), INTERVAL 7 DAY) OR DATE(kadaluarsa) = DATE_ADD(CURDATE(), INTERVAL 3 DAY)')->get(); 
-        // dd($dataKadaluarsa);
+        ->select('md_namalimbah.namalimbah','tr_packing.created_at','tr_packing.kadaluarsa','md_tps.namatps',DB::raw('sum(tr_statusmutasi.jumlah) as jumlah'))
+        ->where('tr_packing.kadaluarsa',Carbon::today()->addDays(3))
+        ->orWhere('tr_packing.kadaluarsa',Carbon::today()->addDays(7))
+        ->groupBy('tr_packing.kadaluarsa')->get();
+        // ->whereRaw('DATE(tr_packing.kadaluarsa) = DATE(NOW()) + INTERVAL 3 DAY OR DATE(tr_packing.kadaluarsa) = DATE(NOW()) + INTERVAL 7 DAY' )->get(); 
+        
         return $dataKadaluarsa;
 
     }
@@ -219,7 +224,9 @@ class HomeController extends Controller
         ->join('tr_headermutasi','tr_headermutasi.id','tr_packing.idmutasi')
         ->join('md_tps','tr_packing.idtps','md_tps.id')
         ->select('md_namalimbah.namalimbah','tr_packing.created_at','tr_packing.kadaluarsa','md_tps.namatps',DB::raw('sum(tr_headermutasi.jumlah) as jumlah'))
-        ->whereRaw('DATE(kadaluarsa) = DATE_ADD(CURDATE(), INTERVAL 7 DAY) OR DATE(kadaluarsa) = DATE_ADD(CURDATE(), INTERVAL 3 DAY)')->get(); 
+        ->where('tr_packing.kadaluarsa',Carbon::today()->addDays(3))
+        ->orWhere('tr_packing.kadaluarsa',Carbon::today()->addDays(7))
+        ->groupBy('tr_packing.kadaluarsa')->get();
         // dd($dataKadaluarsa);
         // return $dataKadaluarsa;
         return datatables()->of($dataKadaluarsa)
@@ -281,6 +288,7 @@ class HomeController extends Controller
         $arrKapasitas=[];
 
         $dataNotifikasi=$this->dashboardToBeKadaluarsa(); 
+
         $dataKapasitas=DB::table('md_tps')
         ->get();
         // dd($dataKapasitas);
@@ -325,8 +333,7 @@ class HomeController extends Controller
 
             
 
-        }
-        // dd($arrKapasitas);
+        } 
 
         if(count($dataNotifikasi) == 0){
             $arrNotifikasi=null;
@@ -334,28 +341,37 @@ class HomeController extends Controller
            
             
             // $dataIsi=$dataNotifikasi->groupBy('kadaluarsa')->keys()->toArray();
-            $dataNotif=$dataNotifikasi->groupBy('kadaluarsa')->values()->toArray();
+            // $dataNotif=$dataNotifikasi->groupBy('kadaluarsa')->values();
+          
             // $datavalues=$dataPenghasil->keyBy('jumlah')->keys();
-           
-            // for($i=0;$i<count($dataNotif);$i++){
-                // $arrNotifikasi->isi=count($dataNotif[$i]);
+        //    dd($dataNotif);
+            for($i=0;$i<count($dataNotifikasi);$i++){ 
+                // dd($dataNotif);
+                $date3=date('Y-m-d', strtotime("+ 3 day",strtotime($dataNotifikasi[$i]->kadaluarsa)));
+                $date7=date('Y-m-d', strtotime("+ 7 day",strtotime($dataNotifikasi[$i]->kadaluarsa)));
+                
+               if($dataNotifikasi[$i]->kadaluarsa == $date3){
                 $arrKadaluarsa3=array(
-                    'tanggal'=>$dataNotif[0][0]->kadaluarsa,
-                    'jumlah'=>count($dataNotif[0]),
+                    'tanggal'=>$dataNotifikasi[$i]->kadaluarsa,
+                    'jumlah'=>0,
                     'status'=>'Waspada'
                 );
-
+               }else if($dataNotifikasi[$i]->kadaluarsa == $date7){
                 $arrKadaluarsa7=array(
-                    'tanggal'=>$dataNotif[1][0]->kadaluarsa,
-                    'jumlah'=>count($dataNotif[1]),
+                    'tanggal'=>$dataNotifikasi[$i]->kadaluarsa,
+                    'jumlah'=>0,
                     'status'=>'Bahaya'
                 );
+               }
+                
+
+                
 
                 array_push($arrIsi,$arrKadaluarsa3);
                 array_push($arrIsi,$arrKadaluarsa7);
                 // dd($dataJumlah);
     
-            // }
+            }
             $arrNotifikasi->keys=$dataNotifikasi->groupBy('kadaluarsa')->keys()->toArray();
             $arrNotifikasi->values=$arrIsi;
         }
