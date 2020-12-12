@@ -8,6 +8,9 @@
     td.wrapok {
         white-space: normal
     }
+    .modal-lg {
+    max-width: 80% !important;
+}
 
 </style>
 
@@ -163,7 +166,9 @@
 </div>
 
 <!-- modal -->
+@include('pemohon.f_revisi')
 @include('pemohon.f_confirmnp')
+
 
 {{-- @include('layouts.confimdelete') --}}
 
@@ -185,6 +190,10 @@
         $('.select2bs4').select2({
             theme: 'bootstrap4'
         })
+        $('#np').select2({
+            theme: 'bootstrap4'
+        })
+        
 
         $('#nonb3').hide()
         // $('.select2').select2()
@@ -239,6 +248,50 @@
                         $('#title_konfirmasi').text('Divalidasi Oleh: ')
                         $('#hidden_transaksi').val('validasi')
                         $('#modalconfirm').modal('show')
+
+                    }
+
+
+                },
+                {
+                    text: 'Revisi',
+                    className: 'revisi btn btn-info',
+                    action: function (e, dt, node, config) {
+                       
+                        var data = table.rows({
+                            selected: true
+                        }).data()
+                        console.log(data)
+                        if(data.count() > 1){
+                            toastr.warning('Harus pilih salah satu', 'Warning', {
+                                timeOut: 5000
+                            });
+                        }else if(data.count() == 1){
+                            
+                            $('#title_revisi').text('Revisi Permohonan')
+                            $('#hidden_transaksi').val('revisi') 
+                          var tglEntri= moment(data[0].tgl).format('DD/MM/YYYY');
+                               $('#entridate').val(tglEntri);
+                               $('#jmlhlimbah').val(data[0].jumlah);
+                               $('#satuan').val(data[0].idsatuan).change();
+                               $('#keterangan').val(data[0].keterangan);
+                               $('#jenislimbah').val(data[0].idjenislimbah).change();
+                               $('#limbahasal').val(data[0].idasallimbah).change();
+                               $('#maksud').val(data[0].maksud);
+                               $('#namalimbah').val(data[0].idlimbah).change();
+                               if(data[0].limbah3r == ''){
+                                $('#nonb3').css('display','none')
+                               }else{
+                                $('#limbah3r').val(data[0].limbah3r).change();
+                               }
+
+                              
+                            //    $('#alasan').val(data.limbah3r);
+                            $('#hidden_transaksi').val('revisi')
+                            $('#hidden_id').val(data[0].idheader)
+                            $('#modalrevisi').modal('show')
+                        }
+                       
 
                     }
 
@@ -341,8 +394,8 @@
                 // },
 
                 {
-                    data: 'keterangan',
-                    name: 'keterangan',
+                    data: 'status',
+                    name: 'status',
                     render: function (data, type, row) {
 
                         if (data == 'Input') {
@@ -409,6 +462,7 @@
         });
         var buttonTerima = table.buttons( ['.terima'] );
         var buttonValidasi = table.buttons( ['.validasi'] );
+        var buttonRevisi = table.buttons( ['.revisi'] );
         var buttonDatatable = table.buttons( ['.batal','.semua'] );
         
 
@@ -435,16 +489,46 @@
         //     heightMatch: 'auto'
         // });
 
+ 
+        $('#form_revisi').on('submit', function (event) {
+            event.preventDefault();
+            url = "{{ route('history.update') }}"
+            $.ajax({
+                url: url,
+                method: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: new FormData(this),
+                contentType: false,
+                // cache: false,
+                processData: false,
+                // dataType: "json",
+                beforeSend: function () {
+                    $('#simpan').text('proses menyimpan...');
+                },
+                success: function (data) {
+                    // console.log(data)
+                    if (data.errors) {
 
+                        toastr.success(data.errors, 'Gagal Update', {
+                            timeOut: 5000
+                        });
+                    }
+                    if (data.success) {
+                        toastr.success(data.success, 'Success', {
+                            timeOut: 5000
+                        });
+                        // $('#np').val('').change()
+                        $('#modalrevisi').modal('toggle')
 
-        // $(document).on('click', '.delete', function () {
-        //     user_id = $(this).data('id');
-        //     $("#success-alert").hide();
-        //     var data = table.row($(this).closest('tr')).data();
+                    }
+                }
+            })
+            
+            
+        })
 
-        //     $('#confirmModal').modal();
-
-        // });
         $('#submit').on('click', function () {
             var output = [];
                         var jsonData = {}

@@ -105,6 +105,12 @@
             </a>
         </li>
         <li class="nav-item">
+            <a href="{{ route('history.listview') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Histori Transaksi</p>
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="{{ route('neraca.listview') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Report Neraca Limbah</p>

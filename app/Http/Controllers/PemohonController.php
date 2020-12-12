@@ -50,9 +50,12 @@ class PemohonController extends Controller
                     'md_namalimbah.namalimbah',
                     'tr_headermutasi.id_transaksi',
                     'tr_headermutasi.no_surat',
+                    'tr_headermutasi.id as idheader',
+                    'tr_headermutasi.keterangan',
+                    'tr_headermutasi.maksud',
                     'md_namalimbah.jenislimbah',
                     'md_penghasillimbah.seksi',
-                    'md_statusmutasi.keterangan',
+                    'md_statusmutasi.keterangan as status',
                     'md_satuan.satuan'
                 )
                 ->where('tr_statusmutasi.idstatus', 1) 
@@ -79,11 +82,12 @@ class PemohonController extends Controller
      
     public function viewIndex()
     {
-        $np = DB::table('tbl_np')->get();
-        return view('pemohon.list', [
-            'np' => $np
+        $np = DB::table('tbl_np')->get();  
+        return view('pemohon.list',  
+            // 'np' => $np,
+            QueryHelper::getDropDown()
 
-        ]);
+         );
     }
 
     /**
@@ -309,9 +313,63 @@ class PemohonController extends Controller
             return response()->json(['error' => 'Data Gagal Disimpan']);
         }
     }
-
+//revisi
     public function update(Request $request)
     {
+        // dd($request->all());
+        $username = AuthHelper::getAuthUser()[0]->email;
+        try {
+
+        $dataToBeUpdate=DB::table('tr_headermutasi')->where('id',$request->hidden_id)->first();
+        // $dataLimbah=DB::table('md_namalimbah')->where('id',$request->namalimbah)->first();
+        $dataHeader = array(
+             
+            'idlimbah'            =>   $request->namalimbah,
+            'tgl'                =>  AppHelper::convertDate($request->entridate),
+            'idasallimbah'        =>  $request->limbahasal,
+            'idjenislimbah'     =>  $request->jenislimbah,
+            // 'mutasi'            =>  0	, 
+            'jumlah'            =>  $request->jmlhlimbah,
+            'idsatuan'            =>  $request->satuan,
+            'limbah3r'            =>  $request->limbah3r,
+            'keterangan'            =>  $request->keterangan, 
+            'maksud'                   => $request->maksud,
+            'changed_by'            => $request->np,
+            'updated_at'            => date('Y-m-d')
+
+        );
+        
+        $dataDetail = array(
+            'id_transaksi'      =>  $dataToBeUpdate->id_transaksi,
+            'idmutasi'          => $dataToBeUpdate->id,
+            'idlimbah'          =>  $request->namalimbah,
+            'idstatus'          =>  10,
+            'jumlah'            =>  $request->jmlhlimbah,
+            'idsatuan'          =>  $request->satuan,
+            'created_at'        => date('Y-m-d'),
+            'tgl'                =>  AppHelper::convertDate($request->entridate),
+            'idasallimbah'      =>   $request->limbahasal,
+            'np'                => $request->np,
+            'keterangan'        =>$request->alasan,
+            'idjenislimbah'     => $request->jenislimbah,
+            'limbah3r'          =>  $request->limbah3r,
+            'created_by'        => $username,
+        ); 
+        $dataStatus = array(
+             
+            'jumlah'            =>  $request->jmlhlimbah,
+             
+             
+        ); 
+
+        // $jumlah$dataLimbah
+        $updateHeader = DB::table('tr_headermutasi')->where('id',$request->hidden_id)->update($dataHeader);
+        $updateHeader = DB::table('tr_statusmutasi')->where('idmutasi',$request->hidden_id)->update($dataStatus);
+        $insertDetail = DB::table('tr_detailmutasi')->insert($dataDetail);
+        return response()->json(['success' => 'Data Berhasil Di Revisi']);
+    } catch (Exception $e) {
+        return response()->json(['error' => 'Data Gagal Di Revisi']);
+    }
     }
 
     /**

@@ -1,15 +1,15 @@
-<div class="col-md-12">
-    <div class="card card-info">
-        <div class="card-header">
-            <h3 class="card-title">Header Data</h3>
-        </div>
-        <div class="card-body">
-            {{-- <form id="input_limbah" enctype="multipart/form-data">
-                @csrf --}}
-            <div class="box-body">
-                <!-- jenis Uji -->
-                <span id="form_result"></span>
-                
+<div class="modal fade" id="modalrevisi">
+    <div class="modal-dialog modal-lg" style="width:90%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 id='title_revisi' class="modal-title"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="form_revisi" enctype="multipart/form-data">
+                    @csrf
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
@@ -54,6 +54,13 @@
                         <div id="formnosurat" class="form-group">
                             <label for="nosurat">Keterangan</label>
                             <input type="text" name="keterangan" id="keterangan" class="form-control"
+                                placeholder="Keterangan">
+                            {{-- <small class="text-danger">{{ $errors->nosurat->first() }}</small> --}}
+                        </div>
+                        
+                        <div id="formnosurat" class="form-group">
+                            <label for="nosurat">Alasan Revisi</label>
+                            <input type="text" name="alasan" id="alasan" class="form-control"
                                 placeholder="Keterangan">
                             {{-- <small class="text-danger">{{ $errors->nosurat->first() }}</small> --}}
                         </div>
@@ -110,7 +117,8 @@
                         </div>
                         <div class="form-group">
                             <label>Nomor Pegawai</label>
-                            <select name="np" id="np" class="form-control select2bs4" style="width: 100%;">
+                            <select name="np" id="np" class="form-control select2bs4"
+                            style="width: 100%;">
                                 {{-- <option value="-" selected="selected">Pilih Salah Satu</option> --}}
                                 <option value="" disabled selected>-</option>
                                 @foreach($np as $data)
@@ -143,13 +151,15 @@
 
 
                 </div>
-
-
+                
+                <input type="hidden" id="hidden_transaksi" name="hidden_transaksi" >
+                <input type="hidden" id="hidden_id" name="hidden_id" >
                 <div class="box-footer">
-                    <button name="copy" id="copy" class="btn btn-primary">Copy</button>
+                    <button name="simpan" id="simpan" class="btn btn-primary">Submit</button>
                     {{-- <button id="submit" type="submit" class="btn btn-primary" >Submit</button> --}}
                 </div>
-                {{-- </form> --}}
+                </form>
             </div>
         </div>
     </div>
+</div>

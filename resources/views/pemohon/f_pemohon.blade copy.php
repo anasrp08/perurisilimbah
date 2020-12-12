@@ -9,7 +9,7 @@
             <div class="box-body">
                 <!-- jenis Uji -->
                 <span id="form_result"></span>
-                
+
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">

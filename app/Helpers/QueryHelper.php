@@ -10,7 +10,7 @@ class QueryHelper
         $namaLimbah=DB::table('md_namalimbah')->get();
         $tipeLimbah=DB::table('md_tipelimbah')->get();
         $penghasilLimbah=DB::table('md_penghasillimbah')->get();
-        $satuanLimbah=DB::table('md_satuan')->get();
+        $satuanLimbah=DB::table('md_satuan')->orderBy('id','desc')->get();
         $tpsLimbah=DB::table('md_tps')->get();
         $np=DB::table('tbl_np')->get();
         // dd($namaLimbah);

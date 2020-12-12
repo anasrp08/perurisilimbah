@@ -37,6 +37,7 @@ class CreateTrProseslimbah extends Migration
             $table->string('created_by')->nullable();
             $table->string('changed_by')->nullable();
             $table->string('limbah3r')->nullable();
+            $table->text('keterangan')->nullable();
             $table->timestamps();
         });
     }

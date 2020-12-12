@@ -39,6 +39,7 @@ Route::get('pemohon/entri', 'PemohonController@viewEntri')->name('pemohon.entri'
 Route::post('pemohon/list', 'PemohonController@index')->name('pemohon.list');
 Route::post('pemohon/terima', 'PemohonController@updatevalid') -> name('pemohon.updatevalid');
 Route::post('pemohon/validasi', 'PemohonController@updatedValidSatpam') -> name('satpam.valid');
+Route::post('histori/update', 'PemohonController@update')->name('history.update');
 Route::resource('pemohon', 'PemohonController');
 
 Route::post('penyimpanan/list', 'PenyimpananLimbahController@index')->name('penyimpanan.list');
@@ -65,6 +66,9 @@ Route::get('/kapasitas/viewlist', 'ReportLimbahController@viewIndexKapasitas')->
 Route::post('kapasitas/daftar', 'ReportLimbahController@indexKapasitas')->name('kapasitas.daftar');
 Route::get('penghasil/viewlist', 'ReportLimbahController@viewIndexPenghasil')->name('penghasil.listview');
 Route::post('penghasil/daftar', 'ReportLimbahController@indexPenghasil')->name('penghasil.daftar');
+Route::get('histori/viewlist', 'ReportLimbahController@viewHistory')->name('history.listview');
+Route::post('histori/data', 'ReportLimbahController@indexHistory')->name('history.data');
+
 
 
 
