@@ -9,12 +9,22 @@
                 <li class="nav-item">
                     <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill"
                         href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home"
-                        aria-selected="true">Dashboard 1</a>
+                        aria-selected="true">Dashboard Kuota & Kapasitas</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill"
                         href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile"
-                        aria-selected="false">Dashboard 2</a>
+                        aria-selected="false">Dashboard Penghasil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-mutasi-tab" data-toggle="pill"
+                        href="#custom-tabs-one-mutasi" role="tab" aria-controls="custom-tabs-one-mutasi"
+                        aria-selected="false">Dashboard Mutasi</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-one-kadaluarsa-tab" data-toggle="pill"
+                        href="#custom-tabs-one-kadaluarsa" role="tab" aria-controls="custom-tabs-one-kadaluarsa"
+                        aria-selected="false">Daftar Kadaluarsa</a>
                 </li>
 
             </ul>
@@ -39,25 +49,35 @@
                 </div>
                 <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel"
                     aria-labelledby="custom-tabs-one-profile-tab" style="position: relative;">
-                    {{-- <div class="row"> --}}
-                    <!-- Left col -->
-                    <div class="row">
-                        <!-- Left col -->
-                        @include('dashboard.penghasil')
-                        {{-- @include('dashboard.unit_kerja_penghasil') --}}
+                  
+                    <div class="row"> 
+                        @include('dashboard.penghasil') 
 
 
                     </div>
-                    <div class="row">
-                        <!-- Left col -->
-                        @include('dashboard.kadaluarsa')
+                    <div class="row"> 
+                        
+                    </div> 
+                </div>
+                <div class="tab-pane fade" id="custom-tabs-one-mutasi" role="tabpanel"
+                    aria-labelledby="custom-tabs-one-mutasi-tab" style="position: relative;">
+                  
+                    <div class="row"> 
+                        @include('dashboard.penghasil') 
 
 
                     </div>
+                    
+                </div>
+                <div class="tab-pane fade" id="custom-tabs-one-kadaluarsa" role="tabpanel"
+                    aria-labelledby="custom-tabs-one-kadaluarsa-tab" style="position: relative;">
+                  
+                    <div class="row"> 
+                        @include('dashboard.kadaluarsa') 
 
 
-
-                    {{-- </div> --}}
+                    </div>
+                     
                 </div>
 
 
@@ -65,58 +85,9 @@
 
             </div>
         </div>
-        <!-- /.card -->
+        
 
-        {{-- <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">
-            <i class="fas fa-chart-pie mr-1"></i>
-            {{-- Dashboard Kapasitas & Kuota 
-          </h3>
-          <div class="card-tools">
-            <ul class="nav nav-pills ml-auto">
-              <li class="nav-item">
-                <a class="nav-link active" href="#revenue-chart" data-toggle="tab">Kapasitas</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#sales-chart" data-toggle="tab">Kadaluarsa</a>
-              </li>
-            </ul>
-          </div>
-        </div><!-- /.card-header -->
-        <div class="card-body">
-          <div class="tab-content p-0">
-            <!-- Morris chart - Sales -->
-            <div class="chart tab-pane active" id="revenue-chart" style="position: relative;">
-                 <div class="row">
-                    <!-- Left col -->
-                    @include('dashboard.kuotalimbah')
-             
-            
-                </div>
-            
-                <div class="row">
-                    <!-- Left col -->
-                    @include('dashboard.kapasitastps')
-            
-            
-                </div>
-                 
-             </div>
-            <div class="chart tab-pane" id="sales-chart" style="position: relative;">
-                <div class="row">
-                    <!-- Left col -->
-                    @include('dashboard.penghasil')
-            
-                </div>
-            </div>  
-          </div>
-        </div><!-- /.card-body -->
-      </div> --}}
-
-
-</section>
-{{-- </div> --}}
+</section> 
 
 @endsection
 @section('scripts')
