@@ -45,10 +45,12 @@ class ReportLimbahController extends Controller
     public function detailNeraca(Request $request)
     {
         //    dd($request->all());
-        $queryData = DB::table('tr_detailmutasi')
+        $queryData=null;
+        if($request->isWiping == '-'){
+            $queryData = DB::table('tr_detailmutasi')
             ->join('tr_headermutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
             ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id')
-            ->join('md_tps', 'tr_headermutasi.idtps', '=', 'md_tps.id')
+            // ->join('md_tps', 'tr_headermutasi.idtps', '=', 'md_tps.id')
             ->join('md_penghasillimbah', 'tr_detailmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
             ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
             ->join('md_satuan', 'md_satuan.id', '=', 'tr_detailmutasi.idsatuan')
@@ -56,7 +58,8 @@ class ReportLimbahController extends Controller
             ->select(
                 'md_namalimbah.namalimbah',
                 'md_namalimbah.jenislimbah',
-                'md_tps.namatps',
+                'md_namalimbah.saldo',
+                // 'md_tps.namatps',
                 'md_statusmutasi.keterangan',
                 'md_statusmutasi.mutasi',
                 'md_penghasillimbah.seksi',
@@ -69,87 +72,149 @@ class ReportLimbahController extends Controller
             ->where('tr_detailmutasi.idstatus', $request->idstatus)
             ->orderBy('tr_detailmutasi.created_at', 'desc');
         $queryData = $queryData->get();
+        }else{
+            $queryData = DB::table('tr_detailmutasi')
+            ->join('tr_headermutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
+            ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id')
+            // ->join('md_tps', 'tr_headermutasi.idtps', '=', 'md_tps.id')
+            ->join('md_penghasillimbah', 'tr_detailmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
+            ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
+            ->join('md_satuan', 'md_satuan.id', '=', 'tr_detailmutasi.idsatuan')
+
+            ->select(
+                'md_namalimbah.namalimbah',
+                'md_namalimbah.jenislimbah',
+                // 'md_tps.namatps',
+                'md_statusmutasi.keterangan',
+                'md_statusmutasi.mutasi',
+                'md_penghasillimbah.seksi',
+                'tr_detailmutasi.*',
+                'md_satuan.satuan',
+
+            )
+            ->whereMonth('tr_detailmutasi.created_at', $request->bulan)
+            ->whereIn('tr_detailmutasi.idlimbah', ['1','2','3'])
+            ->where('tr_detailmutasi.idstatus', $request->idstatus)
+            ->orderBy('tr_detailmutasi.created_at', 'desc');
+        $queryData = $queryData->get();
+        }
+        
         return response()->json(['data' => $queryData]);
     }
     public function indexNeraca(Request $request)
     {
         // dd($request->period) ;
+
         if (request()->ajax()) {
             $months = [11, 10];
             $monthPrev = 10;
+            $filterStatus=null;
+            if($request->mutasi=='masuk'){
+                $filterStatus=['2'];
+            }else{
+                $filterStatus=['5', '6', '7', '8', '9'];
+            }
             $queryData = DB::table('tr_detailmutasi')
-
-
                 ->join('tr_headermutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
-
                 ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id')
-                ->join('md_tps', 'tr_headermutasi.idtps', '=', 'md_tps.id')
+                // ->join('md_tps', 'tr_headermutasi.idtps', '=', 'md_tps.id')
                 ->join('md_penghasillimbah', 'tr_detailmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
                 ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
                 ->join('md_satuan', 'md_satuan.id', '=', 'tr_detailmutasi.idsatuan')
-
                 ->select(
                     'md_namalimbah.namalimbah',
+                    'md_namalimbah.keterangan as isWiping',
                     'md_namalimbah.jenislimbah',
-                    'md_tps.namatps',
-                    'md_statusmutasi.keterangan',
+                    // 'md_tps.namatps',
+                    'md_statusmutasi.keterangan as keterangan_mutasi',
                     'md_statusmutasi.mutasi',
                     'md_penghasillimbah.seksi',
                     'tr_detailmutasi.*',
                     'md_satuan.satuan',
                     DB::raw('SUM(tr_detailmutasi.jumlah) as jumlah2'),
-                    // DB::raw('SUM(tr_detailmutasi.jumlah) as jmlah123 from tr_detailmutasi where MONTH(tr_detailmutasi.created)=10'),
+                    
                 )
-                ->whereMonth('tr_detailmutasi.created_at', '=', $request->period)
-                // ->whereMonth('tr_detailmutasi.created_at','=','10')
-                // ->whereIn(DB::RAW('month(tr_detailmutasi.created_at)'), $months)
+                ->whereMonth('tr_detailmutasi.created_at', '=', $request->period) 
 
-                ->whereIn('tr_detailmutasi.idstatus', ['2', '5', '6', '7', '8', '9'])
+                ->whereIn('tr_detailmutasi.idstatus',  $filterStatus)
+                ->whereNotIn('tr_detailmutasi.idlimbah', ['1', '2', '3'])
 
                 ->groupBy('tr_detailmutasi.idstatus', 'tr_detailmutasi.idlimbah');
 
             $queryData = $queryData->get();
-            $queryData = collect($queryData);
-            // foreach ($queryData as $key => $item){
+            //penggabungan limbah cair B3
+            $dataLimbahCair = DB::table('tr_detailmutasi')
+            ->join('tr_headermutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
+            ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id')
+            // ->join('md_tps', 'tr_headermutasi.idtps', '=', 'md_tps.id')
+            ->join('md_penghasillimbah', 'tr_detailmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
+            ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
+            ->join('md_satuan', 'md_satuan.id', '=', 'tr_detailmutasi.idsatuan')
+            ->select(
+                'md_namalimbah.namalimbah',
+                'md_namalimbah.keterangan as isWiping',
+                'md_namalimbah.jenislimbah', 
+                'md_statusmutasi.keterangan as keterangan_mutasi',
+                'md_statusmutasi.mutasi',
+                'md_penghasillimbah.seksi',
+                'tr_detailmutasi.*',
+                'md_satuan.satuan',
+                DB::raw('SUM(tr_detailmutasi.jumlah) as jumlah2'),
+                
+            )
+            ->whereMonth('tr_detailmutasi.created_at', '=', $request->period) 
 
-            //     $vendorQuantitySum = $item->stock->sum('vendor_quantity');
+            ->whereIn('tr_detailmutasi.idstatus',  $filterStatus)
+            ->whereIn('tr_detailmutasi.idlimbah', ['1', '2', '3'])
 
-            //     $products[$key]->vendorQuantity = $vendorQuantitySum;
-
-            // }
-            // $posts
-            //     $post['url'] = 'http://your.url/here';
-            //     return $post;
-            // });
+            ->groupBy('tr_detailmutasi.idstatus', 'md_namalimbah.keterangan');
             
-            $transactionsWithTotalCharge = $queryData->map(function ($transaction) {
-                // $transactionsWithTotalCharge = $queryData->each(function ($transaction, $key) {
-
-                $limbahMasuk = DB::table('tr_detailmutasi')->where('idlimbah', $transaction->idlimbah)
-                    ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
-
-                    ->whereMonth('tr_detailmutasi.created_at', '=', '10')
-                    ->where('md_statusmutasi.mutasi', 'Masuk')
-                    ->sum('tr_detailmutasi.jumlah');
-
-                $limbahKeluar = DB::table('tr_detailmutasi')->where('idlimbah', $transaction->idlimbah)
-                    ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
-                    ->whereMonth('tr_detailmutasi.created_at', '=', '10')
-                    ->where('md_statusmutasi.mutasi', 'Proses')->sum('jumlah');
-                    //dari master data limbah
-                    $sisaSaldoLimbah = DB::table('md_namalimbah')->where('id', $transaction->idlimbah)->first();
-                    // dd();
-                    
-                     
-
-                $sisaSaldo = (int)$limbahMasuk - (int)$limbahKeluar;
-                // dd($limbahKeluar);
-                // $totalAmount = $transaction->created_at->where('month', 10)->sum('jumlah'); // This make the sum of all charges of march for that transaction 
-                $transaction->sisaSaldo = $sisaSaldo;
-                $transaction->saldoLimbah = $sisaSaldoLimbah->saldo; // This add chargesTotalAmount to every TransactionServices
-                // dd($transaction);
-                return $transaction;
-            });
+                
+        $dataLimbahCair = $dataLimbahCair->get();
+        $sorted=null;
+        if($dataLimbahCair->count()==0){
+            $sorted=$dataLimbahCair;
+        }else{
+            $dataLimbahCair[0]->namalimbah='Limbah Cair Wiping Solution';
+            //merged 2 colection with id limbah 1,2,3 to Limbah cair Wiping solution
+            $queryData = $queryData->merge($dataLimbahCair);
+            $period=$request->period;
+            
+     
+                $queryData = collect($queryData);
+                //sort by idlimbah
+                $sorted=$queryData->sortBy('idlimbah');
+               
+                $transactionsWithTotalCharge = $sorted->map(function ($transaction) use($period) {
+                    // $transactionsWithTotalCharge = $queryData->each(function ($transaction, $key) {
+                    $prevPeriod=(int)$period - 1;
+                    $limbahMasuk = DB::table('tr_detailmutasi')->where('idlimbah', $transaction->idlimbah)
+                        ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
+    
+                        ->whereMonth('tr_detailmutasi.created_at', '=', $prevPeriod)
+                        ->where('md_statusmutasi.mutasi', 'Masuk')
+                        ->sum('tr_detailmutasi.jumlah');
+    
+                    $limbahKeluar = DB::table('tr_detailmutasi')->where('idlimbah', $transaction->idlimbah)
+                        ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
+                        ->whereMonth('tr_detailmutasi.created_at', '=', $prevPeriod)
+                        ->where('md_statusmutasi.mutasi', 'Proses')->sum('jumlah');
+                        //dari master data limbah
+                        $sisaSaldoLimbah = DB::table('md_namalimbah')->where('id', $transaction->idlimbah)->first();
+                        // dd();
+                        
+                         
+    
+                    $sisaSaldo = (int)$limbahMasuk - (int)$limbahKeluar;
+                    // dd($limbahKeluar);
+                    // $totalAmount = $transaction->created_at->where('month', 10)->sum('jumlah'); // This make the sum of all charges of march for that transaction 
+                    $transaction->sisaSaldo = $sisaSaldo;
+                    $transaction->saldoLimbah = $sisaSaldoLimbah->saldo; // This add chargesTotalAmount to every TransactionServices
+                    // dd($transaction);
+                    return $transaction;
+                });
+        }
+        
 
 
             // foreach($transactionsWithTotalCharge as $transaction) {
@@ -160,7 +225,7 @@ class ReportLimbahController extends Controller
 
 
             // dd( $  $transactionsWithTotalCharge );
-            return datatables()->of($queryData)
+            return datatables()->of($sorted)
 
                 ->addIndexColumn()
                 // ->addColumn('action', 'action_butt_pemohon')

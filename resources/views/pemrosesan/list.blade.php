@@ -23,7 +23,7 @@
     }
 
     .modal-lg {
-        max-width: 55% !important;
+        max-width: 75% !important;
     }
 
 </style>

@@ -13,10 +13,15 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-
-                        <label>Periode</label>
-                        <input type="text" id="period" name="period" class="entridate form-control float-right"
-                            autocomplete="off">
+                        <label>Tahun Anggaran</label>
+                        <select name="tahun" id="tahun" class="form-control select2bs4" style="width: 100%;">
+                            <option value="" disabled selected>-Tahun-</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                            {{-- @foreach($penghasilLimbah as $data)
+                            <option value="{{$data->id}}">{{$data->seksi}}</option>
+                            @endforeach --}}
+                        </select>
                     </div>
                 </div>
             
