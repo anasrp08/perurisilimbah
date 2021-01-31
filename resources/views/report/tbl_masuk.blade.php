@@ -8,8 +8,9 @@
                         <th>No. </th> 
                         <th>Nama Limbah</th>
                         <th>Satuan</th>
-                        <th>Total Saldo Masuk</th>
-                        <th>Saldo Bulan Lalu</th> 
+                        <th>Saldo Masuk</th>
+                        <th>Sisa Saldo Bulan Lalu</th> 
+                        <th>Total</th> 
                         <th>Status</th>
                         <th>Mutasi</th> 
                     </tr>

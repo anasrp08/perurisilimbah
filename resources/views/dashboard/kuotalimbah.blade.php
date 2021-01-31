@@ -19,6 +19,31 @@
         </div><!-- /.card-header -->
         <div class="card-body">
             <div class="tab-content p-0">
+                <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Tahun Anggaran</label>
+                        <select name="tahun_kuota" id="tahun_kuota" class="form-control select2bs4" style="width: 100%;">
+                            <option value="" disabled selected>-Tahun-</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                            {{-- @foreach($penghasilLimbah as $data)
+                            <option value="{{$data->id}}">{{$data->seksi}}</option>
+                            @endforeach --}}
+                        </select>
+                         
+                    </div>
+                   
+                </div>
+                <div class="col-md-4" style="positio:relatve;">
+                    <div class="text-bottom">               
+                   
+                    <button style="position: absolute;bottom: 17px;" name="display_kuota" id="display_kuota" class="btn btn-primary">Tampilkan</button>
+                
+                </div>
+ 
+                </div>
+                
                 <!-- Morris chart - Sales -->
                 <div class="row">
                     <div class="col-md-4">

@@ -5,7 +5,7 @@
         <div class="card-header">
             <h3 class="card-title">
                 <i class="fas fa-chart-pie mr-1"></i>
-                Penghasil Limbah
+                Neraca Limbah
             </h3>
 
         </div><!-- /.card-header -->
@@ -14,7 +14,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>Tahun Periode</label>
-                        <select name="tahun" id="tahun" class="form-control select2bs4" style="width: 100%;">
+                        <select name="tahun_neraca" id="tahun_neraca" class="form-control select2bs4" style="width: 100%;">
                             <option value="" disabled selected>-Tahun-</option>
                             <option value="2021">2021</option>
                             <option value="2020">2020</option>
@@ -25,24 +25,11 @@
                     </div>
                 </div>
             
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>Penghasil Limbah</label>
-                    <select name="limbahasal" id="limbahasal" class="form-control select2bs4" style="width: 100%;">
-                        <option value="" disabled selected>-Pilih Asal Limbah-</option>
-                        @foreach($penghasilLimbah as $data)
-                        <option value="{{$data->id}}">{{$data->seksi}}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="text-center">
-                    <button name="display_penghasil" id="display_penghasil" class="btn btn-primary">Tampilkan</button>
-                </div>
-            </div>
+             
             <div class="col-md-4">
                 <div class="form-group">
                     <label>Nama Limbah</label>
-                    <select name="namalimbah" id="namalimbah" class="form-control select2bs4" style="width: 100%;">
+                    <select name="namalimbah_neraca" id="namalimbah_neraca" class="form-control select2bs4" style="width: 100%;">
                         <option value="" disabled selected>-Pilih Nama Limbah-</option>
                         @foreach($namaLimbah as $data)
                         <option value="{{$data->id}}">{{$data->namalimbah}}</option>
@@ -50,13 +37,18 @@
                     </select>
                 </div>
             </div>
+            <div class="col-md-4" style="positio:relatve;">
+                <div class="text-bottom">               
+               
+                <button style="position: absolute;bottom: 17px;" name="display_neraca" id="display_neraca" class="btn btn-primary">Tampilkan</button>
             
-             
+            </div>
+        </div> 
         </div>
             {{-- <div class="tab-content p-0"> --}}
             <!-- Morris chart - Sales -->
             {{-- <div class="chart tab-pane active" id="revenue-chart" style="position: relative; "> --}}
-            <canvas id="penghasil_all" style="height: 175px;"></canvas>
+            <canvas id="graf_mutasi" style="height: 175px;"></canvas>
             {{-- </div> --}}
 
             {{-- </div> --}}

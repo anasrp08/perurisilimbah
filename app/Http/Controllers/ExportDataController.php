@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use App\Helpers\AppHelper;
 use App\Helpers\QueryHelper;
+use App\Exports\NeracaExport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\Controller;
 
 use Redirect;
 use Validator;
@@ -18,7 +21,7 @@ use DB;
 use PDF;
 
 
-class ReportLimbahController extends Controller
+class ExportDataController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -31,75 +34,67 @@ class ReportLimbahController extends Controller
     }
     public function viewIndexNeraca()
     {
-        //
-        // $queryData = DB::table('tr_detailmutasi')
-        // ->whereMonth('created_at','=','11')
-        // ->whereIn('idstatus',['2','5','6','7','8','9']);
-
-        // $queryData= $queryData->get();
-        // dd( $queryData);
-
+        
 
         return view('report.reportneraca', QueryHelper::getDropDown());
     }
-    public function detailNeraca(Request $request)
+    public function downloadNeraca($month,$year)
     {
-        //    dd($request->all());
-        $queryData=null;
-        if($request->isWiping == '-'){
-            $queryData = DB::table('tr_detailmutasi')
-            ->join('tr_headermutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
-            ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id')
-            // ->join('md_tps', 'tr_headermutasi.idtps', '=', 'md_tps.id')
-            ->join('md_penghasillimbah', 'tr_detailmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
-            ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
-            ->join('md_satuan', 'md_satuan.id', '=', 'tr_detailmutasi.idsatuan')
+ 
+    //     $queryData = DB::table('tr_detailmutasi')
+    //     ->join('tr_headermutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
+    //     ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id') 
+    //     ->join('md_penghasillimbah', 'tr_detailmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
+    //     ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
+    //     ->join('md_satuan', 'md_satuan.id', '=', 'tr_detailmutasi.idsatuan')
+    //     ->select(
+    //         // 'tr_headermutasi.id',
+    //         'tr_headermutasi.tgl',
+    //         'md_namalimbah.namalimbah', 
+    //         'tr_detailmutasi.jumlah',
+    //         'md_satuan.satuan',
+    //         'md_namalimbah.jenislimbah', 
+    //         'md_statusmutasi.keterangan as keterangan_mutasi',
+            
+    //         'md_penghasillimbah.seksi',
+    //         // 'tr_detailmutasi.*'
+    //         // DB::raw('SUM(tr_detailmutasi.jumlah) as jumlah2'),
+           
+    //         'tr_detailmutasi.created_at',
+    //         'tr_detailmutasi.np'
+    //     )
+    //     ->whereMonth('tr_detailmutasi.created_at', '=',   $this->month)
+    //     ->whereYear('tr_detailmutasi.created_at', '=',   $this->year)    
+    //     ->whereIn('tr_detailmutasi.idstatus', ['5','6','7','8','9'])
+    //     ->orderBy('tr_detailmutasi.created_at','desc'); 
+ 
 
-            ->select(
-                'md_namalimbah.namalimbah',
-                'md_namalimbah.jenislimbah',
-                'md_namalimbah.saldo',
-                // 'md_tps.namatps',
-                'md_statusmutasi.keterangan',
-                'md_statusmutasi.mutasi',
-                'md_penghasillimbah.seksi',
-                'tr_detailmutasi.*',
-                'md_satuan.satuan',
-
-            )
-            ->whereMonth('tr_detailmutasi.created_at', $request->bulan)
-            ->where('tr_detailmutasi.idlimbah', $request->idlimbah)
-            ->where('tr_detailmutasi.idstatus', $request->idstatus)
-            ->orderBy('tr_detailmutasi.created_at', 'desc');
-        $queryData = $queryData->get();
-        }else{
-            $queryData = DB::table('tr_detailmutasi')
-            ->join('tr_headermutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
-            ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id')
-            // ->join('md_tps', 'tr_headermutasi.idtps', '=', 'md_tps.id')
-            ->join('md_penghasillimbah', 'tr_detailmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
-            ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
-            ->join('md_satuan', 'md_satuan.id', '=', 'tr_detailmutasi.idsatuan')
-
-            ->select(
-                'md_namalimbah.namalimbah',
-                'md_namalimbah.jenislimbah',
-                // 'md_tps.namatps',
-                'md_statusmutasi.keterangan',
-                'md_statusmutasi.mutasi',
-                'md_penghasillimbah.seksi',
-                'tr_detailmutasi.*',
-                'md_satuan.satuan',
-
-            )
-            ->whereMonth('tr_detailmutasi.created_at', $request->bulan)
-            ->whereIn('tr_detailmutasi.idlimbah', ['1','2','3'])
-            ->where('tr_detailmutasi.idstatus', $request->idstatus)
-            ->orderBy('tr_detailmutasi.created_at', 'desc');
-        $queryData = $queryData->get();
-        }
-        
-        return response()->json(['data' => $queryData]);
+    //     $queryData = $queryData->get();
+    //     foreach($sales as $e)
+    // {
+    //     $sales_array[] = array(
+    //        ' Date'=>$e->date,
+    //             ' Time'=>$e->time,
+    //             ' No of litre'=>$e->no_of_litre,
+    //             ' note'=>$e->note,
+    //     );
+    //     $total += $e->no_of_litre;
+    // }
+    // $sales_array[] = array(
+    //    ' Date'=>$e->'',
+    //             ' Time'=>$e->'',
+    //             ' No of litre'=>$e->'',
+    //             ' note'=>$e->'',
+    //    'Total'=> $total
+    // );
+    //     return Excel::create('salesdet',function($excel) use ($sales_array) {
+    //         $excel->sheet('mySheet', function($sheet) use ($sales_array)
+    //         {
+    //             $sheet->fromArray($sales_array);
+    //         });
+    //     })->download($type);
+    // https://laracasts.com/discuss/channels/laravel/how-to-pass-the-sumfields-to-excel-conversion-using-maatwebsite-in-laravel
+        return Excel::download(new NeracaExport($month,$year), 'neraca.xlsx');
     }
     public function indexNeraca(Request $request)
     { 

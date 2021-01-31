@@ -19,7 +19,7 @@
                 <li class="nav-item">
                     <a class="nav-link" id="custom-tabs-one-mutasi-tab" data-toggle="pill"
                         href="#custom-tabs-one-mutasi" role="tab" aria-controls="custom-tabs-one-mutasi"
-                        aria-selected="false">Dashboard Mutasi</a>
+                        aria-selected="false">Dashboard Neraca</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="custom-tabs-one-kadaluarsa-tab" data-toggle="pill"
@@ -49,35 +49,35 @@
                 </div>
                 <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel"
                     aria-labelledby="custom-tabs-one-profile-tab" style="position: relative;">
-                  
-                    <div class="row"> 
-                        @include('dashboard.penghasil') 
+
+                    <div class="row">
+                        @include('dashboard.penghasil')
 
 
                     </div>
-                    <div class="row"> 
-                        
-                    </div> 
+                    <div class="row">
+
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="custom-tabs-one-mutasi" role="tabpanel"
                     aria-labelledby="custom-tabs-one-mutasi-tab" style="position: relative;">
-                  
-                    <div class="row"> 
-                        @include('dashboard.penghasil') 
+
+                    <div class="row">
+                        @include('dashboard.graf_mutasi')
 
 
                     </div>
-                    
+
                 </div>
                 <div class="tab-pane fade" id="custom-tabs-one-kadaluarsa" role="tabpanel"
                     aria-labelledby="custom-tabs-one-kadaluarsa-tab" style="position: relative;">
-                  
-                    <div class="row"> 
-                        @include('dashboard.kadaluarsa') 
+
+                    <div class="row">
+                        @include('dashboard.kadaluarsa')
 
 
                     </div>
-                     
+
                 </div>
 
 
@@ -85,9 +85,9 @@
 
             </div>
         </div>
-        
 
-</section> 
+
+</section>
 
 @endsection
 @section('scripts')
@@ -101,18 +101,42 @@
         var cair = createPieChart(document.getElementById('cair'), "Cair", 0)
         var sludge = createPieChart(document.getElementById('sludge'), "Sludge", 1)
         var sk = createPieChart(document.getElementById('sk'), "Sampah Kontaminasi", 2)
-        $('#period').datepicker({
-            uiLibrary: 'bootstrap4',
-            todayHighlight: true,
-            format: "mm/yyyy",
-            defaultDate: new Date(),
-            viewMode: "months",
-            minViewMode: "months"
-        });
-        $('#period').val(moment().format('MM/YYYY'))
-
+        var namalimbah = null
         $('.select2bs4').select2({
             theme: 'bootstrap4'
+        })
+        $('#tahun').val(moment().format('YYYY')).change()
+        $('#tahun_kuota').val(moment().format('YYYY')).change()
+        $('#tahun_neraca').val(moment().format('YYYY')).change()
+        var paramKuota = {
+
+            period: $('#tahun_kuota').val()
+        }
+        getDataKuota(paramKuota)
+
+        $('#display_penghasil').click(function () {
+            var paramData = {
+
+                period: $('#tahun').val(),
+                unit_kerja: $('#limbahasal').val(),
+                namalimbah: $('#namalimbah').val()
+            } 
+            getDataPenghasil(paramData)
+        })
+        $('#display_kuota').click(function () {
+            var paramData = {
+
+                period: $('#tahun_kuota').val()
+            }
+            getDataKuota(paramData)
+        })
+        $('#display_neraca').click(function () {
+            var paramData = {
+
+                period: $('#tahun_neraca').val(),
+                namalimbah: $('#namalimbah_neraca').val()
+            }
+            getDataNeraca(paramData)
         })
 
 
@@ -172,76 +196,160 @@
                 }
             });
         }
-        var namalimbah=null
-        var myChart = new Chart(document.getElementById("penghasil_all"), {
-                type: 'bar',
-                data: {
-                    labels: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli",
-                        "Agustus",
-                        "September", "Oktober", "November", "Desember"
-                    ],
-                    datasets: [{
-                            label: "Jumlah Limbah",
-                            backgroundColor: "#007bff",
-                            data: ''
-                        },
-                         
-                    ]
-                },
-                options: {
-                    scales: {
-            yAxes: [{
-                ticks: {
-                    // Include a dollar sign in the ticks
-                    callback: function(value, index, values) {
-                        var finalValue=null
-                                 var satuan=null
-                        if(namalimbah== 1 || namalimbah== 2 || namalimbah== 3 || namalimbah== 17 ||namalimbah== 20){
-                                    // finalValue=parseInt(formattedjumlah) / parseInt(1000)
-                                    satuan='m3'
-                                  }else{
-                                    // finalValue=parseInt(formattedjumlah) / parseInt(1000)
-                                    satuan='ton'
-                                  }
 
-                        return   value+' '+satuan;
+        var chartNeraca = new Chart(document.getElementById("graf_mutasi"), {
+            type: 'bar',
+            data: {
+                labels: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli",
+                    "Agustus",
+                    "September", "Oktober", "November", "Desember"
+                ],
+                datasets: [{
+                        label: "Masuk",
+                        backgroundColor: "#007bff",
+                        data: ''
+                    },
+                    {
+                        label: "Keluar",
+                        backgroundColor: "#28a745",
+                        data: ''
+                    },
+                    {
+                        label: "Sisa",
+                        backgroundColor: "#dc3545",
+                        data: ''
                     }
-                }
-            }]
-        },
-                    tooltips: {
-                        callbacks: {
-                            // title: function (tooltipItem, data) {
-                            //     return data['labels'][tooltipItem[0]['index']];
-                            // },
-                            label: function (tooltipItem, data) {
-                                var formattedjumlah = data['datasets'][0]['data'][tooltipItem['index']]
-                                 console.log(namalimbah)
-                                 var finalValue=null
-                                 var satuan=null
-                                  if(namalimbah== 1 || namalimbah== 2 || namalimbah== 3 || namalimbah== 17 ||namalimbah== 20){
-                                    finalValue=parseInt(formattedjumlah) / parseInt(1000)
-                                    satuan='m3'
-                                  }else{
-                                    finalValue=parseInt(formattedjumlah) / parseInt(1000)
-                                    satuan='ton'
-                                  }
-                                return formattedjumlah +' '+satuan
-                                // return data['datasets'];
-                            },
-                            // afterLabel: function (tooltipItem, data) {
-                            //     var dataset = data['datasets'][0];
 
-                               
-                            //     return "Presentase: " + '(' + dataset + '%)';
-                            //     // return data;
-                            // }
+                ]
+            },
+            options: {
+                // scales: {
+                //     yAxes: [{
+                //         ticks: {
+                //             // Include a dollar sign in the ticks
+                //             callback: function (value, index, values) {
+                //                 var finalValue = null
+                //                 var satuan = null
+                //                 if (namalimbah == 1 || namalimbah == 2 || namalimbah == 3 ||
+                //                     namalimbah == 17 || namalimbah == 20) {
+                //                     // finalValue=parseInt(formattedjumlah) / parseInt(1000)
+                //                     satuan = 'm3'
+                //                 } else {
+                //                     // finalValue=parseInt(formattedjumlah) / parseInt(1000)
+                //                     satuan = 'ton'
+                //                 }
+
+                //                 return value + ' ' + satuan;
+                //             }
+                //         }
+                //     }]
+                // },
+                // tooltips: {
+                //     callbacks: {
+                //         // title: function (tooltipItem, data) {
+                //         //     return data['labels'][tooltipItem[0]['index']];
+                //         // },
+                //         label: function (tooltipItem, data) {
+                //             var formattedjumlah = data['datasets'][0]['data'][tooltipItem['index']]
+                //             console.log(namalimbah)
+                //             var finalValue = null
+                //             var satuan = null
+                //             if (namalimbah == 1 || namalimbah == 2 || namalimbah == 3 ||
+                //                 namalimbah == 17 || namalimbah == 20) {
+                //                 finalValue = parseInt(formattedjumlah) / parseInt(1000)
+                //                 satuan = 'm3'
+                //             } else {
+                //                 finalValue = parseInt(formattedjumlah) / parseInt(1000)
+                //                 satuan = 'ton'
+                //             }
+                //             return formattedjumlah + ' ' + satuan
+                //             // return data['datasets'];
+                //         },
+                //         // afterLabel: function (tooltipItem, data) {
+                //         //     var dataset = data['datasets'][0];
+
+
+                //         //     return "Presentase: " + '(' + dataset + '%)';
+                //         //     // return data;
+                //         // }
+                //     },
+
+                // }
+            }
+        });
+
+        var myChart = new Chart(document.getElementById("penghasil_all"), {
+            type: 'bar',
+            data: {
+                labels: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli",
+                    "Agustus",
+                    "September", "Oktober", "November", "Desember"
+                ],
+                datasets: [{
+                        label: "Jumlah Limbah",
+                        backgroundColor: "#007bff",
+                        data: ''
+                    },
+
+                ]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            // Include a dollar sign in the ticks
+                            callback: function (value, index, values) {
+                                var finalValue = null
+                                var satuan = null
+                                if (namalimbah == 1 || namalimbah == 2 || namalimbah == 3 ||
+                                    namalimbah == 17 || namalimbah == 20) {
+                                    // finalValue=parseInt(formattedjumlah) / parseInt(1000)
+                                    satuan = 'm3'
+                                } else {
+                                    // finalValue=parseInt(formattedjumlah) / parseInt(1000)
+                                    satuan = 'ton'
+                                }
+
+                                return value + ' ' + satuan;
+                            }
+                        }
+                    }]
+                },
+                tooltips: {
+                    callbacks: {
+                        // title: function (tooltipItem, data) {
+                        //     return data['labels'][tooltipItem[0]['index']];
+                        // },
+                        label: function (tooltipItem, data) {
+                            var formattedjumlah = data['datasets'][0]['data'][tooltipItem['index']]
+                            console.log(namalimbah)
+                            var finalValue = null
+                            var satuan = null
+                            if (namalimbah == 1 || namalimbah == 2 || namalimbah == 3 ||
+                                namalimbah == 17 || namalimbah == 20) {
+                                finalValue = parseInt(formattedjumlah) / parseInt(1000)
+                                satuan = 'm3'
+                            } else {
+                                finalValue = parseInt(formattedjumlah) / parseInt(1000)
+                                satuan = 'ton'
+                            }
+                            return formattedjumlah + ' ' + satuan
+                            // return data['datasets'];
                         },
-                 
+                        // afterLabel: function (tooltipItem, data) {
+                        //     var dataset = data['datasets'][0];
+
+
+                        //     return "Presentase: " + '(' + dataset + '%)';
+                        //     // return data;
+                        // }
+                    },
+
                 }
-                }
-            });
-         
+            }
+        });
+
+
         var tps1 = createGauge('tps1', 'TPS I', 'm3', 'kapasitas', 150, 20, 75, 120)
 
         var tps2 = createGauge('tps2', 'TPS II', 'JB', 'kapasitas', 125, 20, 65, 90)
@@ -330,60 +438,98 @@
                 }]
             })
         }
-        var paramData = {
+        var paramKapasitas = {
 
-            period: $('#period').val(),
-            unit_kerja: $('#limbahasal').val(),
-            namalimbah:$('#namalimbah').val()
+            period:moment().format('YYYY'), 
+
         }
-        getDataGrafik(paramData)
-        
-        $('#limbahasal').on('change', function () {
-            var paramData = {
-
-                period: $('#period').val(),
-                unit_kerja: $('#limbahasal').val(),
-                namalimbah:$('#namalimbah').val()
-            }
-            namalimbah=$('#namalimbah').val()
-            getDataGrafik(paramData)
-            // updateChart(chart, value,paramData)
-
-        })
-        $('#period').on('change', function () {
-            namalimbah=$('#namalimbah').val()
-            var paramData = {
-                period: $('#period').val(),
-                unit_kerja: $('#limbahasal').val(),
-                namalimbah:$('#namalimbah').val()
-            }
-            getDataGrafik(paramData)
-            // updateChart(chart, value,paramData)
-
-        })
-        $('#namalimbah').on('change', function () {
-            namalimbah=$('#namalimbah').val()
-            var paramData = {
-                period: $('#period').val(),
-                unit_kerja: $('#limbahasal').val(),
-                namalimbah:$('#namalimbah').val()
-            }
-            getDataGrafik(paramData)
-            // updateChart(chart, value,paramData)
-
-        })
-
+        getDataKapasitas(paramKapasitas)
 
         function updateChart(chart, value, paramData) {
             if (!chart.renderer.forExport) {
                 var point = chart.series[0].points[0]
                 point.update(value)
 
-                 
+
             }
         }
 
-        function getDataGrafik(paramData) {
+        function getDataNeraca(paramData) {
+            $.ajax({
+                url: "{{ route('dashboard.neraca') }}",
+                method: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    "accept": "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
+                data: paramData,
+                dataType: "json",
+
+                success: function (data) {
+                    console.log(data)
+                    var saldoMasuk = data.saldoMasuk
+                    var saldoKeluar = data.saldoKeluar
+                    var sisaSaldo = data.sisaSaldo
+
+                    chartNeraca.data.datasets[0].data = saldoMasuk
+                    chartNeraca.data.datasets[1].data = saldoKeluar
+                    chartNeraca.data.datasets[2].data = sisaSaldo
+                    chartNeraca.update();
+
+
+                }
+            });
+        }
+
+        function getDataKuota(paramData) {
+            $.ajax({
+                url: "{{ route('dashboard.kuota') }}",
+                method: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    "accept": "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
+                data: paramData,
+                dataType: "json",
+
+                success: function (data) {
+                    var dataKuota = data.dataKuota
+
+                    updateData(cair, ["Konsumsi", "Sisa"], [dataKuota[0].konsumsi, dataKuota[0]
+                        .sisa
+                    ])
+                    updateData(sludge, ["Konsumsi", "Sisa"], [dataKuota[1].konsumsi, dataKuota[1]
+                        .sisa
+                    ])
+                    updateData(sk, ["Konsumsi", "Sisa"], [dataKuota[2].konsumsi, dataKuota[2].sisa])
+
+
+                }
+            });
+        }
+
+        function getDataPenghasil(paramData) {
+
+            $.ajax({
+                url: "{{ route('dashboard.penghasil') }}",
+                method: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    "accept": "application/json",
+                    "Access-Control-Allow-Origin": "*"
+                },
+                data: paramData,
+                dataType: "json",
+
+                success: function (data) {  
+                    updateDataBar(myChart, data)  
+                }
+            });
+        }
+
+        function getDataKapasitas(paramData) {
 
             $.ajax({
                 url: "{{ route('dashboard.data') }}",
@@ -396,32 +542,21 @@
                 data: paramData,
                 dataType: "json",
 
-                success: function (data) {
-                    var dataPenghasil = data.dataPenghasil
-                    var dataKuota = data.dataKuota
-                    var dataKapasitas = data.dataKapasitas
-                    var dataKadaluarsa = data.dataKadaluarsa 
+                success: function (data) { 
+                    console.log(data)
+                    var dataKapasitas = data.dataKapasitas 
+                    updateChart(tps1, dataKapasitas[0].saldo, dataKapasitas[0].kapasitasjumlah)
+                    updateChart(tps2, dataKapasitas[1].saldo, dataKapasitas[1].kapasitasjumlah)
+                    updateChart(tps3, dataKapasitas[2].saldo, dataKapasitas[2].kapasitasjumlah)
+                    updateChart(tps4, dataKapasitas[3].saldo, dataKapasitas[3].kapasitasjumlah)
+                    updateChart(tps5, dataKapasitas[4].saldo, dataKapasitas[4].kapasitasjumlah)
 
-                    updateData(cair, ["Konsumsi", "Sisa"], [dataKuota[0].konsumsi, dataKuota[0]
-                        .sisa])
-                    updateData(sludge, ["Konsumsi", "Sisa"], [dataKuota[1].konsumsi, dataKuota[1]
-                        .sisa
-                    ])
-                    updateData(sk, ["Konsumsi", "Sisa"], [dataKuota[2].konsumsi, dataKuota[2].sisa])
-                    updateDataBar(myChart, dataPenghasil)
-
-                    updateChart(tps1, dataKapasitas[0].saldo, 150)
-                    updateChart(tps2, dataKapasitas[1].saldo, 125)
-                    updateChart(tps3, dataKapasitas[2].saldo, 125)
-                    updateChart(tps4, dataKapasitas[3].saldo, 50955)
-                    updateChart(tps5, dataKapasitas[4].saldo, 250)
-                    
                 }
             });
         }
 
         $('#datakadaluarsa').DataTable({
-                ajax: {
+            ajax: {
                 url: "{{ route('dashboard.kadaluarsa') }}",
                 type: "POST",
                 headers: {
@@ -429,99 +564,100 @@
                 },
                 data: function (d) {}
             },
-                columns: [{
-                        data: "namalimbah",
-                        name:"namalimbah"
-                    },
-                    {
-                        data: "jumlah",
-                        name:"jumlah",
-                        
-
-                    },
-                    {
-                        data: "created_at",
-                        name:"created_at",
-                        render: function (data, type, row) {
-
-                            if (data == null || data == "-" || data == "0000-00-00 00:00:00" || data == "NULL") {
-                                // console.log(data)    
-                                return '<span>-</span>'
-
-                            } else {
-                                return moment(data).format('DD/MM/YYYY');
-                            }
+            columns: [{
+                    data: "namalimbah",
+                    name: "namalimbah"
+                },
+                {
+                    data: "jumlah",
+                    name: "jumlah",
 
 
+                },
+                {
+                    data: "created_at",
+                    name: "created_at",
+                    render: function (data, type, row) {
+
+                        if (data == null || data == "-" || data == "0000-00-00 00:00:00" ||
+                            data == "NULL") {
+                            // console.log(data)    
+                            return '<span>-</span>'
+
+                        } else {
+                            return moment(data).format('DD/MM/YYYY');
                         }
 
-                    },
-                    {
-                        data: "created_at",
-                        name:"created_at",
-                        render: function (data, type, row) {
 
-                            
-                                return moment().format('DD/MM/YYYY');
-                            
+                    }
+
+                },
+                {
+                    data: "created_at",
+                    name: "created_at",
+                    render: function (data, type, row) {
 
 
-                        }
+                        return moment().format('DD/MM/YYYY');
 
-                    },
-                    {
-                        data: "kadaluarsa",
-                        name:"kadaluarsa",
-                        render: function (data, type, row) {
-                            if (data == null || data == "-" || data ==
-                                "0000-00-00 00:00:00" ||
-                                data == "NULL") {
-                                return '<span>-</span>'
-                            } else {
-                                return moment(data).format('DD/MM/YYYY');
-                            }
 
-                        }
-                    },
-                    {
-                        data: "namatps",
-                        name:"namatps"
-                    },
-                    
-                    {
-                        data: "kadaluarsa",
-                        name:"kadaluarsa",
-                        render: function (data, type, row) {
-                            var curDate = moment().format('DD')
-                            var curMonth = moment().format('MM')
-                            var curYear = moment().format('YYYY')
-                            var date3 = moment(curDate, 'DD/MM/YYYY').add(3,
-                                'days');
-                            var date7 = moment(curDate, 'DD/MM/YYYY').add(7,
-                                'days');
 
-                            var a = moment([curYear, curMonth, curDate]);
-                            var b = moment([moment(data).format('YYYY'), moment(
-                                    data).format('MM'), moment(data)
-                                .format('DD')
-                            ]);
-                            var difference = b.diff(a, 'days') // 1
-                            //diff di query berbeda dengan dif di moment js
-                            
-                            if (difference == 3) {
-                                return '<span class="badge badge-danger">Bahaya</span>'
-                            } else if(difference == 7) {
-                                return '<span class="badge badge-warning">Waspada</span>'
-                            }else{
-                                return '-'
-                            }
+                    }
 
+                },
+                {
+                    data: "kadaluarsa",
+                    name: "kadaluarsa",
+                    render: function (data, type, row) {
+                        if (data == null || data == "-" || data ==
+                            "0000-00-00 00:00:00" ||
+                            data == "NULL") {
+                            return '<span>-</span>'
+                        } else {
+                            return moment(data).format('DD/MM/YYYY');
                         }
 
                     }
-                ]
-            })
-        
+                },
+                {
+                    data: "namatps",
+                    name: "namatps"
+                },
+
+                {
+                    data: "kadaluarsa",
+                    name: "kadaluarsa",
+                    render: function (data, type, row) {
+                        var curDate = moment().format('DD')
+                        var curMonth = moment().format('MM')
+                        var curYear = moment().format('YYYY')
+                        var date3 = moment(curDate, 'DD/MM/YYYY').add(3,
+                            'days');
+                        var date7 = moment(curDate, 'DD/MM/YYYY').add(7,
+                            'days');
+
+                        var a = moment([curYear, curMonth, curDate]);
+                        var b = moment([moment(data).format('YYYY'), moment(
+                                data).format('MM'), moment(data)
+                            .format('DD')
+                        ]);
+                        var difference = b.diff(a, 'days') // 1
+                        //diff di query berbeda dengan dif di moment js
+
+                        if (difference == 3) {
+                            return '<span class="badge badge-danger">Bahaya</span>'
+                        } else if (difference == 7) {
+                            return '<span class="badge badge-warning">Waspada</span>'
+                        } else {
+                            return '-'
+                        }
+
+                    }
+
+                }
+            ]
+        })
+
 
         function updateData(chart, labels, data) {
             chart.data.labels = labels
@@ -534,7 +670,7 @@
             // chart.data.labels = labels
             // chart.data.datasets[0].backgroundColor = ["#ff5722"]
             chart.data.datasets[0].data = data
-            chart.update(); 
+            chart.update();
         }
 
         function thousands_separators(num) {

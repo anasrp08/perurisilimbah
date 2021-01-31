@@ -20,6 +20,9 @@ Auth::routes();
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::post('/dashboard/data', 'HomeController@dataDashboard')->name('dashboard.data');
+Route::post('/dashboard/data_kuota', 'HomeController@dataKuota')->name('dashboard.kuota');
+Route::post('/dashboard/data_neraca', 'HomeController@dataNeraca')->name('dashboard.neraca');
+Route::post('/dashboard/data_penghasil', 'HomeController@dataPenghasil')->name('dashboard.penghasil');
 Route::post('/dashboard/data_kadaluarsa', 'HomeController@dashboardToBeKadaluarsa1')->name('dashboard.kadaluarsa');
 
 Route::post('/dashboard/notifikasi', 'HomeController@dataNotifikasi')->name('notifikasi.data');
@@ -99,6 +102,10 @@ Route::resource('user', 'MDUserController');
 Route::get('user/destroy/{id}', 'MDUserController@destroy');
 Route::post('user/userlist', 'MDUserController@index') -> name('user.list');
 Route::post('user/update', 'MDUserController@update') -> name('user.update');
+
+//export
+Route::get('/neraca/export/{month}/{year}', 'ExportDataController@downloadNeraca')-> name('export.neraca');
+
 
 
 });

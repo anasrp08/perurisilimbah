@@ -9,9 +9,10 @@
                         <th>No. </th> 
                         <th>Nama Limbah</th>
                         <th>Satuan</th>
-                        <th>Total Saldo Keluar</th>
+                        <th>Saldo Keluar</th>
                         <th>Sisa Saldo</th> 
                         <th>Status</th>
+                        <th>Mutasi</th> 
                         <th>Mutasi</th> 
                     </tr>
                 </thead>
