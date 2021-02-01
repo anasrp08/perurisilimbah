@@ -68,9 +68,10 @@
                             <select name="jenislimbah" id="jenislimbah" class="form-control select2bs4"
                                 style="width: 100%;">
                                 <option value="" disabled selected>-Pilih Jenis Limbah-</option>
-                                @foreach($jenisLimbah as $data)
+                                <option value="1">Limbah B3 
+                                {{-- @foreach($jenisLimbah as $data)
                                 <option value="{{$data->id}}">{{$data->jenislimbah}} </option>
-                                @endforeach
+                                @endforeach --}}
                             </select>
                         </div>
 

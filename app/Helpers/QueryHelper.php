@@ -13,6 +13,7 @@ class QueryHelper
         $satuanLimbah=DB::table('md_satuan')->orderBy('id','desc')->get();
         $tpsLimbah=DB::table('md_tps')->get();
         $np=DB::table('tbl_np')->get();
+        $status=DB::table('md_statusmutasi')->get();
         // dd($namaLimbah);
         
 
@@ -24,6 +25,7 @@ class QueryHelper
             'tpsLimbah' => $tpsLimbah,
             'penghasilLimbah' => $penghasilLimbah,
             'np' => $np,
+            'status'=>$status
 
         ];
         

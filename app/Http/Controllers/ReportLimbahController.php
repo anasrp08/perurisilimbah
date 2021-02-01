@@ -822,20 +822,24 @@ class ReportLimbahController extends Controller
     }
     public function indexHistory(Request $request)
     {
-       
+    //    dd($request->all());
         if (request()->ajax()) {
             $queryData = DB::table('tr_headermutasi')
                 ->join('tr_detailmutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
                 ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id')
+                ->join('md_jenislimbah', 'tr_detailmutasi.idjenislimbah', '=', 'md_jenislimbah.id')
                 ->join('md_penghasillimbah', 'tr_detailmutasi.idlimbah', '=', 'md_penghasillimbah.id')
                 ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
                 // ->join('md_tps', 'tr_detailmutasi.idtps', '=', 'md_tps.id')
                 ->select('tr_detailmutasi.*', 
+                'md_namalimbah.id as idnama',
                 'md_namalimbah.namalimbah', 
                 'md_namalimbah.satuan', 
                 'md_namalimbah.jenislimbah', 
                 'md_namalimbah.tipelimbah', 
+                'md_penghasillimbah.id as idseksi', 
                 'md_penghasillimbah.seksi', 
+                'md_statusmutasi.id as idmdstatus',
                 'md_statusmutasi.keterangan as status',
                 )
                 ->orderBy('tr_detailmutasi.created_at', 'desc');
@@ -847,44 +851,44 @@ class ReportLimbahController extends Controller
             // }
             $queryData = $queryData->get();
             return datatables()->of($queryData)
-                // ->filter(function ($instance) use ($request) {
-                //     if (!empty($request->get('jenislimbah'))) {
-                //         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                //             return Str::contains(Str::lower($row['jenislimbah']), Str::lower($request->get('jenislimbah'))) ? true : false;
-                //         });
-                //     }
-                //     if (!empty($request->get('namalimbah'))) {
-                //         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                //             return Str::contains(Str::lower($row['namalimbah']), Str::lower($request->get('namalimbah'))) ? true : false;
-                //         });
-                //     }
+                ->filter(function ($instance) use ($request) {
+                    if (!empty($request->get('status'))) {
+                        $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                            return Str::contains($row['idmdstatus'], $request->get('status')) ? true : false;
+                        });
+                    }
+                    if (!empty($request->get('namalimbah'))) {
+                        $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                            return Str::contains($row['idnama'], $request->get('namalimbah')) ? true : false;
+                        });
+                    }
 
-                //     if (!empty($request->get('mutasi'))) {
-                //         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                //             return Str::contains($row['mutasi'], $request->get('mutasi')) ? true : false;
-                //         });
-                //     }
-                //     if (!empty($request->get('fisik'))) {
-                //         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                //             return Str::contains($row['fisik'], $request->get('fisik')) ? true : false;
-                //         });
-                //     }
-                //     if (!empty($request->get('asallimbah'))) {
-                //         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                //             return Str::contains($row['asallimbah'], $request->get('asallimbah')) ? true : false;
-                //         });
-                //     }
-                //     if (!empty($request->get('tpslimbah'))) {
-                //         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                //             return Str::contains($row['tps'], $request->get('tpslimbah')) ? true : false;
-                //         });
-                //     }
-                //     if (!empty($request->get('limbah3r'))) {
-                //         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                //             return Str::contains($row['limbah3r'], $request->get('limbah3r')) ? true : false;
-                //         });
-                //     }
-                // })
+                    if (!empty($request->get('np'))) {
+                        $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                            return Str::contains($row['np'], $request->get('np')) ? true : false;
+                        });
+                    }
+                    if (!empty($request->get('jenislimbah'))) {
+                        $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                            return Str::contains($row['idjenislimbah'], $request->get('jenislimbah')) ? true : false;
+                        });
+                    }
+                    if (!empty($request->get('limbahasal'))) {
+                        $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                            return Str::contains($row['idseksi'], $request->get('limbahasal')) ? true : false;
+                        });
+                    }
+                    // if (!empty($request->get('tpslimbah'))) {
+                    //     $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                    //         return Str::contains($row['tps'], $request->get('tpslimbah')) ? true : false;
+                    //     });
+                    // }
+                    // if (!empty($request->get('limbah3r'))) {
+                    //     $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                    //         return Str::contains($row['limbah3r'], $request->get('limbah3r')) ? true : false;
+                    //     });
+                    // }
+                })
                 ->addIndexColumn()
                 // ->addColumn('action', 'action_butt_limbah')
                 // ->rawColumns(['action'])

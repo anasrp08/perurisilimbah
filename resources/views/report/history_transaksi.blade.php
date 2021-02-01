@@ -45,6 +45,7 @@
             Refresh</button>
     </div>
     <div class="card-body">
+        @include('report.f_filterhistori')
         <table id="daftar_histori" class="table table-hover" style="width:100%;">
             <thead>
                 <tr>
@@ -58,7 +59,7 @@
                     <th>Jumlah</th>  
                     <th>Proses Oleh</th>  
                     <th>Status</th> 
-                    <th>Keterangan</th>  
+                    {{-- <th>Keterangan</th>   --}}
                      
                 </tr>
             </thead>
@@ -81,17 +82,72 @@
         })
         $('#refresh').click(function () {
 
-            $('#daftar_penghasil').DataTable().ajax.reload(); 
+            $('#daftar_histori').DataTable().ajax.reload(); 
         })
+        $('#entridate').datepicker({
+            uiLibrary: 'bootstrap4',
+            format: 'dd/mm/yyyy',
+            todayHighlight: true
+        });
+        
+        
+        $("#jenislimbah").change(function () {
+            getDropdown('{{ route("limbah.getnama")}}', "", $(this).val(), "namalimbah")
 
+        });
+        $('#filter').click(function () {
+            $('#daftar_histori').DataTable().draw(true);
+        })
+ 
+        function getDropdown(paramUrl, param1, param2, idkomponen) {
 
+            var paramData
+            if (idkomponen == 'namalimbah') {
+                // console.log(param1)
+                paramData = {
+                    jenis: param2,
+                    // fisik: param2
+                }
+                $.ajax({
+                    url: paramUrl,
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: paramData,
+                    success: function (data) { 
+                        // if(data==''){
+
+                        // }
+                        $("#" + idkomponen).html(data.html);
+                    }
+                });
+            } else {
+                paramData = {
+                    idlimbah: param2
+
+                } 
+                $.ajax({
+                    url: paramUrl,
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: paramData,
+                    success: function (data) {
+                        $("#" + idkomponen).text(data.satuan);
+                    }
+                });
+            } 
+        } 
 
         var table = $('#daftar_histori').DataTable({
             processing: true,
             serverSide: true,
             scrollCollapse: true,
             scrollX: true,
-            dom: 'rti<"clear">',
+            // dom: 'lfrtip<"clear">',
+            dom: '<lfr<t>ip>',
 
             columnDefs: [{
                     className: 'text-center',
@@ -115,7 +171,15 @@
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                data: function (d) {}
+                data: function (d) {
+                    d.status=$('#status').val()
+                    d.namalimbah=$('#namalimbah').val()
+                    d.np=$('#np').val()
+                    d.jenislimbah=$('#jenislimbah').val()
+                    d.limbahasal=$('#limbahasal').val()
+                    // d.entridate=$('#entridate').val()
+
+                }
             },
             // bFilter: false,
             columns: [{
@@ -208,20 +272,19 @@
                                 break;
                                 case 10:
                                 return '<span class="badge bg-fuchsia">' + data + '</span>'
-                                break;
-
+                                break; 
                             default:
                                 break;
                         }
                     }
 
-                },
-                {
-                    data: 'keterangan',
-                    name: 'keterangan',
+                }
+                // {
+                //     data: 'keterangan',
+                //     name: 'keterangan',
                    
 
-                },
+                // },
                 
                
                  

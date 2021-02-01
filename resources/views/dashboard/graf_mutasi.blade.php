@@ -16,11 +16,9 @@
                         <label>Tahun Periode</label>
                         <select name="tahun_neraca" id="tahun_neraca" class="form-control select2bs4" style="width: 100%;">
                             <option value="" disabled selected>-Tahun-</option>
-                            <option value="2021">2021</option>
-                            <option value="2020">2020</option>
-                            {{-- @foreach($penghasilLimbah as $data)
-                            <option value="{{$data->id}}">{{$data->seksi}}</option>
-                            @endforeach --}}
+                            @foreach($tahun as $data)
+                            <option value="{{$data}}">{{$data}}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>

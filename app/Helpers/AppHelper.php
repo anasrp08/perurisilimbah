@@ -4,6 +4,18 @@ use DateTime;
 
 class AppHelper
 {
+    public static function dataTahun()
+       {
+           $curDate=date('Y');
+           $lastYear='2020';
+           $rangeYear=(int)$curDate - (int)$lastYear;
+           $arrYear=[];
+           for($i=(int)$curDate;$i>=$lastYear;$i--){
+
+                array_push($arrYear,$i);
+           } 
+              return $arrYear;
+       }
     public static function convertDate($date){
         if($date == null){
             return "-";

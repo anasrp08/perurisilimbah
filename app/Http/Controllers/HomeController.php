@@ -62,10 +62,12 @@ class HomeController extends Controller
             //     ]);
             $penghasilLimbah=DB::table('md_penghasillimbah')->get();
             $namaLimbah=DB::table('md_namalimbah')->get();
+            AppHelper::dataTahun();
             UpdKaryawanHelper::updatePegawai();
             return view('dashboard.dashboard',[
                 'penghasilLimbah'=>$penghasilLimbah,
-                'namaLimbah'=>$namaLimbah
+                'namaLimbah'=>$namaLimbah,
+                'tahun'=> AppHelper::dataTahun()
                 ] 
             );
             
