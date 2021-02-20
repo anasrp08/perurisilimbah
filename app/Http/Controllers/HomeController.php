@@ -136,6 +136,7 @@ class HomeController extends Controller
         return $dataChart;
     }
     public function querySaldoMutasi($year,$month,$status,$namalimbah){
+        // dd($namalimbah);
         $resultData=DB::table('tr_detailmutasi')
         ->join('md_namalimbah','tr_detailmutasi.idlimbah','md_namalimbah.id')
         
@@ -146,6 +147,7 @@ class HomeController extends Controller
         ->whereIn('tr_detailmutasi.idstatus', $status)
         ->where('tr_detailmutasi.idlimbah', $namalimbah) 
         ->first();  
+        // dd($resultData);
         if($resultData->jumlah == null){
             $resultData->jumlah=0;
         }    
@@ -162,84 +164,130 @@ class HomeController extends Controller
         $arrSisa=[];
        
         for($i=1;$i<=12;$i++){
+            // $dataMasuk=$this->querySaldoMutasi(
+            //     (int)$request->period-1,
+            //     '12',
+            //     ['2'],
+            //     $request->namalimbah
+            // );
+            // $dataKeluar=$this->querySaldoMutasi(
+            //     (int)$request->period-1,
+            //     '12',
+            //     ['5','6','7','8','9'],
+            //     $request->namalimbah
+            // );
+            // if((int)$dataKeluar==0){
+            //     $jumlahSisa[$i]=0;
+            // }else{
+            //     $jumlahSisa[$i]=(int)$dataMasuk - (int)$dataKeluar;
+            // }
 
             $jumlahMasuk[$i]=$this->querySaldoMutasi($request->period,$i,['2'], $request->namalimbah);
-          
-            // DB::table('tr_detailmutasi')
-            // ->join('md_namalimbah','tr_detailmutasi.idlimbah','md_namalimbah.id')
-            
-            // ->select(DB::raw('sum(tr_detailmutasi.jumlah) as jumlah'))
-
-            // ->whereYear('tr_detailmutasi.created_at', $request->period)
-            // ->whereMonth('tr_detailmutasi.created_at', $i) 
-            // ->where('tr_detailmutasi.idstatus', '2')
-            // ->where('tr_detailmutasi.idlimbah', $request->namalimbah) 
-            // ->first();  
-            // if($dataMasuk[$i]->jumlah == null){
-            //     $dataMasuk[$i]->jumlah=0;
-            // }    
+             
 
             $jumlahKeluar[$i]=$this->querySaldoMutasi($request->period,$i,['5','6','7','8','9'], $request->namalimbah);
-            // DB::table('tr_detailmutasi')
-            // ->join('md_namalimbah','tr_detailmutasi.idlimbah','md_namalimbah.id')
-            
-            // ->select(DB::raw('sum(tr_detailmutasi.jumlah) as jumlah'))
-
-            // ->whereYear('tr_detailmutasi.created_at', $request->period)
-            // ->whereMonth('tr_detailmutasi.created_at', $i) 
-            // ->whereIn('tr_detailmutasi.idstatus', ['5','6','7','8','9'])
-            // ->where('tr_detailmutasi.idlimbah', $request->namalimbah) 
-            // ->first();  
-            // if($dataKeluar[$i]->jumlah == null){
-            //     $dataKeluar[$i]->jumlah=0;
-            // }    
+              
             $jumlahSisa[$i]=null;
+            $jumlahSisaPrev[$i]=null;
             if($i>0){
                 //jika bulan ke 2 sampe 12 ambil bulan sebelumnya
                 $dataMasuk=$this->querySaldoMutasi(
                     $request->period,
-                    $i-1,
+                    $i,
                     ['2'],
                     $request->namalimbah
                 );
                 $dataKeluar=$this->querySaldoMutasi(
                     $request->period,
-                    $i-1,
+                    $i,
                     ['5','6','7','8','9'],
                     $request->namalimbah
                 );
+                // $dataMasukPrev=$this->querySaldoMutasi(
+                //     $request->period,
+                //     $i,
+                //     ['2'],
+                //     $request->namalimbah
+                // );
+                // $dataKeluarPrev=$this->querySaldoMutasi(
+                //     $request->period,
+                //     $i,
+                //     ['5','6','7','8','9'],
+                //     $request->namalimbah
+                // );
                 // dd($jumlahMasuk);
-                $jumlahSisa[$i]=(int)$dataMasuk - (int)$dataKeluar;
+                if((int)$dataKeluar==0){
+                    $jumlahSisa[$i]=0;
+                }else{
+                    $jumlahSisa[$i]=(int)$dataMasuk - (int)$dataKeluar;
+                }
+
+                // if((int)$dataKeluarPrev==0){
+                //     $jumlahSisaPrev[$i]=0;
+                // }else{
+                //     $jumlahSisaPrev[$i]=(int)$dataMasukPrev - (int)$dataKeluarPrev;
+                // }
+                // $jumlahMasuk[$i]= $jumlahMasuk[$i]+$jumlahSisaPrev[$i];
+
+
+                
             }else{
                 //jika bulan awal tahun ambil sisa dari tahun dan bulan sebelumnya
                 $dataMasuk=$this->querySaldoMutasi(
-                    (int)$request->period-1,
-                    '12',
+                    (int)$request->period,
+                   $i,
                     ['2'],
                     $request->namalimbah
                 );
                 $dataKeluar=$this->querySaldoMutasi(
-                    (int)$request->period-1,
-                    '12',
+                    (int)$request->period,
+                    $i,
                     ['5','6','7','8','9'],
                     $request->namalimbah
                 );
-                $jumlahSisa[$i]=(int)$dataMasuk - (int)$dataKeluar;
+                if((int)$dataKeluar==0){
+                    $jumlahSisa[$i]=0;
+                }else{
+                    $jumlahSisa[$i]=(int)$dataMasuk - (int)$dataKeluar;
+                }
+
+                // $dataMasukPrevMonth=$this->querySaldoMutasi(
+                //     (int)$request->period-1,
+                //     '12',
+                //     ['2'],
+                //     $request->namalimbah
+                // );
+                // $dataKeluarPrevMonth=$this->querySaldoMutasi(
+                //     (int)$request->period-1,
+                //     '12',
+                //     ['5','6','7','8','9'],
+                //     $request->namalimbah
+                // );
+                // if((int)$dataKeluarPrevMonth==0){
+                //     $jumlahSisaPrev[$i]=0;
+                // }else{
+                //     $jumlahSisaPrev[$i]=(int)$dataMasukPrevMonth - (int)$dataKeluarPrevMonth;
+                // }
+
+
+                // $jumlahMasuk[$i]=$jumlahMasuk[$i]+$jumlahSisaPrev[$i];
+
             }
-            
-
-
-
-
+             
             array_push($arrMasuk,(int)$jumlahMasuk[$i]); 
             array_push($arrKeluar,(int)$jumlahKeluar[$i]); 
             array_push($arrSisa,(int)$jumlahSisa[$i]); 
 
         } 
+        $satuan=DB::table('md_namalimbah')->where('id',$request->namalimbah)
+        ->first('satuan');
+         
+        // dd($arrKeluar);
         return response()->json([
             'saldoMasuk'=>$arrMasuk,
             'saldoKeluar'=>$arrKeluar,
-            'sisaSaldo'=>$arrSisa
+            'sisaSaldo'=>$arrSisa,
+            'satuan'=>$satuan
             ]);
     }
     public function dashboardToBeKadaluarsa(){
@@ -293,13 +341,17 @@ class HomeController extends Controller
     public function dataPenghasil(Request $request)
     {
         $dataPenghasil=$this->dashboardPenghasil($request);
-        return $dataPenghasil;
+        $satuan=DB::table('md_namalimbah')->where('id',$request->namalimbah)
+        ->first('satuan');
+        return response()->json([
+            'dataPenghasil'=>$dataPenghasil,
+            'satuan'=>$satuan
+            ]); 
     }
     
     public function dataDashboard(Request $request)
     {
-        // dd($request->all()); 
-      
+       
         $dataKadaluarsa=$this->dashboardToBeKadaluarsa();
         $dataNotifikasi=$this->dashboardToBeKadaluarsa(); 
         $arrNotifikasi=new \stdClass(); 

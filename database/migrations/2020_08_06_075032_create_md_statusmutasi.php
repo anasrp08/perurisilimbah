@@ -29,7 +29,15 @@ class CreateMdStatusmutasi extends Migration
     public function down()
     {
 
-       
+        Schema::disableForeignKeyConstraints();
+        // Schema::table('tr_statusmutasi', function (Blueprint $table) {
+        //     $table->dropForeign(['idmutasi']);
+        //     $table->dropForeign(['idlimbah']);
+        //     $table->dropForeign(['idtps']);
+        //     $table->dropForeign(['idstatus']);
+        //     $table->dropColumn(['idmutasi','idlimbah','idtps','idstatus']);
+        // }); 
         Schema::dropIfExists('md_statusmutasi');
+        Schema::enableForeignKeyConstraints(); 
     }
 }

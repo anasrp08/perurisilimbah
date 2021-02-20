@@ -61,7 +61,7 @@
                         <div id="formnosurat" class="form-group">
                             <label for="nosurat">Alasan Revisi</label>
                             <input type="text" name="alasan" id="alasan" class="form-control"
-                                placeholder="Keterangan">
+                                placeholder="Alasan Revisi">
                             {{-- <small class="text-danger">{{ $errors->nosurat->first() }}</small> --}}
                         </div>
 
@@ -116,8 +116,8 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Nomor Pegawai</label>
-                            <select name="np" id="np" class="form-control select2bs4"
+                            <label>NP Perevisi</label>
+                            <select name="np_perevisi" id="np_perevisi" class="form-control select2bs4"
                             style="width: 100%;">
                                 {{-- <option value="-" selected="selected">Pilih Salah Satu</option> --}}
                                 <option value="" disabled selected>-</option>
@@ -154,6 +154,7 @@
                 
                 <input type="hidden" id="hidden_transaksi" name="hidden_transaksi" >
                 <input type="hidden" id="hidden_id" name="hidden_id" >
+                <input type="hidden" id="np_pemohon" name="np_pemohon" >
                 <div class="box-footer">
                     <button name="simpan" id="simpan" class="btn btn-primary">Submit</button>
                     {{-- <button id="submit" type="submit" class="btn btn-primary" >Submit</button> --}}

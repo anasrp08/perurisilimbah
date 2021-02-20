@@ -30,77 +30,12 @@ class ReportLimbahController extends Controller
         $this->middleware('auth');
     }
     public function viewIndexNeraca()
-    {
-        //
-        // $queryData = DB::table('tr_detailmutasi')
-        // ->whereMonth('created_at','=','11')
-        // ->whereIn('idstatus',['2','5','6','7','8','9']);
-
-        // $queryData= $queryData->get();
-        // dd( $queryData);
+    { 
 
 
         return view('report.reportneraca', QueryHelper::getDropDown());
     }
-    public function detailNeraca(Request $request)
-    {
-        //    dd($request->all());
-        $queryData=null;
-        if($request->isWiping == '-'){
-            $queryData = DB::table('tr_detailmutasi')
-            ->join('tr_headermutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
-            ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id')
-            // ->join('md_tps', 'tr_headermutasi.idtps', '=', 'md_tps.id')
-            ->join('md_penghasillimbah', 'tr_detailmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
-            ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
-            ->join('md_satuan', 'md_satuan.id', '=', 'tr_detailmutasi.idsatuan')
-
-            ->select(
-                'md_namalimbah.namalimbah',
-                'md_namalimbah.jenislimbah',
-                'md_namalimbah.saldo',
-                // 'md_tps.namatps',
-                'md_statusmutasi.keterangan',
-                'md_statusmutasi.mutasi',
-                'md_penghasillimbah.seksi',
-                'tr_detailmutasi.*',
-                'md_satuan.satuan',
-
-            )
-            ->whereMonth('tr_detailmutasi.created_at', $request->bulan)
-            ->where('tr_detailmutasi.idlimbah', $request->idlimbah)
-            ->where('tr_detailmutasi.idstatus', $request->idstatus)
-            ->orderBy('tr_detailmutasi.created_at', 'desc');
-        $queryData = $queryData->get();
-        }else{
-            $queryData = DB::table('tr_detailmutasi')
-            ->join('tr_headermutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
-            ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id')
-            // ->join('md_tps', 'tr_headermutasi.idtps', '=', 'md_tps.id')
-            ->join('md_penghasillimbah', 'tr_detailmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
-            ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
-            ->join('md_satuan', 'md_satuan.id', '=', 'tr_detailmutasi.idsatuan')
-
-            ->select(
-                'md_namalimbah.namalimbah',
-                'md_namalimbah.jenislimbah',
-                // 'md_tps.namatps',
-                'md_statusmutasi.keterangan',
-                'md_statusmutasi.mutasi',
-                'md_penghasillimbah.seksi',
-                'tr_detailmutasi.*',
-                'md_satuan.satuan',
-
-            )
-            ->whereMonth('tr_detailmutasi.created_at', $request->bulan)
-            ->whereIn('tr_detailmutasi.idlimbah', ['1','2','3'])
-            ->where('tr_detailmutasi.idstatus', $request->idstatus)
-            ->orderBy('tr_detailmutasi.created_at', 'desc');
-        $queryData = $queryData->get();
-        }
-        
-        return response()->json(['data' => $queryData]);
-    }
+    
     public function indexNeraca(Request $request)
     { 
         // dd($request->period);
@@ -115,14 +50,13 @@ class ReportLimbahController extends Controller
             $splitPrevPeriod = explode("-",$prevPeriod);
             $prevMonth= $splitPrevPeriod[0];
             $prevYear= $splitPrevPeriod[1];
-
-           
             $filterStatus=null;
             if($request->mutasi=='masuk'){
                 $filterStatus=['2'];
             }else{
                 $filterStatus=['5', '6', '7', '8', '9'];
             }
+
             $queryData = DB::table('tr_detailmutasi')
                 ->join('tr_headermutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
                 ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id') 
@@ -149,6 +83,7 @@ class ReportLimbahController extends Controller
                 ->groupBy('tr_detailmutasi.idstatus', 'tr_detailmutasi.idlimbah');
 
             $queryData = $queryData->get();
+             
             //penggabungan limbah cair B3
             $dataLimbahCair = DB::table('tr_detailmutasi')
             ->join('tr_headermutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
@@ -172,6 +107,7 @@ class ReportLimbahController extends Controller
             ->whereYear('tr_detailmutasi.created_at', '=',  $currYear)    
             ->whereIn('tr_detailmutasi.idstatus',  $filterStatus)
             ->whereIn('tr_detailmutasi.idlimbah', ['1', '2', '3'])
+            ->where('md_namalimbah.keterangan','Wiping Solution')
             ->groupBy('tr_detailmutasi.idstatus', 'md_namalimbah.keterangan');
  
 
@@ -179,7 +115,9 @@ class ReportLimbahController extends Controller
 
         $sorted=null;
         if($dataLimbahCair->count()==0){
-            $sorted=$dataLimbahCair;
+            // $sorted=$dataLimbahCair;
+            $sorted=$queryData->sortBy('idlimbah');
+           
         }else{
             $dataLimbahCair[0]->namalimbah='Limbah Cair Wiping Solution';
             //merged 2 colection with id limbah 1,2,3 to Limbah cair Wiping solution
@@ -270,6 +208,65 @@ class ReportLimbahController extends Controller
 
         return view('report.reportneraca', QueryHelper::getDropDown());
     }
+    public function detailNeraca(Request $request)
+    {
+        //    dd($request->all());
+        $queryData=null;
+        if($request->isWiping == '-'){
+            $queryData = DB::table('tr_detailmutasi')
+            ->join('tr_headermutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
+            ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id')
+            // ->join('md_tps', 'tr_headermutasi.idtps', '=', 'md_tps.id')
+            ->join('md_penghasillimbah', 'tr_detailmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
+            ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
+            ->join('md_satuan', 'md_satuan.id', '=', 'tr_detailmutasi.idsatuan')
+
+            ->select(
+                'md_namalimbah.namalimbah',
+                'md_namalimbah.jenislimbah',
+                'md_namalimbah.saldo',
+                // 'md_tps.namatps',
+                'md_statusmutasi.keterangan',
+                'md_statusmutasi.mutasi',
+                'md_penghasillimbah.seksi',
+                'tr_detailmutasi.*',
+                'md_satuan.satuan',
+
+            )
+            ->whereMonth('tr_detailmutasi.created_at', $request->bulan)
+            ->where('tr_detailmutasi.idlimbah', $request->idlimbah)
+            ->where('tr_detailmutasi.idstatus', $request->idstatus)
+            ->orderBy('tr_detailmutasi.created_at', 'desc');
+        $queryData = $queryData->get();
+        }else{
+            $queryData = DB::table('tr_detailmutasi')
+            ->join('tr_headermutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
+            ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id')
+            // ->join('md_tps', 'tr_headermutasi.idtps', '=', 'md_tps.id')
+            ->join('md_penghasillimbah', 'tr_detailmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
+            ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
+            ->join('md_satuan', 'md_satuan.id', '=', 'tr_detailmutasi.idsatuan')
+
+            ->select(
+                'md_namalimbah.namalimbah',
+                'md_namalimbah.jenislimbah',
+                // 'md_tps.namatps',
+                'md_statusmutasi.keterangan',
+                'md_statusmutasi.mutasi',
+                'md_penghasillimbah.seksi',
+                'tr_detailmutasi.*',
+                'md_satuan.satuan',
+
+            )
+            ->whereMonth('tr_detailmutasi.created_at', $request->bulan)
+            ->whereIn('tr_detailmutasi.idlimbah', ['1','2','3'])
+            ->where('tr_detailmutasi.idstatus', $request->idstatus)
+            ->orderBy('tr_detailmutasi.created_at', 'desc');
+        $queryData = $queryData->get();
+        }
+        
+        return response()->json(['data' => $queryData]);
+    }
 
     public function viewKuota()
     {
@@ -340,7 +337,7 @@ class ReportLimbahController extends Controller
                 ->join('md_namalimbah', 'tr_headermutasi.idlimbah', 'md_namalimbah.id')
                 ->join('md_penghasillimbah', 'tr_headermutasi.idasallimbah', 'md_penghasillimbah.id')
                 ->join('md_tps', 'tr_headermutasi.idtps', 'md_tps.id')
-                ->select('md_namalimbah.namalimbah', 'md_namalimbah.jenislimbah', 'md_namalimbah.tipelimbah', 'md_penghasillimbah.seksi', 'md_tps.namatps', DB::raw('sum(tr_headermutasi.jumlah) as jumlah'))
+                ->select('md_namalimbah.namalimbah', 'md_namalimbah.jenislimbah', 'md_penghasillimbah.seksi', 'md_tps.namatps', DB::raw('sum(tr_headermutasi.jumlah) as jumlah'))
                 ->groupBy('md_penghasillimbah.seksi', 'md_namalimbah.namalimbah');
             $queryData = $queryData->get();
             // dd( $queryData);
@@ -521,6 +518,7 @@ class ReportLimbahController extends Controller
             'tahun'                =>  $request->tahun,
             'jumlah'                =>  $request->total,
             'np'                =>  $request->np,
+            'konsumsi'          =>0,
             'created_at'                =>  date('Y-m-d'),
         );
         try {
@@ -832,11 +830,16 @@ class ReportLimbahController extends Controller
                 ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
                 // ->join('md_tps', 'tr_detailmutasi.idtps', '=', 'md_tps.id')
                 ->select('tr_detailmutasi.*', 
+                'tr_headermutasi.np_pemohon',
+                'tr_headermutasi.np_penerima',
+                'tr_headermutasi.np_perevisi',
+                'tr_headermutasi.np_packer',
+                'tr_headermutasi.np_pemroses',
                 'md_namalimbah.id as idnama',
                 'md_namalimbah.namalimbah', 
                 'md_namalimbah.satuan', 
                 'md_namalimbah.jenislimbah', 
-                'md_namalimbah.tipelimbah', 
+                'md_namalimbah.treatmen_limbah', 
                 'md_penghasillimbah.id as idseksi', 
                 'md_penghasillimbah.seksi', 
                 'md_statusmutasi.id as idmdstatus',
@@ -863,11 +866,11 @@ class ReportLimbahController extends Controller
                         });
                     }
 
-                    if (!empty($request->get('np'))) {
-                        $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                            return Str::contains($row['np'], $request->get('np')) ? true : false;
-                        });
-                    }
+                    // if (!empty($request->get('np'))) {
+                    //     $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                    //         return Str::contains($row['np_pemohon'], $request->get('np')) ? true : false;
+                    //     });
+                    // }
                     if (!empty($request->get('jenislimbah'))) {
                         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
                             return Str::contains($row['idjenislimbah'], $request->get('jenislimbah')) ? true : false;

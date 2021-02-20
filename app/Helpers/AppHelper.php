@@ -38,18 +38,18 @@ class AppHelper
         
         
     } 
-       public static function pathFile($folderSurat,$folderNosurat)
+       public static function pathFile($folderNosurat)
        {
 
               // return public_path(). DIRECTORY_SEPARATOR .'file'. DIRECTORY_SEPARATOR .$folderSurat. DIRECTORY_SEPARATOR .$folderNosurat; 
-              return public_path(). '/' .'file'. '/' .$folderSurat. '/' .$folderNosurat; 
+              return public_path(). '/' .'file'. '/' .$folderNosurat; 
                //un comment ini ketika publish
               // return base_path(). '/' .'file'. '/' .$folderSurat. '/' .$folderNosurat; 
        }
 
-       public static function savePath($folderSurat,$folderNosurat,$filename)
+       public static function savePath($folderSurat,$filename)
        {
-              return  'file/'.$folderSurat. '/' .$folderNosurat.'/'.$filename;
+              return  'file/'.$folderSurat. '/'.$filename;
                //un comment ini ketika publish
               // return  'project/file/'.$folderSurat. '/' .$folderNosurat.'/'.$filename;
        }

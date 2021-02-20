@@ -53,12 +53,13 @@
         <table id="daftar_pack" class="table table-hover" style="width:100%;">
             <thead>
                 <tr>
-                    <th>No. </th>
-                    <th>Tanggal Proses</th>
-                    <th>Tanggal Kadaluarsa</th>
-                    <th>Kode Pack</th>
+                    <th>No. </th> 
+                    <th>Nama Limbah</th> 
+                    <th>Jumlah</th>
+                    <th>Jenis Limbah</th>
+                    {{-- <th>Packing</th> --}}
                     <th>TPS</th>
-                    <th>Tipe Limbah</th>
+                    
                 </tr>
             </thead>
 
@@ -122,7 +123,7 @@
 
             columnDefs: [{
                     className: 'text-center',
-                    targets: [1, 2, 3, 4, 5]
+                    targets: [0,2,3 ]
                 },
                 {
                     className: 'dt-body-nowrap',
@@ -151,42 +152,57 @@
                     orderable: false,
                     searchable: false
                 },
-                {
-                    data: 'created_at',
-                    name: 'created_at',
-                    render: function (data, type, row) {
-                        // console.log()
-                        return moment(data).format('DD/MM/YYYY');
+                // {
+                //     data: 'created_at',
+                //     name: 'created_at',
+                //     render: function (data, type, row) {
+                //         // console.log()
+                //         return moment(data).format('DD/MM/YYYY');
 
-                    }
+                //     }
+                // },
+                // {
+                //     data: 'kadaluarsa',
+                //     name: 'kadaluarsa',
+                //     render: function (data, type, row) {
+                //         var currDate = moment().format('DD/MM/YYYY');
+                //         var day7 = moment(data).subtract(7, 'd').format('DD/MM/YYYY');
+
+                //         var day3 = moment(data).subtract(3, 'd').format('DD/MM/YYYY');
+                //         // console.log(currDate.to(day3));
+                //         // console.log(currDate)
+                //         if (currDate == day7) {
+                //             return '<h5><span class="badge badge-warning">' + moment(data)
+                //                 .format('DD/MM/YYYY') + '</span></h5>'
+                //         } else if (currDate == day3) {
+                //             return '<h5><span class="badge badge-danger">' + moment(data)
+                //                 .format('DD/MM/YYYY') + '</span></h5>'
+                //         } else {
+                //             return moment(data).format('DD/MM/YYYY');
+                //         }
+
+
+
+                //     }
+                // },
+                {
+                    data: 'namalimbah',
+                    name: 'namalimbah',
+
                 },
                 {
-                    data: 'kadaluarsa',
-                    name: 'kadaluarsa',
-                    render: function (data, type, row) {
-                        var currDate = moment().format('DD/MM/YYYY');
-                        var day7 = moment(data).subtract(7, 'd').format('DD/MM/YYYY');
-
-                        var day3 = moment(data).subtract(3, 'd').format('DD/MM/YYYY');
-                        // console.log(currDate.to(day3));
-                        // console.log(currDate)
-                        if (currDate == day7) {
-                            return '<h5><span class="badge badge-warning">' + moment(data)
-                                .format('DD/MM/YYYY') + '</span></h5>'
-                        } else if (currDate == day3) {
-                            return '<h5><span class="badge badge-danger">' + moment(data)
-                                .format('DD/MM/YYYY') + '</span></h5>'
-                        } else {
-                            return moment(data).format('DD/MM/YYYY');
-                        }
-
-
+                    data: 'total_saldo',
+                    name: 'total_saldo',
+                    render: function (data, type, row) { 
+                        return data+' '+row.satuan ;
+                        //tambah menu, dashboard, proses pengurangan saldo TPS (by query)
 
                     }
+                    
                 },
                 {
-                    data: 'kode_pack',
-                    name: 'kode_pack',
+                    data: 'jenislimbah',
+                    name: 'jenislimbah',
 
                 },
                 // {
@@ -194,21 +210,14 @@
                 //     name: 'namalimbah'
                 // },
                 // {
-                //     data: 'jumlah',
-                //     name: 'jumlah'
+                //     data: 'packing_besar',
+                //     name: 'packing_besar'
                 // },
                 {
                     data: 'namatps',
                     name: 'namatps'
                 },
-                {
-                    data: 'tipelimbah',
-                    name: 'tipelimbah',
-
-                },
-
-
-
+                
             ]
         });
         $("input[name='r1']").change(function () {
@@ -267,34 +276,62 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     data: function (d) {
-                        d.kodepack = data.kode_pack
+                        d.packing_besar = data.packing_besar
+                        d.idlimbah = data.idlimbah
                     }
-                },
+                }, 
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'
                     },
                     {
+                        data: 'tgl_permohonan',
+                        name: 'tgl_permohonan',
+                        render: function (data, type, row) {
+                        return moment(data).format('DD/MM/YYYY');
+                        }
+                    },
+
+                    {
+                    data: 'kadaluarsa',
+                    name: 'kadaluarsa',
+                    render: function (data, type, row) {
+                        var currDate = moment().format('DD/MM/YYYY');
+                        var day7 = moment(data).subtract(7, 'd').format('DD/MM/YYYY');
+
+                        var day3 = moment(data).subtract(3, 'd').format('DD/MM/YYYY');
+                        // console.log(currDate.to(day3));
+                        // console.log(currDate)
+                        if (currDate == day7) {
+                            return '<h5><span class="badge badge-warning">' + moment(data)
+                                .format('DD/MM/YYYY') + '</span></h5>'
+                        } else if (currDate == day3) {
+                            return '<h5><span class="badge badge-danger">' + moment(data)
+                                .format('DD/MM/YYYY') + '</span></h5>'
+                        } else {
+                            return moment(data).format('DD/MM/YYYY');
+                        } 
+                    }
+                },
+                    {
                         data: 'namalimbah',
                         name: 'namalimbah'
                     },
 
+                    // {
+                    //     data: 'total_pack',
+                    //     name: 'total_pack',
+                    //     render: function (data, type, row) {
+                    //     return data +' ('+row.packing_besar+')'
+                    //     }
+                    // },
                     {
                         data: 'jumlah',
                         name: 'jumlah'
                     },
                     {
-                        data: 'nama_satuan',
-                        name: 'nama_satuan'
-                    },
-
-                    {
-                        data: 'tipelimbah',
-                        name: 'tipelimbah'
-                    },
-                    {
-                        data: 'jenislimbah',
-                        name: 'jenislimbah'
+                        data: 'satuan',
+                        name: 'satuan'
                     },
                     {
                         data: 'action',
@@ -390,18 +427,30 @@
             var jsonData = {}
             var dataNonInput = []
             var output1 = []
+            var isEmptyCounter=0
             // console.log(arrValue)
             console.log(data.toArray())
 
+            var countData=data.count()
             $("#detail_pack tbody tr").each(function () {
                 var obj = {};
+                //memasukkan jmlh proses yang isi nya kosong
+                if($(":input[name=jmlh_proses]", this).val()==""){
+                    isEmptyCounter++
 
+                }
                 obj.jmlh_proses = $(":input[name=jmlh_proses]", this).val();
+            
                 output1.push(obj);
                 // dataNonInput
             })
 
-            for (i = 0; i < data.count(); i++) {
+            if(countData == isEmptyCounter){
+                toastr.warning('Belum Ada Jumlah Yang Di Proses', 'Perhatian', {
+                            timeOut: 5000
+                        });
+            }else{
+                for (i = 0; i < data.count(); i++) {
                 var obj = {};
                 console.log(output1[i].jmlh_proses)
                 if (output1[i].jmlh_proses == '' || output1[i].jmlh_proses == 0) {
@@ -431,7 +480,7 @@
                     obj.status_lama = data[i].idstatus;
                     // obj.jumlah_lama = data[i].idstatus;
 
-                    obj.np = $('#np').val();
+                    obj.np_pemroses = $('#np_pemroses').val();
                     output.push(obj);
                     jsonData["detail"] = output
                 }
@@ -442,6 +491,9 @@
             }
             console.log(jsonData)
             packLimbah(jsonData)
+            }
+
+            
         }
 
         function packLimbah(jsonData) {
@@ -475,7 +527,7 @@
                         $('#daftar_pack').DataTable().ajax.reload();
                         $('.formproses').val('');
                         $('.radioPilihan').prop('checked', false); 
-                        $('#np').val('').change();
+                        $('#np_pemroses').val('').change();
                         // $('#counterentries').text(data.count);
 
                         // $('#saveentri').text('Simpan');

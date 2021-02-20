@@ -144,6 +144,7 @@
             $('#f_date').val(moment().format('MM/YYYY'))
             console.log()
             $('#refresh').click(function () {
+                
                 $('#daftar_neraca').DataTable().ajax.reload();
                 $('#tbl_keluar').DataTable().ajax.reload();
                 console.log($('#f_date').val())
@@ -172,22 +173,10 @@
                     //     '<td>And any further details here (images etc)...</td>'+
                     // '</tr>'+
                     '</table>';
-            }
-            //             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-            //   var target = $(e.target).attr("href") // activated tab
-
-            // //   if(target=='#custom-tabs-one-profile-tab'){
-
-            // //   }
-            // //   alert(target);
-            // });
+            } 
 
             Datatable('#daftar_neraca')
-            Datatable('#tbl_keluar')
-
-
-
-
+            Datatable('#tbl_keluar') 
             function Datatable(id) {
                 var mutasi = ''
                 var visible = ''
@@ -318,7 +307,11 @@
                             name: 'sisaSaldo',
                             render: function (data, type, row) {
                                 // console.log(data)
-                                return parseInt(data)
+                                if(data==undefined){
+                                    return 0
+                                }else{
+                                     return parseInt(data) + parseInt(row.jumlah2)
+                                }
 
 
                             }
@@ -327,8 +320,13 @@
                             data: 'sisaSaldo',
                             name: 'sisaSaldo',
                             render: function (data, type, row) {
-                                // console.log(data)
-                                return parseInt(data) + parseInt(row.jumlah2)
+                                console.log(data)
+                                if(data==undefined ){
+                                    return parseInt(row.jumlah2)
+                                }else{
+                                     return parseInt(data) + parseInt(row.jumlah2)
+                                }
+                               
 
 
                             }

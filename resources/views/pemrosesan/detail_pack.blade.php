@@ -12,12 +12,14 @@
                     <thead>
                         <tr>
                             <th>No. </th>
+                            <th>Tgl. Permohonan</th>
+                            <th>Tgl. Kadaluarsa</th>
                             <th>Nama Limbah</th>
-                            <th>Jumlah</th>
+                            {{-- <th>Jumlah Pack</th> --}}
+                            <th>Jumlah Saldo</th>
                             <th>Satuan</th>
-                            <th>Tipe Limbah</th>
-                            <th>Jenis Limbah</th>
                             <th>Jumlah Proses</th>
+                            
                         </tr>
                     </thead>
                     <tfoot>
@@ -87,8 +89,8 @@
                             </div>
                             <div class="col-sm-4">
                                 <div class="form-group nonpihakketiga">
-                                    <label>Nomor Pegawai</label>
-                                    <select name="np" id="np" class="formproses form-control select2bs4"
+                                    <label>NP Pemroses</label>
+                                    <select name="np_pemroses" id="np_pemroses" class="formproses form-control select2bs4"
                                         style="width: 100%;">
                                         {{-- <option value="-" selected="selected">Pilih Salah Satu</option> --}}
                                         <option value="" disabled selected>-</option>

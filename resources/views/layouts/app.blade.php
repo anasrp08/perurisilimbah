@@ -243,7 +243,7 @@
             $(document).ready(function () {
                 var pProv = {
 
-                    tahun: '2020'
+                    tahun: moment().format('YYYY')
                 }
                 // notifikasi.data
                 $.ajax({

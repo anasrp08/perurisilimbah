@@ -62,7 +62,7 @@ class NeracaProsesExport implements FromCollection,WithHeadings,WithTitle
             // DB::raw('SUM(tr_detailmutasi.jumlah) as jumlah2'),
            
             'tr_detailmutasi.created_at',
-            'tr_detailmutasi.np'
+            'tr_detailmutasi.np_pemroses'
         )
         ->whereMonth('tr_detailmutasi.created_at', '=',   $this->month)
         ->whereYear('tr_detailmutasi.created_at', '=',   $this->year)    

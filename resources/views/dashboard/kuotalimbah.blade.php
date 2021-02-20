@@ -20,52 +20,66 @@
         <div class="card-body">
             <div class="tab-content p-0">
                 <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label>Tahun Anggaran</label>
-                        <select name="tahun_kuota" id="tahun_kuota" class="form-control select2bs4" style="width: 100%;">
-                            <option value="" disabled selected>-Tahun-</option>
-                            {{-- <option value="2021">2021</option>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Tahun Anggaran</label>
+                            <select name="tahun_kuota" id="tahun_kuota" class="form-control select2bs4"
+                                style="width: 100%;">
+                                <option value="" disabled selected>-Tahun-</option>
+                                {{-- <option value="2021">2021</option>
                             <option value="2020">2020</option> --}}
-                            @foreach($tahun as $data)
-                            <option value="{{$data}}">{{$data}}</option>
-                            @endforeach
-                        </select>
-                         
-                    </div>
-                   
-                </div>
-                <div class="col-md-4" style="positio:relatve;">
-                    <div class="text-bottom">               
-                   
-                    <button style="position: absolute;bottom: 17px;" name="display_kuota" id="display_kuota" class="btn btn-primary">Tampilkan</button>
-                
-                </div>
+                                @foreach($tahun as $data)
+                                <option value="{{$data}}">{{$data}}</option>
+                                @endforeach
+                            </select> 
+                        </div>
+
+                    </div> 
+                    <div class="col-md-4" > 
+                            <button style="position: absolute;bottom: 17px;" name="display_kuota" id="display_kuota"
+                                class="btn btn-primary">Tampilkan</button>
  
+
+                    </div>
                 </div>
-                
-                <!-- Morris chart - Sales -->
                 <div class="row">
                     <div class="col-md-4">
                         <div class="chart tab-pane" id="revenue-chart" style="position: relative;">
                             <canvas id="cair"></canvas>
                             <div id="js-legend" class="chart-legend"></div>
                         </div>
-                    </div> 
+                    </div>
                     <div class="col-md-4">
                         <div class="chart tab-pane" id="sales-chart" style="position: relative;">
                             <canvas id="sludge"></canvas>
                             <div id="js-legend" class="chart-legend"></div>
                         </div>
-                    </div> 
+                    </div>
                     <div class="col-md-4">
                         <div class="chart tab-pane" id="sales-chart" style="position: relative;">
                             <canvas id="sk"></canvas>
                             <div id="js-legend" class="chart-legend"></div>
                         </div>
                     </div>
+                    <div class="col-md-4">
+                        <div class="chart tab-pane" id="sales-chart" style="position: relative;">
+                            <canvas id="abu"></canvas>
+                            <div id="js-legend" class="chart-legend"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="chart tab-pane" id="sales-chart" style="position: relative;">
+                            <canvas id="lamputl"></canvas>
+                            <div id="js-legend" class="chart-legend"></div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div><!-- /.card-body -->
-    </div>
+
+                    <!-- Morris chart - Sales -->
+                    {{-- <div class="row"> --}}
+                        
+                    {{-- </div> --}}
+                {{-- </div> --}}
+            </div><!-- /.card-body -->
+        </div>
 </section>

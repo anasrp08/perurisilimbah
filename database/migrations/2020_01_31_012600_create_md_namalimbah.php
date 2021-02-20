@@ -21,6 +21,8 @@ class CreateMdNamalimbah extends Migration
             $table->string('jenislimbah');
             $table->string('fisik');
             $table->integer('saldo');
+            $table->integer('is_lgsg_proses');
+            
             $table->string('keterangan');
             $table->timestamps();
         });

@@ -26,15 +26,15 @@
 
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<title>Daftar Kapasitas</title>
+<title>Report Kapasitas</title>
 @section('title')
-<h1>Daftar Kapasitas</h1>
+<h1>Report Kapasitas</h1>
 
 @endsection
 
 @section('breadcrumb')
 <li class="breadcrumb-item"><a href="{{ url('home') }}">Home</a></li>
-<li class="breadcrumb-item active">Daftar Kapasitas</li>
+<li class="breadcrumb-item active">Report Kapasitas</li>
 @endsection
 
 
@@ -50,9 +50,7 @@
                 <tr>
                     <th>No. </th>
                     <th>Nama TPS</th>
-                    <th>Jenis Limbah</th>
-                    <th>Tipe Limbah</th>
-                    <th>Kapasitas Area</th>
+                    <th>Jenis Limbah</th>  
                     <th>Kapasitas Jumlah</th>
                     <th>Saldo</th> 
                     <th>Status</th> 
@@ -133,16 +131,7 @@
                     name: 'jenislimbah',
 
                 },
-                {
-                    data: 'tipelimbah',
-                    name: 'tipelimbah',
-
-                },
-                {
-                    data: 'kapasitasarea',
-                    name: 'kapasitasarea',
-
-                },
+                
                 {
                     data: 'kapasitasjumlah',
                     name: 'kapasitasjumlah',

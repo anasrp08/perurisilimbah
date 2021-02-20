@@ -12,12 +12,7 @@
 
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="form-group">
-
-                            <label>Tanggal Permohonan</label>
-                            <input type="text" id="entridate" name="entridate"
-                                class="entridate form-control float-right" autocomplete="off">
-                        </div>
+                        
                         <div class="form-group">
                             <label>Asal Limbah</label>
                             <select name="limbahasal" id="limbahasal" class="form-control select2bs4"
@@ -29,8 +24,7 @@
                             </select>
                         </div>
                     </div>
-
-
+ 
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Jenis Limbah</label>
@@ -41,26 +35,7 @@
                                 <option value="{{$data->id}}">{{$data->jenislimbah}} </option>
                                 @endforeach
                             </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Status</label>
-                            <select name="status" id="status" class="form-control select2bs4" style="width: 100%;">
-                                <option value="" disabled selected>-Pilih Status-</option>
-                                @foreach($status as $data)
-                                <option value="{{$data->id}}">{{$data->keterangan}} </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        {{-- <div class="form-group">
-                            <label>Nomor Pegawai</label>
-                            <select name="np" id="np" class="form-control select2bs4" style="width: 100%;">
-                                <option value="-" selected="selected">Pilih Salah Satu</option>
-                                <option value="" disabled selected>-</option>
-                                @foreach($np as $data)
-                                <option value="{{$data->np}}">{{$data->np}}-{{$data->nama}} </option>
-                                @endforeach
-                            </select>
-                        </div> --}}
+                        </div> 
 
 
 
@@ -79,8 +54,7 @@
                                 <option value="{{$data->id}}">{{$data->namalimbah}} </option>
                                 @endforeach
                             </select>
-                        </div>
-                       
+                        </div> 
 
 
                     </div>

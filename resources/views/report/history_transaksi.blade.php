@@ -52,11 +52,9 @@
                     <th>No. </th>
                     <th>Tanggal</th>
                     <th>Nama Limbah</th>
-                    <th>Asal Limbah</th>
-                    <th>Jenis Limbah</th>
-                    <th>Tipe Limbah</th>
-                    {{-- <th>TPS</th> --}}
                     <th>Jumlah</th>  
+                    <th>Asal Limbah</th>
+                    <th>Jenis Limbah</th> 
                     <th>Proses Oleh</th>  
                     <th>Status</th> 
                     {{-- <th>Keterangan</th>   --}}
@@ -174,7 +172,7 @@
                 data: function (d) {
                     d.status=$('#status').val()
                     d.namalimbah=$('#namalimbah').val()
-                    d.np=$('#np').val()
+                    // d.np=$('#np').val()
                     d.jenislimbah=$('#jenislimbah').val()
                     d.limbahasal=$('#limbahasal').val()
                     // d.entridate=$('#entridate').val()
@@ -208,6 +206,14 @@
 
                 },
                 {
+                    data: 'jumlah',
+                    name: 'jumlah',
+                    render: function (data, type, row) {
+                        return data+' '+row.satuan
+                    }
+
+                },
+                {
                     data: 'seksi',
                     name: 'seksi',
 
@@ -217,25 +223,57 @@
                     name: 'jenislimbah',
 
                 },
-                {
-                    data: 'tipelimbah',
-                    name: 'tipelimbah',
+                // {
+                //     data: 'treatmen_limbah',
+                //     name: 'treatmen_limbah',
 
-                },
+                // },
                 // {
                 //     data: 'namatps',
                 //     name: 'namatps',
 
                 // },
                  
+                
                 {
-                    data: 'jumlah',
-                    name: 'jumlah',
-
-                },
-                {
-                    data: 'np',
-                    name: 'np',
+                    data: 'np_pemohon',
+                    name: 'np_pemohon',
+                    render: function (data, type, row) {
+                    switch (row.idstatus) {
+                            case 1:
+                                return data
+                                break;
+                            case 2:
+                                return row.np_penerima
+                                break;
+                            case 3:
+                                return row.np_packer
+                                break;
+                            case 4:
+                                return row.np_pemroses
+                                break;
+                            case 5:
+                                return row.np_pemroses
+                                break;
+                            case 6:
+                                return row.np_pemroses
+                                break;
+                            case 7:
+                                return row.np_pemroses
+                                break;
+                                case 8:
+                                return row.np_pemroses
+                                break;
+                                case 9:
+                                return row.np_pemroses
+                                break;
+                                case 10:
+                                return row.np_perevisi
+                                break; 
+                            default:
+                                break;
+                        }
+                    }
 
                 },
                 {

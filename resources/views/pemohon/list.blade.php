@@ -8,9 +8,10 @@
     td.wrapok {
         white-space: normal
     }
+
     .modal-lg {
-    max-width: 80% !important;
-}
+        max-width: 80% !important;
+    }
 
 </style>
 
@@ -154,10 +155,10 @@
                     <th>Satuan</th>
                     <th>Asal Limbah</th>
                     <th>Jenis Limbah (B3/Non)</th>
-                    <th>Status</th> 
+                    <th>Status</th>
                     <th>Terima Oleh</th>
                     <th>Tervalidasi</th>
-                    <th>Validasi Oleh</th> 
+                    <th>Validasi Oleh</th>
                 </tr>
             </thead>
 
@@ -181,7 +182,7 @@
 @section('scripts')
 <script>
     $(document).ready(function () {
-     
+
         $('#entridate').datepicker({
             uiLibrary: 'bootstrap4',
             format: 'dd/mm/yyyy',
@@ -193,7 +194,7 @@
         $('#np').select2({
             theme: 'bootstrap4'
         })
-        
+
 
         $('#nonb3').hide()
         // $('.select2').select2()
@@ -214,7 +215,7 @@
             $('#daftar_pemohon').DataTable().ajax.reload();
 
         })
-        
+
 
 
         var table = $('#daftar_pemohon').DataTable({
@@ -222,10 +223,9 @@
             serverSide: true,
             scrollCollapse: true,
             scrollX: true,
-            paging:true,
-            dom: '<"right"B>rtipl<"clear">',
-            buttons: [
-                {
+            paging: true,
+            dom: '<"right"B>frtipl<"clear">',
+            buttons: [{
                     text: 'Terima',
                     className: 'terima btn btn-success',
                     action: function (e, dt, node, config) {
@@ -235,6 +235,10 @@
                         // console.log(node)
                         $('#title_konfirmasi').text('Diterima Oleh: ')
                         $('#hidden_transaksi').val('terima')
+                        // var data = table.rows({
+                        //     selected: true
+                        // }).data() 
+                        // $('#np_pemohon').val(data[0].np_pemohon)
                         $('#modalconfirm').modal('show')
 
                     }
@@ -257,41 +261,42 @@
                     text: 'Revisi',
                     className: 'revisi btn btn-info',
                     action: function (e, dt, node, config) {
-                       
+
                         var data = table.rows({
                             selected: true
                         }).data()
                         console.log(data)
-                        if(data.count() > 1){
+                        if (data.count() > 1) {
                             toastr.warning('Harus pilih salah satu', 'Warning', {
                                 timeOut: 5000
                             });
-                        }else if(data.count() == 1){
-                            
-                            $('#title_revisi').text('Revisi Permohonan')
-                            $('#hidden_transaksi').val('revisi') 
-                          var tglEntri= moment(data[0].tgl).format('DD/MM/YYYY');
-                               $('#entridate').val(tglEntri);
-                               $('#jmlhlimbah').val(data[0].jumlah);
-                               $('#satuan').val(data[0].idsatuan).change();
-                               $('#keterangan').val(data[0].keterangan);
-                               $('#jenislimbah').val(data[0].idjenislimbah).change();
-                               $('#limbahasal').val(data[0].idasallimbah).change();
-                               $('#maksud').val(data[0].maksud);
-                               $('#namalimbah').val(data[0].idlimbah).change();
-                               if(data[0].limbah3r == ''){
-                                $('#nonb3').css('display','none')
-                               }else{
-                                $('#limbah3r').val(data[0].limbah3r).change();
-                               }
+                        } else if (data.count() == 1) {
 
-                              
+                            $('#title_revisi').text('Revisi Permohonan')
+                            $('#hidden_transaksi').val('revisi')
+                            $('#np_pemohon').val(data[0].np_pemohon)
+                            var tglEntri = moment(data[0].tgl).format('DD/MM/YYYY');
+                            $('#entridate').val(tglEntri);
+                            $('#jmlhlimbah').val(data[0].jumlah);
+                            $('#satuan').val(data[0].idsatuan).change();
+                            $('#keterangan').val(data[0].keterangan);
+                            $('#jenislimbah').val(data[0].idjenislimbah).change();
+                            $('#limbahasal').val(data[0].idasallimbah).change();
+                            $('#maksud').val(data[0].maksud);
+                            $('#namalimbah').val(data[0].idlimbah).change();
+                            if (data[0].limbah3r == '') {
+                                $('#nonb3').css('display', 'none')
+                            } else {
+                                $('#limbah3r').val(data[0].limbah3r).change();
+                            }
+
+
                             //    $('#alasan').val(data.limbah3r);
                             $('#hidden_transaksi').val('revisi')
                             $('#hidden_id').val(data[0].idheader)
                             $('#modalrevisi').modal('show')
                         }
-                       
+
 
                     }
 
@@ -310,7 +315,7 @@
             ],
             columnDefs: [{
                     className: 'text-center',
-                    targets: [1, 2, 3, 4, 5,6,7,8,9]
+                    targets: [1, 2, 4, 5, 8, 9]
                 },
                 {
                     className: 'dt-body-nowrap',
@@ -347,7 +352,7 @@
                     orderable: false,
                     searchable: false
                 },
-                
+
                 {
                     data: 'no_surat',
                     name: 'no_surat',
@@ -409,7 +414,7 @@
                     data: 'changed_by',
                     name: 'changed_by',
                     render: function (data, type, row) {
-                    if (data == null) {
+                        if (data == null) {
                             return '<span class="badge badge-info">-</span>'
                         } else {
                             return '<span class="badge badge-success">' + data + '</span>'
@@ -423,7 +428,7 @@
                         if (data == null) {
                             return '<span class="badge badge-info">Belum Validasi</span>'
                         } else {
-                         return moment(data).format('DD/MM/YYYY');
+                            return moment(data).format('DD/MM/YYYY');
                         }
                     }
 
@@ -433,12 +438,12 @@
                     name: 'validated_by',
                     render: function (data, type, row) {
                         // console.log(data)
-                    if (data == null) {
+                        if (data == null) {
                             return '<span class="badge badge-info">Belum Validasi</span>'
                         } else {
                             return data
                         }
-                }
+                    }
 
                 },
 
@@ -460,36 +465,38 @@
                 // }
             ]
         });
-        var buttonTerima = table.buttons( ['.terima'] );
-        var buttonValidasi = table.buttons( ['.validasi'] );
-        var buttonRevisi = table.buttons( ['.revisi'] );
-        var buttonDatatable = table.buttons( ['.batal','.semua'] );
-        
+        var buttonTerima = table.buttons(['.terima']);
+        var buttonValidasi = table.buttons(['.validasi']);
+        var buttonRevisi = table.buttons(['.revisi']);
+        var buttonDatatable = table.buttons(['.batal', '.semua']);
+
 
         var roleUser = '<?php echo Laratrust::hasRole("admin") ?>'
         var roleUnitKerja = '<?php echo Laratrust::hasRole("unit kerja") ?>'
         var rolePengawas = '<?php echo Laratrust::hasRole("pengawas") ?>'
         var roleOperator = '<?php echo Laratrust::hasRole("operator") ?>'
-        if(roleUnitKerja == 1){
+        if (roleUnitKerja == 1) {
             buttonTerima.disable();
             buttonValidasi.disable();
             buttonDatatable.disable();
-        }else if(rolePengawas==1){
+            buttonRevisi.disable();
+        } else if (rolePengawas == 1) {
             buttonTerima.disable();
-        }else if(roleOperator==1){
+            buttonRevisi.disable();
+        } else if (roleOperator == 1) {
             buttonValidasi.disable();
         }
         // console.log(loginInstansi)
 
         // buttons.disable();
-        
+
 
         // new $.fn.dataTable.FixedColumns(table, {
         //     leftColumns: 3,
         //     heightMatch: 'auto'
         // });
 
- 
+
         $('#form_revisi').on('submit', function (event) {
             event.preventDefault();
             url = "{{ route('history.update') }}"
@@ -525,99 +532,112 @@
                     }
                 }
             })
-            
-            
+
+
         })
 
         $('#submit').on('click', function () {
             var output = [];
-                        var jsonData = {}
-                        var id = []
-                        var nomor_order = []
-                        var status = []
-                        var dataSelected = []
+            var jsonData = {}
+            var id = []
+            var nomor_order = []
+            var status = []
+            var dataSelected = []
 
-                        var data1 = table.rows({
-                            selected: true
-                        }).data()
-                        console.log(data1.toArray())
-                        if (data1.count() == 0) {
-                            toastr.warning('Ada Order Yang Belum Dipilih', 'Warning', {
-                                timeOut: 5000
-                            });
-                        } else {
-                            for(i=0;i<data1.count();i++){
+            var data1 = table.rows({
+                selected: true
+            }).data()
+            console.log(data1.toArray())
+            if (data1.count() == 0) {
+                toastr.warning('Ada Order Yang Belum Dipilih', 'Warning', {
+                    timeOut: 5000
+                });
+            } else {
 
-                                var obj = {};
-                                // console.log(value)
-                                obj.limbah3r = data1[i].limbah3r;
-                                obj.tgl = data1[i].tgl;
-                                obj.id_transaksi = data1[i].id_transaksi;
-                                obj.idmutasi = data1[i].idmutasi;
-                                obj.idasallimbah = data1[i].idasallimbah;
-                                obj.idlimbah = data1[i].idlimbah;
-                                obj.idstatus = data1[i].idstatus;
-                                obj.idjenislimbah = data1[i].idjenislimbah;
-                                obj.jumlah = data1[i].jumlah;
-                                obj.satuan = data1[i].idsatuan;
-                                obj.np = $('#np').val();
-                                obj.hiddenTransaksi = $('#hidden_transaksi').val();
+                for (i = 0; i < data1.count(); i++) {
+                    // if (data1[i].validated_by != '') {
+                       
+                    //     toastr.warning('Sudah Ada Data Yang Tervalidasi', 'Warning', {
+                    //         timeOut: 5000
+                    //     });
+                    //     break;
+                    // } else {
+                        var obj = {};
+                        // console.log(value)
+                        obj.idheader = data1[i].id;
+                        obj.limbah3r = data1[i].limbah3r;
+                        obj.limbah3r = data1[i].limbah3r;
+                        obj.tgl = data1[i].tgl;
+                        obj.id_transaksi = data1[i].id_transaksi;
+                        obj.idmutasi = data1[i].idmutasi;
+                        obj.idasallimbah = data1[i].idasallimbah;
+                        obj.idlimbah = data1[i].idlimbah;
+                        obj.idstatus = data1[i].idstatus;
+                        obj.idjenislimbah = data1[i].idjenislimbah;
+                        obj.jumlah = data1[i].jumlah;
+                        obj.satuan = data1[i].idsatuan;
+                        obj.np = $('#np').val();
+                        obj.hiddenTransaksi = $('#hidden_transaksi').val();
 
-                                output.push(obj);
-                                jsonData["Order"] = output
-                            }
-                           
-                        }
-                        // var tipeTransaksi=('#hidden_transaksi').val()
-                        var url=''
-                        // if(tipeTransaksi=='terima'){
-                        //     url="{{ route('pemohon.updatevalid') }}"
-                        // }else{
-                        //     url="{{ route('satpam.valid') }}"
-                        // }
+                        output.push(obj);
+                        jsonData["Order"] = output
+                    // }
 
 
-                        console.log(jsonData)
-                        url="{{ route('pemohon.updatevalid') }}"
-                        $.ajax({
-                            url: url,
-                            method: "POST",
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                                    'content')
-                            },
-                            data: JSON.stringify(jsonData),
-                            // contentType: 'json',
-                            // cache: false,
-                            // processData: false,
-                            // dataType: "json",
-                            beforeSend: function () {
-                                $('#saveentri').text('proses menyimpan...');
-                            },
-                            success: function (data) {
-                                // console.log(data)
-                                if (data.errors) {
-                                    toastr.success(data.errors, 'Success', {
-                                        timeOut: 5000
-                                    });
-                                }
-                                if (data.success) {
-                                    toastr.success(data.success, 'Success', {
-                                        timeOut: 5000
-                                    });
-                                    $('#daftar_pemohon').DataTable().ajax.reload();
-                                    // $('#counterentries').text(data.count);
+                }
+                var url = ''
+            // if(tipeTransaksi=='terima'){
+            //     url="{{ route('pemohon.updatevalid') }}"
+            // }else{
+            //     url="{{ route('satpam.valid') }}"
+            // }
 
-                                    $('#saveentri').text('Simpan');
-                                    // $('#tblorder').DataTable().ajax.reload();
-                                    // renderTgl()
 
-                                }
+            console.log(jsonData)
+            url = "{{ route('pemohon.updatevalid') }}"
+            $.ajax({
+                url: url,
+                method: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                        'content')
+                },
+                data: JSON.stringify(jsonData),
+                // contentType: 'json',
+                // cache: false,
+                // processData: false,
+                // dataType: "json",
+                beforeSend: function () {
+                    $('#saveentri').text('proses menyimpan...');
+                },
+                success: function (data) {
+                    // console.log(data)
+                    if (data.errors) {
+                        toastr.success(data.errors, 'Success', {
+                            timeOut: 5000
+                        });
+                    }
+                    if (data.success) {
+                        toastr.success(data.success, 'Success', {
+                            timeOut: 5000
+                        });
+                        $('#daftar_pemohon').DataTable().ajax.reload();
+                        // $('#counterentries').text(data.count);
 
-                            }
-                        })
-                        $('#np').val('').change()
-                        $('#modalconfirm').modal('toggle')
+                        $('#saveentri').text('Simpan');
+                        // $('#tblorder').DataTable().ajax.reload();
+                        // renderTgl()
+
+                    }
+
+                }
+            })
+            $('#np').val('').change()
+            $('#modalconfirm').modal('toggle')
+
+            }
+            // var tipeTransaksi=('#hidden_transaksi').val()
+           
         })
         $('#daftar_pemohon tbody').on('click', 'tr', function () {
             $(this).toggleClass('selected');

@@ -11,7 +11,7 @@
                 <input type="hidden" id="type" name="type" >
                 <div class="form-group">
                     <label>Nomor Pegawai</label>
-                    <select name="np" id="np" class="form-control select2bs4"
+                    <select name="np_packer" id="np_packer" class="form-control select2bs4"
                         style="width: 100%;">
                         {{-- <option value="-" selected="selected">Pilih Salah Satu</option> --}}
                         <option value="" disabled selected>-</option>
@@ -22,7 +22,7 @@
                 </div>
                 <div class="box-footer">
                     <button name="submit" id="submit" class="btn btn-primary">Submit</button>
-                    {{-- <button id="submit" type="submit" class="btn btn-primary" >Submit</button> --}}
+                  
                 </div>
             </div>
         </div>

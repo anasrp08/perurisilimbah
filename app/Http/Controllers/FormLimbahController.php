@@ -204,7 +204,7 @@ class FormLimbahController extends Controller
             'md_namalimbah.namalimbah',
             'md_penghasillimbah.seksi',
             'tr_headermutasi.maksud',
-            'tr_headermutasi.np',
+            'tr_headermutasi.np_pemohon',
             'tr_headermutasi.validated',
             'tr_headermutasi.validated_by',
            ) 
@@ -217,11 +217,11 @@ class FormLimbahController extends Controller
         //    dd();
 
            $detailPenerima=DB::table('tbl_np')
-           ->where('np','=',$penerima->np)->first();
+           ->where('np','=',$penerima->np_penerima)->first();
            $detailPengawas=DB::table('tbl_np')
            ->where('np','=',$dataFormulirLimbah[0]->validated_by)->first();
            $detailPenyerah=DB::table('tbl_np')
-           ->where('np','=',$dataFormulirLimbah[0]->np)->first();
+           ->where('np','=',$dataFormulirLimbah[0]->np_pemohon)->first();
 
         //    dd($penerima);
 
@@ -232,9 +232,9 @@ class FormLimbahController extends Controller
         $penghasillimbah=$dataFormulirLimbah[0]->seksi;
         $dikirimke='Seksi Operasional Limbah';
         $maksud=$dataFormulirLimbah[0]->maksud; 
-        $ttdPenerima=$penerima->np;
-        $ttdPengawas=$dataFormulirLimbah[0]->validated_by;
-        $ttdMenyerahkan=$dataFormulirLimbah[0]->np;
+        // $ttdPenerima=$penerima->np;
+        // $ttdPengawas=$dataFormulirLimbah[0]->validated_by;
+        // $ttdMenyerahkan=$dataFormulirLimbah[0]->np;
         $listLimbah=$dataFormulirLimbah;
         // dd($listLimbah);
 

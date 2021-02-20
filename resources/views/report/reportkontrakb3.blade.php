@@ -422,11 +422,17 @@
                     data: 'sisa',
                     name: 'sisa',
                     render: function (data, type, row) {
+                        console.log(row.konsumsi)
                         var totalKuota = parseInt(row.konsumsi) + parseInt(row.sisa)
                         var kuota_danger = Math.round(parseInt(totalKuota) * parseInt(90) /
                             parseInt(100))
                         var kuota_warning = Math.round(parseInt(totalKuota) * parseInt(75) /
                             parseInt(100))
+                            
+                        if(row.konsumsi == 0 ){
+                            return '<span class="badge badge-success">Aman</span>'
+                        }
+
                         if (parseInt(row.konsumsi) >= kuota_warning && parseInt(row.konsumsi) <=
                             kuota_danger) {
                             return '<span class="badge badge-warning">Waspada</span>'
@@ -435,6 +441,7 @@
                         } else {
                             return '<span class="badge badge-success">Aman</span>'
                         }
+
 
 
                     }

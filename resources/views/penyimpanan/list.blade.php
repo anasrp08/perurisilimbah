@@ -33,11 +33,11 @@
             Refresh</button>
     </div>
     <div class="card-body">
-        <table id="daftar_masuk" class="table table-bordered table-striped">
+        <table id="daftar_masuk" class="table table-bordered table-striped" style="width: 100%;">
             <thead>
                 <tr>
                     <th>No. </th>
-                    <th>Tanggal Permohonan</th>
+                    <th>Tgl. Permohonan Angkut</th>
                     <th>Nama Limbah</th>
                     <th>Jumlah</th>
                     <th>Satuan</th>
@@ -45,7 +45,7 @@
                     <th>Jenis Limbah (B3/Non)</th>
                     <th>Fisik</th>
                     <th>Status</th>
-                    <th>Tanggal Proses</th>
+                    <th>Tgl. Proses Masuk</th>
 
                 </tr>
             </thead>
@@ -105,25 +105,33 @@
             paging:true,
             dom: '<"right"B>rtipl<"clear">',
             buttons: [
-                 
                 {
-                    text: 'Jumbo Bag',
-                    className: 'btn btn-warning',
-                    action: function (e, dt, node, config) {
-                        $('#type').val('Padat')
-                        $('#modalconfirm').modal('show')
-                        
-                    }
-                },
-                {
-                    text: 'TPS Kolam Cair',
+                    text: 'Packing',
                     className: 'btn btn-info',
                     action: function (e, dt, node, config) {
-                        $('#type').val('Cair')
+                        // $('#type').val('Padat')
                         $('#modalconfirm').modal('show')
                         
                     }
                 },
+                // {
+                //     text: 'Jumbo Bag',
+                //     className: 'btn btn-warning',
+                //     action: function (e, dt, node, config) {
+                //         $('#type').val('Padat')
+                //         $('#modalconfirm').modal('show')
+                        
+                //     }
+                // },
+                // {
+                //     text: 'TPS Kolam Cair',
+                //     className: 'btn btn-info',
+                //     action: function (e, dt, node, config) {
+                //         $('#type').val('Cair')
+                //         $('#modalconfirm').modal('show')
+                        
+                //     }
+                // },
                 {
                     extend: "selectAll",
                     text: 'Pilih Semua',
@@ -137,7 +145,7 @@
             ],
             columnDefs: [{
                     className: 'text-center',
-                    targets: [1, 2, 3, 4, 5, 6]
+                    targets: [1,   3, 4, 6]
                 },
                 {
                     className: 'dt-body-nowrap',
@@ -265,69 +273,70 @@
                     timeOut: 5000
                 });
             } else {
-                if (fisik == 'Cair') {
+                // if (fisik == 'Cair') {
                     for (i = 0; i < data1.count(); i++) {
-                        if (data1[i].fisik == 'Padat') {
-                            toastr.warning('Ada Item Limbah Padat Yang Dipilih Baris Ke- '+[i+1], 'Warning', {
-                                timeOut: 5000
-                            });
-                            break;
-                        } else {
+                        // if (data1[i].fisik == 'Padat') {
+                        //     toastr.warning('Ada Item Limbah Padat Yang Dipilih Baris Ke- '+[i+1], 'Warning', {
+                        //         timeOut: 5000
+                        //     });
+                        //     break;
+                        // } else {
                             var obj = {};
                             obj.limbah3r = data1[i].limbah3r;
                             obj.tgl = data1[i].tgl;
-                            obj.idmutasi = data1[i].idmutasi;
-                            obj.id_transaksi = data1[i].id_transaksi;
-                            obj.idasallimbah = data1[i].idasallimbah;
-                            obj.idlimbah = data1[i].idlimbah;
-                            obj.idstatus = 4;
-                            obj.fisik = data1[i].fisik;
-                            obj.tipelimbah = data1[i].tipelimbah;
-                            obj.idjenislimbah = data1[i].idjenislimbah;
-                            obj.jumlah = data1[i].jumlah;
-                            obj.limbah3r = data1[i].limbah3r;
-                            obj.np = $('#np').val();
-                            output.push(obj);
-                            jsonData["Order"] = output
-                            
-                        }
-
-                    }
-                    packLimbah(jsonData)
-                } else {
-                    
-                    for (i = 0; i < data1.count(); i++) {
-                        if (data1[i].fisik == 'Cair') {
-                            toastr.warning('Ada Item Limbah Cair Yang Dipilih Baris Ke- '+[i+1], 'Warning', {
-                                timeOut: 5000
-                            });
-                            break;
-                        } else {
-                            var obj = {};
-                            // console.log(value)
-                            obj.limbah3r = data1[i].limbah3r;
-                            obj.tgl = data1[i].tgl;
-                            obj.idmutasi = data1[i].idmutasi;
+                            obj.idheader = data1[i].id;
                             obj.id_transaksi = data1[i].id_transaksi;
                             obj.idasallimbah = data1[i].idasallimbah;
                             obj.idlimbah = data1[i].idlimbah;
                             obj.idstatus = 3;
                             obj.fisik = data1[i].fisik;
-                            obj.tipelimbah = data1[i].tipelimbah;
+                            obj.tps = data1[i].tps;
+                            obj.pack_in = data1[i].pack_in;
+                            obj.packing_besar = data1[i].packing_besar;
                             obj.idjenislimbah = data1[i].idjenislimbah;
-                            obj.jumlah = data1[i].jumlah;
-                            obj.limbah3r = data1[i].limbah3r;
-                            obj.np = $('#np').val();
+                            obj.jumlah = data1[i].jumlah; 
+                            obj.max_packing = data1[i].max_packing; 
+                            obj.np_packer = $('#np_packer').val();
                             output.push(obj);
                             jsonData["Order"] = output
-                           
-
-                        }
+                            
+                        // }
 
                     }
                     packLimbah(jsonData)
+                // } else {
+                    
+                //     for (i = 0; i < data1.count(); i++) {
+                //         if (data1[i].fisik == 'Cair') {
+                //             toastr.warning('Ada Item Limbah Cair Yang Dipilih Baris Ke- '+[i+1], 'Warning', {
+                //                 timeOut: 5000
+                //             });
+                //             break;
+                //         } else {
+                //             var obj = {};
+                //             // console.log(value)
+                //             obj.limbah3r = data1[i].limbah3r;
+                //             obj.tgl = data1[i].tgl;
+                //             obj.idmutasi = data1[i].idmutasi;
+                //             obj.id_transaksi = data1[i].id_transaksi;
+                //             obj.idasallimbah = data1[i].idasallimbah;
+                //             obj.idlimbah = data1[i].idlimbah;
+                //             obj.idstatus = 3;
+                //             obj.fisik = data1[i].fisik;
+                //             obj.packing_besar = data1[i].packing_besar;
+                //             obj.idjenislimbah = data1[i].idjenislimbah;
+                //             obj.jumlah = data1[i].jumlah; 
+                //             obj.np = $('#np').val();
+                //             output.push(obj);
+                //             jsonData["Order"] = output
+                           
 
-                }
+                //         }
+
+                //     }
+                //     packLimbah(jsonData)
+
+                // }
 
             }
             $('#np').val('').change()

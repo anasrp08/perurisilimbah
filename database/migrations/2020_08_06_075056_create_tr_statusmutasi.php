@@ -35,7 +35,10 @@ class CreateTrStatusmutasi extends Migration
             $table->integer('jumlah_out'); 
             $table->string('limbah3r'); 
             $table->date('tgl'); 
-            $table->string('np')->nullable();
+            $table->string('np_pemohon')->nullable();
+            $table->string('np_perevisi')->nullable();
+             $table->string('np_packer')->nullable();
+              $table->string('np_pemroses')->nullable();
             $table->date('validated')->nullable();
             $table->string('validated_by')->nullable();
             $table->string('created_by')->nullable();

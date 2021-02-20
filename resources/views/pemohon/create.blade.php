@@ -181,7 +181,7 @@
 
 
             var getSelected = [
-                $("#np").val(),
+                $("#np_pemohon").val(),
                 $("#jenislimbah").val(),
                 $("#namalimbah").val(),
                 $("#limbahasal").val(),
@@ -232,7 +232,7 @@
 
                 ],
                 [
-                    "np",
+                    "np_pemohon",
                     "jenis_limbah",
                     "nama_limbah",
                     "asal_limbah",
@@ -247,7 +247,7 @@
                 counter,
 
                 // createInputTextDisabled("uji", counter, counter), 
-                createDropdown("np", counter,
+                createDropdown("np_pemohon", counter,
                     ' <option value="" disabled selected>-</option>' +
                     '@foreach($np as $data)' +
                     '<option value="{{$data->np}}" >{{$data->np}}</option>' +
@@ -319,7 +319,11 @@
                 var jsonData = {}
 
                 $("tbody tr").each(function () {
-                     
+                    if ($(":input[name=nama_limbah]", this).val() == "") {
+                        toastr.warning('Ada Data Yang Belum Diisi', 'Data Kosong', {
+                    timeOut: 5000
+                });
+                    }
                     if ($(":input[name=tgl]", this).val() == undefined) {
 
                     } else {
@@ -331,7 +335,7 @@
                         obj.jmlhlimbah = $(":input[name=jmlhlimbah]", this).val();
                         obj.limbah_3r = $("select[name=limbah_3r]", this).val();
                         obj.satuan = $("select[name=satuan]", this).val();
-                        obj.np = $("select[name=np]", this).val();
+                        obj.np_pemohon = $("select[name=np_pemohon]", this).val();
                         obj.keterangan = $(":input[name=keterangan]", this).val();
                         // console.log(obj)
                         output.push(obj);

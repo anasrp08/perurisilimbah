@@ -95,7 +95,7 @@
 
 
 
-                        <div id="nonb3" class="card card-danger">
+                        <div id="nonb3" class="card card-danger" ">
                             <div class="card-header">
                                 <h3 class="card-title">Entri Data Non B3</h3>
                             </div>

@@ -19,6 +19,8 @@
                         @endforeach
                     </select>
                 </div>
+                <input type="hidden" id="np_pemohon" name="np_pemohon" >
+                
                 <input type="hidden" id="hidden_transaksi" name="hidden_transaksi" >
                 <div class="box-footer">
                     <button name="submit" id="submit" class="btn btn-primary"   >Submit</button>

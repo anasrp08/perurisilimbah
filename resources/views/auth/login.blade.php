@@ -45,6 +45,7 @@
                     <button class="btn btn-primary">Messages <span class="badge badge-white">5</span></button>
                     <button class="btn btn-secondary">Notifications <span class="badge badge-white">3</span></button> --}}
                                         <h1 class="h4 text-gray-900 mb-4">SIMBAH</h1>
+                                        <h1 class="h4 text-gray-900 mb-4">Sistem Informasi Limbah</h1>
                                     </div>
                                     <form class="user" method="POST" action="{{ route('login') }}">
                                         @csrf

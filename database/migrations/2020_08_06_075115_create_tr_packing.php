@@ -26,9 +26,11 @@ class CreateTrPacking extends Migration
             $table->foreign('idtps')->references('id')->on('md_tps')->onDelete('cascade'); 
             $table->bigInteger('idstatus')->unsigned()->nullable();
             $table->foreign('idstatus')->references('id')->on('md_statusmutasi')->onDelete('cascade');
-            $table->string('tipelimbah');
+            $table->string('packing_besar');
+            $table->bigInteger('jumlah');
             $table->date('kadaluarsa');
-            $table->string('np')->nullable();
+            $table->string('status');
+            $table->string('np_packer')->nullable();
             $table->string('created_by')->nullable();
             $table->string('changed_by')->nullable();
             $table->timestamps();

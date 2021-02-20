@@ -34,7 +34,7 @@
 
 @section('breadcrumb')
 <li class="breadcrumb-item"><a href="{{ url('home') }}">Home</a></li>
-<li class="breadcrumb-item active">Daftar Penghasil Limbah</li>
+<li class="breadcrumb-item active">Report Penghasil Limbah</li>
 @endsection
 
 
@@ -45,14 +45,15 @@
             Refresh</button>
     </div>
     <div class="card-body">
+        @include('report.f_filter_penghasil')
+       
         <table id="daftar_penghasil" class="table table-hover" style="width:100%;">
             <thead>
                 <tr>
                     <th>No. </th>
                     <th>Unit Kerja</th>
                     <th>Nama Limbah</th>
-                    <th>Jenis Limbah</th>
-                    <th>Tipe Limbah</th>
+                    <th>Jenis Limbah</th> 
                     <th>Jumlah</th>  
                 </tr>
             </thead>
@@ -72,14 +73,22 @@
     $(document).ready(function () {
         
 
-
+        $('.select2bs4').select2({
+            theme: 'bootstrap4'
+        })
 
         $('#refresh').click(function () {
 
             $('#daftar_penghasil').DataTable().ajax.reload();
 
         })
+        $("#jenislimbah").change(function () {
+            getDropdown('{{ route("limbah.getnama")}}', "", $(this).val(), "namalimbah")
 
+        });
+        $('#filter').click(function () {
+            $('#daftar_penghasil').DataTable().draw(true);
+        })
 
 
         var table = $('#daftar_penghasil').DataTable({
@@ -87,10 +96,10 @@
             serverSide: true,
             scrollCollapse: true,
             scrollX: true,
-            dom: 'rti<"clear">',
+            dom: '<lfr<t>ip>',
 
             columnDefs: [{
-                    className: 'text-center',
+                    className: 'text-left',
                     targets: [1, 2, 3]
                 },
                 {
@@ -111,7 +120,11 @@
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                data: function (d) {}
+                data: function (d) { 
+                    d.namalimbah=$('#namalimbah').val() 
+                    d.jenislimbah=$('#jenislimbah').val()
+                    d.limbahasal=$('#limbahasal').val()
+                }
             },
             // bFilter: false,
             columns: [{
@@ -135,11 +148,7 @@
                     name: 'jenislimbah',
 
                 },
-                {
-                    data: 'tipelimbah',
-                    name: 'tipelimbah',
-
-                },
+                
                 
                  
                 {

@@ -23,6 +23,7 @@ class CreateMdTps extends Migration
             $table->string('kapasitasjumlah');
             $table->string('satuan2');
             $table->string('fisik');
+            $table->integer('tahun');
             $table->timestamps();
         });
     }

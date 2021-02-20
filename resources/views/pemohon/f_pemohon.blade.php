@@ -14,14 +14,14 @@
                     <div class="col-md-4">
                         <div class="form-group">
 
-                            <label>Tanggal Permohonan</label>
+                            <label>1. Tanggal Permohonan</label>
                             <input type="text" id="entridate" name="entridate"
                                 class="entridate form-control float-right" autocomplete="off">
                         </div>
                         <div class="row">
                             <div class="col-md-8">
                                 <div id="formnosurat" class="form-group"> 
-                                    <label for="nosurat">Jumlah Limbah</label>
+                                    <label for="nosurat">4. Jumlah Limbah</label>
                                     <div class="input-group input-group mb-3">
                                         <input type="number" name="jmlhlimbah" id="jmlhlimbah" class="form-control">
  
@@ -52,7 +52,7 @@
 
                         </div> --}}
                         <div id="formnosurat" class="form-group">
-                            <label for="nosurat">Keterangan</label>
+                            <label for="nosurat">7. Keterangan</label>
                             <input type="text" name="keterangan" id="keterangan" class="form-control"
                                 placeholder="Keterangan">
                             {{-- <small class="text-danger">{{ $errors->nosurat->first() }}</small> --}}
@@ -64,20 +64,20 @@
 
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label>Jenis Limbah</label>
+                            <label>2. Jenis Limbah</label>
                             <select name="jenislimbah" id="jenislimbah" class="form-control select2bs4"
                                 style="width: 100%;">
                                 <option value="" disabled selected>-Pilih Jenis Limbah-</option>
-                                <option value="1">Limbah B3 
-                                {{-- @foreach($jenisLimbah as $data)
+                                {{-- <option value="1">Limbah B3  --}}
+                                @foreach($jenisLimbah as $data)
                                 <option value="{{$data->id}}">{{$data->jenislimbah}} </option>
-                                @endforeach --}}
+                                @endforeach
                             </select>
                         </div>
 
 
                         <div class="form-group">
-                            <label>Asal Limbah</label>
+                            <label>5. Asal Limbah</label>
                             <select name="limbahasal" id="limbahasal" class="form-control select2bs4"
                                 style="width: 100%;">
                                 <option value="" disabled selected>-Pilih Asal Limbah-</option>
@@ -87,7 +87,7 @@
                             </select>
                         </div>
                         <div id="formnosurat" class="form-group">
-                            <label for="nosurat">Maksud</label>
+                            <label for="nosurat">8. Maksud</label>
                             <input type="text" name="maksud" id="maksud" class="form-control" placeholder="Maksud">
                             {{-- <small class="text-danger">{{ $errors->nosurat->first() }}</small> --}}
                         </div>
@@ -99,7 +99,7 @@
                     <div class="col-md-4">
 
                         <div class="form-group">
-                            <label>Nama Limbah</label>
+                            <label>3. Nama Limbah</label>
                             <select name="namalimbah" id="namalimbah" class="form-control select2bs4"
                                 style="width: 100%;">
                                 {{-- <option value="-" selected="selected">Pilih Salah Satu</option> --}}
@@ -110,8 +110,8 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Nomor Pegawai</label>
-                            <select name="np" id="np" class="form-control select2bs4" style="width: 100%;">
+                            <label>6. NP Pemohon</label>
+                            <select name="np_pemohon" id="np_pemohon" class="form-control select2bs4" style="width: 100%;">
                                 {{-- <option value="-" selected="selected">Pilih Salah Satu</option> --}}
                                 <option value="" disabled selected>-</option>
                                 @foreach($np as $data)
@@ -124,7 +124,7 @@
 
 
 
-                        <div id="nonb3" class="card card-danger">
+                        <div id="nonb3" class="card card-danger" style="display: none;">
                             <div class="card-header">
                                 <h3 class="card-title">Entri Data Non B3</h3>
                             </div>
@@ -133,9 +133,9 @@
                                     <label>Limbah 3R</label>
                                     <select name="limbah3r" id="limbah3r" class="form-control select2bs4"
                                         style="width: 100%;">
-                                        <option value="-" selected="selected">Pilih Satuan</option>
+                                        <option value="-"="selected">Pilih Satuan</option>
                                         <option value="Ya">Ya</option>
-                                        <option value="Tidak">Tidak</option>
+                                        <option value="Tidak" selected>Tidak</option>
                                     </select>
                                 </div>
                             </div>

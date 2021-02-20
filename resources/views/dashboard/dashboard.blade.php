@@ -101,6 +101,8 @@
         var cair = createPieChart(document.getElementById('cair'), "Cair", 0)
         var sludge = createPieChart(document.getElementById('sludge'), "Sludge", 1)
         var sk = createPieChart(document.getElementById('sk'), "Sampah Kontaminasi", 2)
+        var abu= createPieChart(document.getElementById('abu'), "Sampah Abu", 2)
+        var lamputl = createPieChart(document.getElementById('lamputl'), "Sampah Lampu TL, Catridge Printer, PCB", 2)
         var namalimbah = null
         $('.select2bs4').select2({
             theme: 'bootstrap4'
@@ -196,7 +198,7 @@
                 }
             });
         }
-
+        var satuanNeraca=null
         var chartNeraca = new Chart(document.getElementById("graf_mutasi"), {
             type: 'bar',
             data: {
@@ -223,27 +225,18 @@
                 ]
             },
             options: {
-                // scales: {
-                //     yAxes: [{
-                //         ticks: {
-                //             // Include a dollar sign in the ticks
-                //             callback: function (value, index, values) {
-                //                 var finalValue = null
-                //                 var satuan = null
-                //                 if (namalimbah == 1 || namalimbah == 2 || namalimbah == 3 ||
-                //                     namalimbah == 17 || namalimbah == 20) {
-                //                     // finalValue=parseInt(formattedjumlah) / parseInt(1000)
-                //                     satuan = 'm3'
-                //                 } else {
-                //                     // finalValue=parseInt(formattedjumlah) / parseInt(1000)
-                //                     satuan = 'ton'
-                //                 }
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            // Include a dollar sign in the ticks
+                            callback: function (value, index, values) {
+                                
 
-                //                 return value + ' ' + satuan;
-                //             }
-                //         }
-                //     }]
-                // },
+                                return value + ' ' + satuanNeraca;
+                            }
+                        }
+                    }]
+                },
                 // tooltips: {
                 //     callbacks: {
                 //         // title: function (tooltipItem, data) {
@@ -251,18 +244,19 @@
                 //         // },
                 //         label: function (tooltipItem, data) {
                 //             var formattedjumlah = data['datasets'][0]['data'][tooltipItem['index']]
-                //             console.log(namalimbah)
-                //             var finalValue = null
-                //             var satuan = null
-                //             if (namalimbah == 1 || namalimbah == 2 || namalimbah == 3 ||
-                //                 namalimbah == 17 || namalimbah == 20) {
-                //                 finalValue = parseInt(formattedjumlah) / parseInt(1000)
-                //                 satuan = 'm3'
-                //             } else {
-                //                 finalValue = parseInt(formattedjumlah) / parseInt(1000)
-                //                 satuan = 'ton'
-                //             }
-                //             return formattedjumlah + ' ' + satuan
+                //             // console.log(namalimbah)
+                //             // var finalValue = null
+                //             // var satuan = null
+                //             // if (namalimbah == 1 || namalimbah == 2 || namalimbah == 3 ||
+                //             //     namalimbah == 17 || namalimbah == 20) {
+                //             //     finalValue = parseInt(formattedjumlah) / parseInt(1000)
+                //             //     satuan = 'm3'
+                //             // } else {
+                //             //     finalValue = parseInt(formattedjumlah) / parseInt(1000)
+                //             //     satuan = 'ton'
+                //             // }
+                //             console.log(tooltipItem)
+                //             return data + ' ' + satuanNeraca
                 //             // return data['datasets'];
                 //         },
                 //         // afterLabel: function (tooltipItem, data) {
@@ -277,7 +271,7 @@
                 // }
             }
         });
-
+        var satuanDashboard=null
         var myChart = new Chart(document.getElementById("penghasil_all"), {
             type: 'bar',
             data: {
@@ -301,16 +295,16 @@
                             callback: function (value, index, values) {
                                 var finalValue = null
                                 var satuan = null
-                                if (namalimbah == 1 || namalimbah == 2 || namalimbah == 3 ||
-                                    namalimbah == 17 || namalimbah == 20) {
-                                    // finalValue=parseInt(formattedjumlah) / parseInt(1000)
-                                    satuan = 'm3'
-                                } else {
-                                    // finalValue=parseInt(formattedjumlah) / parseInt(1000)
-                                    satuan = 'ton'
-                                }
+                                // if (namalimbah == 1 || namalimbah == 2 || namalimbah == 3 ||
+                                //     namalimbah == 17 || namalimbah == 20) {
+                                //     // finalValue=parseInt(formattedjumlah) / parseInt(1000)
+                                //     satuan = 'm3'
+                                // } else {
+                                //     // finalValue=parseInt(formattedjumlah) / parseInt(1000)
+                                //     satuan = 'ton'
+                                // }
 
-                                return value + ' ' + satuan;
+                                return value + ' ' + satuanDashboard;
                             }
                         }
                     }]
@@ -350,15 +344,15 @@
         });
 
 
-        var tps1 = createGauge('tps1', 'TPS I', 'm3', 'kapasitas', 150, 20, 75, 120)
+        var tps1 = createGauge('tps1', 'TPS B3 I', 'm2', 'Kapasitas', 540, 50, 405, 486)
 
-        var tps2 = createGauge('tps2', 'TPS II', 'JB', 'kapasitas', 125, 20, 65, 90)
+        var tps2 = createGauge('tps2', 'TPS ABU', 'm3', 'Kapasitas', 72, 30, 54, 65)
 
-        var tps3 = createGauge('tps3', 'TPS III', 'JB', 'kapasitas', 125, 20, 65, 90)
+        var tps3 = createGauge('tps3', 'TPS CAIR', 'm3', 'Kapasitas', 230, 30, 173, 207)
 
-        var tps4 = createGauge('tps4', 'TPS IV', '-', 'kapasitas', 50955, 50, 30000, 45000)
+        var tps4 = createGauge('tps4', 'TPS SK, Sludge, Bata', 'm2', 'kapasitas', 228, 30, 171, 205)
 
-        var tps5 = createGauge('tps5', 'Kolam Limbah Cair', '-', 'kapasitas', 250, 40, 150, 220)
+        // var tps5 = createGauge('tps5', 'Kolam Limbah Cair', '-', 'kapasitas', 250, 40, 150, 220)
 
 
         // var tps6 = createGauge('tps6','TPS VI','m3','kapasitas')
@@ -471,7 +465,7 @@
                     var saldoMasuk = data.saldoMasuk
                     var saldoKeluar = data.saldoKeluar
                     var sisaSaldo = data.sisaSaldo
-
+                    satuanNeraca = data.satuan.satuan
                     chartNeraca.data.datasets[0].data = saldoMasuk
                     chartNeraca.data.datasets[1].data = saldoKeluar
                     chartNeraca.data.datasets[2].data = sisaSaldo
@@ -497,14 +491,13 @@
                 success: function (data) {
                     var dataKuota = data.dataKuota
 
-                    updateData(cair, ["Konsumsi", "Sisa"], [dataKuota[0].konsumsi, dataKuota[0]
-                        .sisa
+                    updateData(cair, ["Konsumsi", "Sisa"], [dataKuota[0].konsumsi, dataKuota[0].sisa
                     ])
-                    updateData(sludge, ["Konsumsi", "Sisa"], [dataKuota[1].konsumsi, dataKuota[1]
-                        .sisa
+                    updateData(sludge, ["Konsumsi", "Sisa"], [dataKuota[1].konsumsi, dataKuota[1].sisa
                     ])
                     updateData(sk, ["Konsumsi", "Sisa"], [dataKuota[2].konsumsi, dataKuota[2].sisa])
-
+                    updateData(sk, ["Konsumsi", "Sisa"], [dataKuota[2].konsumsi, dataKuota[2].sisa])
+                    updateData(sk, ["Konsumsi", "Sisa"], [dataKuota[2].konsumsi, dataKuota[2].sisa])
 
                 }
             });
@@ -524,7 +517,10 @@
                 dataType: "json",
 
                 success: function (data) {  
-                    updateDataBar(myChart, data)  
+                    console.log(data)
+                    var dataPenghasil=data.dataPenghasil
+                    satuanDashboard=data.satuan.satuan
+                    updateDataBar(myChart, dataPenghasil)  
                 }
             });
         }
@@ -549,7 +545,7 @@
                     updateChart(tps2, dataKapasitas[1].saldo, dataKapasitas[1].kapasitasjumlah)
                     updateChart(tps3, dataKapasitas[2].saldo, dataKapasitas[2].kapasitasjumlah)
                     updateChart(tps4, dataKapasitas[3].saldo, dataKapasitas[3].kapasitasjumlah)
-                    updateChart(tps5, dataKapasitas[4].saldo, dataKapasitas[4].kapasitasjumlah)
+                    // updateChart(tps5, dataKapasitas[4].saldo, dataKapasitas[4].kapasitasjumlah)
 
                 }
             });

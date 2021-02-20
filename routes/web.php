@@ -42,7 +42,7 @@ Route::get('pemohon/entri', 'PemohonController@viewEntri')->name('pemohon.entri'
 Route::post('pemohon/list', 'PemohonController@index')->name('pemohon.list');
 Route::post('pemohon/terima', 'PemohonController@updatevalid') -> name('pemohon.updatevalid');
 Route::post('pemohon/validasi', 'PemohonController@updatedValidSatpam') -> name('satpam.valid');
-Route::post('histori/update', 'PemohonController@update')->name('history.update');
+Route::post('histori/update', 'PemohonController@updateRevisi')->name('history.update');
 Route::resource('pemohon', 'PemohonController');
 
 Route::post('penyimpanan/list', 'PenyimpananLimbahController@index')->name('penyimpanan.list');
@@ -51,10 +51,17 @@ Route::get('viewlist', 'PenyimpananLimbahController@viewIndex')->name('penyimpan
 Route::post('penyimpanan/updatepack', 'PenyimpananLimbahController@updatepack') -> name('penyimpanan.updatepack');
 Route::resource('penyimpanan', 'PenyimpananLimbahController');
 
+
 Route::post('pemrosesan/list', 'PemrosesanLimbahController@index')->name('pemrosesan.list');
+Route::get('pemrosesan/viewlist', 'PemrosesanLimbahController@viewIndex')->name('pemrosesan.listview');
 Route::post('pemrosesan/detaillist', 'PemrosesanLimbahController@detaillist')->name('pemrosesan.detaillist');
 Route::post('pemrosesan/proses', 'PemrosesanLimbahController@proses') -> name('pemrosesan.proses');
-Route::get('pemrosesan/viewlist', 'PemrosesanLimbahController@viewIndex')->name('pemrosesan.listview');
+
+Route::post('lain/list', 'PemrosesanLimbahController@indexLain')->name('lain.list');
+Route::get('lain/viewlist', 'PemrosesanLimbahController@viewIndexLain')->name('lain.listview');
+Route::post('lain/proses', 'PemrosesanLimbahController@prosesLain') -> name('lain.proses');
+Route::post('lain/update', 'PemrosesanLimbahController@update') -> name('lain.update');
+Route::get('lain/destroy/{id}', 'PemrosesanLimbahController@destroy');
 Route::resource('pemrosesan', 'PemrosesanLimbahController');
 
 
@@ -102,6 +109,16 @@ Route::resource('user', 'MDUserController');
 Route::get('user/destroy/{id}', 'MDUserController@destroy');
 Route::post('user/userlist', 'MDUserController@index') -> name('user.list');
 Route::post('user/update', 'MDUserController@update') -> name('user.update');
+
+Route::resource('nama_limbah', 'MDNamaLimbahController');
+Route::get('nama_limbah/destroy/{id}', 'MDNamaLimbahController@destroy');
+Route::post('nama_limbah/nama_limbahlist', 'MDNamaLimbahController@index') -> name('nama_limbah.list');
+Route::post('nama_limbah/update', 'MDNamaLimbahController@update') -> name('nama_limbah.update');
+
+Route::resource('vendor', 'MDVendorController');
+Route::get('vendor/destroy/{id}', 'MDVendorController@destroy');
+Route::post('vendor/vendorlist', 'MDVendorController@index') -> name('vendor.list');
+Route::post('vendor/update', 'MDVendorController@update') -> name('vendor.update');
 
 //export
 Route::get('/neraca/export/{month}/{year}', 'ExportDataController@downloadNeraca')-> name('export.neraca');

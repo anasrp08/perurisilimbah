@@ -80,6 +80,15 @@
         </li>
         
     </ul>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('lain.listview') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Proses Limbah Lain-Lain</p>
+            </a>
+        </li>
+        
+    </ul>
 </li>
 <li class="nav-item">
     <a href="{{ route('kontrak.listview') }}" class="nav-link">
@@ -88,12 +97,11 @@
     </a>
      
 </li> 
-
 <li class="nav-item has-treeview">
     <a href="#" class="nav-link">
-        <i class="nav-icon fas fa-chart-pie"></i>
+        <i class="nav-icon fas fa-copy"></i>
         <p>
-            Report Monitoring
+            Cetak Fomulir
             <i class="right fas fa-angle-left"></i>
         </p>
     </a>
@@ -104,6 +112,24 @@
                 <p>Formulir Limbah</p>
             </a>
         </li>
+    </ul>
+</li>
+
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-chart-pie"></i>
+        <p>
+            Report Monitoring
+            <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        {{-- <li class="nav-item">
+            <a href="{{ route('formulir.listview') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Formulir Limbah</p>
+            </a>
+        </li> --}}
         <li class="nav-item">
             <a href="{{ route('history.listview') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
@@ -154,6 +180,18 @@
                 <span>User Login</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a href="{{ route('nama_limbah.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <span>Nama Limbah</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('vendor.index') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <span>Vendor Limbah</span>
+            </a>
+        </li>
         {{-- <li class="nav-item">
             <a href="{{ route('neraca.listview') }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
@@ -180,6 +218,23 @@
 
 @endrole
 @role(['unit kerja'])
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-chart-pie"></i>
+        <p>
+            Fomulir Serah Terima
+            <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('formulir.listview') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Formulir Limbah</p>
+            </a>
+        </li>
+    </ul>
+</li>
 <li class="nav-item has-treeview">
     <a href="#" class="nav-link">
         <i class="nav-icon fas fa-copy"></i>
@@ -209,6 +264,23 @@
 </li>
 @endrole
 @role(['pengawas'])
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-chart-pie"></i>
+        <p>
+            Fomulir Serah Terima
+            <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('formulir.listview') }}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Formulir Limbah</p>
+            </a>
+        </li>
+    </ul>
+</li>
 <li class="nav-item has-treeview">
     <a href="#" class="nav-link">
         <i class="nav-icon fas fa-copy"></i>
