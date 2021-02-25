@@ -83,13 +83,54 @@
 
         })
         $("#jenislimbah").change(function () {
+            console.log($(this).val())
             getDropdown('{{ route("limbah.getnama")}}', "", $(this).val(), "namalimbah")
 
         });
         $('#filter').click(function () {
             $('#daftar_penghasil').DataTable().draw(true);
         })
+        function getDropdown(paramUrl, param1, param2, idkomponen) {
 
+var paramData
+if (idkomponen == 'namalimbah') {
+    // console.log(param1)
+    paramData = {
+        jenis: param2,
+        // fisik: param2
+    }
+    $.ajax({
+        url: paramUrl,
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: paramData,
+        success: function (data) { 
+            // if(data==''){
+
+            // }
+            $("#" + idkomponen).html(data.html);
+        }
+    });
+} else {
+    paramData = {
+        idlimbah: param2
+
+    } 
+    $.ajax({
+        url: paramUrl,
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: paramData,
+        success: function (data) {
+            $("#" + idkomponen).text(data.satuan);
+        }
+    });
+} 
+} 
 
         var table = $('#daftar_penghasil').DataTable({
             processing: true,

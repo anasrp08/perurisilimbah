@@ -25,14 +25,35 @@
                 </div>
                 <div class="form-group pihakketiga">
                     <label>Total Kuota Anggaran</label>
-                    <input type="number" id="transaksi_total" name="transaksi_total"
-                        class="formproses form-control float-right" autocomplete="off">
+                    <input type="text" id="transaksi_total" name="transaksi_total"
+                        class="numberinput formproses form-control " autocomplete="off">
                 </div>
-                <div class="form-group pihakketiga">
-                    <label>Konsumsi</label>
-                    <input type="number" id="transaksi_konsumsi" name="transaksi_konsumsi" class="formproses form-control float-right"
+                <div class="row">
+                    <div class="col-md-4">
+                        <div  class="form-group"> 
+                            <label for="nosurat">Jumlah</label>
+                            <div class="input-group input-group mb-3">
+                                <input type="text" name="jmlhlimbah" id="jmlhlimbah" class="numberinput form-control">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label id='labelharga'></label>
+                            <input type="text" id="dataharga" name="dataharga" class="numberinput formproses form-control "
                         autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group pihakketiga">
+                            <label>Total Konsumsi</label>
+                            <input type="text" id="transaksi_konsumsi" name="transaksi_konsumsi" class="numberinput formproses form-control "
+                                autocomplete="off">
+                        </div>
+                    </div>
                 </div>
+                
                 <input type="hidden" id="anggaran_id" name="anggaran_id">
                 <div class="form-group nonpihakketiga">
                     <label>Diinput Oleh</label>

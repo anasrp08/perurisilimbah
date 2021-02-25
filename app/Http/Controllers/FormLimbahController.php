@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str; 
 use App\Helpers\AppHelper; 
 use App\Helpers\QueryHelper;
+use App\Helpers\AuthHelper;
  
 use Redirect;
 use Validator;
@@ -31,7 +32,7 @@ class FormLimbahController extends Controller
 
     public function index(Request $request)
     {
-       
+        
         if (request()->ajax()) { 
             $queryData=DB::table('tr_headermutasi')
             ->join('tr_detailmutasi', 'tr_headermutasi.id', '=', 'tr_detailmutasi.idmutasi')
@@ -46,7 +47,7 @@ class FormLimbahController extends Controller
            ->where('tr_detailmutasi.idstatus','!=','1')
         //    ->whereNotNull('tr_headermutasi.validated')
            ->groupBy('tr_headermutasi.id_transaksi')
-           ->orderBy('tr_headermutasi.created_at', 'desc');
+           ->orderBy('tr_headermutasi.no_surat', 'asc');
  
             // if(!empty($request->tglinput)){
 
@@ -110,9 +111,11 @@ class FormLimbahController extends Controller
     
 
     public function viewIndex()
-    {
+    { 
          
-        return view('formulir.list',[ ]);
+        return view('formulir.list',[
+            'username'=>AuthHelper::getAuthUser()[0]
+            ]);
     }
 
     /**
@@ -189,7 +192,7 @@ class FormLimbahController extends Controller
     {
       
         setlocale(LC_TIME, 'id');
-        
+       
         $dataFormulirLimbah=DB::table('tr_headermutasi')
             ->join('tr_detailmutasi', 'tr_headermutasi.id', '=', 'tr_detailmutasi.idmutasi')
             ->join('md_namalimbah', 'tr_headermutasi.idlimbah', '=', 'md_namalimbah.id')

@@ -88,6 +88,7 @@ Route::get('/penghasil/viewlist', 'ReportLimbahController@viewIndexPenghasil')->
 // Route::get('/limbah/kuota_anggaran', 'ReportLimbahController@viewIndexKontrak')->name('kuota.listview');
 Route::get('/kontrak/viewlist', 'ReportLimbahController@viewIndexKontrak')->name('kontrak.listview');
 Route::post('/kontrak/data', 'ReportLimbahController@indexKontrak')->name('kontrak.data'); 
+Route::post('/kontrak/editdata', 'ReportLimbahController@editData')->name('kontrak.editdata'); 
 Route::post('/kontrak/kuota_anggaran/save', 'ReportLimbahController@storeAnggaran')->name('kontrak.save_anggaran');
 Route::post('/kontrak/kuota_anggaran/update', 'ReportLimbahController@updateAnggaran')->name('kontrak.update_anggaran');
 Route::post('/kontrak/kuota_anggaran/konsumsi', 'ReportLimbahController@updateKonsumsi')->name('kontrak.konsumsi_anggaran');

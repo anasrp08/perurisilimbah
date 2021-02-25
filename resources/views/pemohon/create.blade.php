@@ -362,7 +362,8 @@
                     // processData: false,
                     // dataType: "json",
                     beforeSend: function () {
-                        // $('#saveentri').text('proses menyimpan...');
+                        $('#save').text('proses menyimpan...');
+                        $('#save').prop('disabled',true);
                     },
                     success: function (data) {
 
@@ -372,9 +373,12 @@
                             });
                         }
                         if (data.success) {
+                            $('#save').text('Saveproses menyimpan...');
+                            $('#save').prop('disabled',false);
                             toastr.success(data.success, 'Tersimpan', {
                                 timeOut: 3000
                             });
+
                             setTimeout(function () {
                                 window.location.reload();
 

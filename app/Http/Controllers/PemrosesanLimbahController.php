@@ -144,11 +144,17 @@ class PemrosesanLimbahController extends Controller
         $error = null;
         $dataDetail = null;
         $nopack = null;
+        $jmlh_pack=null;
         try {
             foreach ($dataRequest as $row) {
                 $dataHeader = DB::table('tr_headermutasi')->where('id', $row['idmutasi'])->first();
                 // $dataStatus = DB::table('tr_statusmutasi')->where('idmutasi', $row['idmutasi'])->first();
-                $jmlh_pack=UpdtSaldoHelper::convertJumlahToPack($row['idlimbah'],$row['jmlh_proses']);
+                if ($row['idlimbah'] == 1 || $row['idlimbah'] == 2 || $row['idlimbah'] == 3) {
+                    $jmlh_pack =0;
+                }else{
+                    $jmlh_pack = UpdtSaldoHelper::convertJumlahToPack($row['idlimbah'], $row['jmlh_proses']);
+                }
+                // $jmlh_pack=UpdtSaldoHelper::convertJumlahToPack($row['idlimbah'],$row['jmlh_proses']);
                 $jmlh = $dataHeader->jumlah;
                 $valJumlah = (int)$row['jumlah'] - (int)$row['jmlh_proses'];
                 

@@ -54,6 +54,7 @@ class PemohonController extends Controller
                     // 'tr_headermutasi.keterangan',
                     // 'tr_headermutasi.maksud',
                     'md_namalimbah.jenislimbah',
+                    'md_namalimbah.is_lgsg_proses',
                     'md_penghasillimbah.seksi',
                     'md_statusmutasi.keterangan as status',
                     'md_satuan.satuan'
@@ -294,7 +295,7 @@ class PemohonController extends Controller
                     );
                     // $updateStatus = DB::table('tr_statusmutasi')->where('idmutasi', $row['idmutasi'])->update($dataStatus, true);
                     $updateHeaderValidasi = DB::table('tr_headermutasi')->where('id', $row['idheader'])->update($dataStatus, true);
-                } else {
+                } else if($row['hiddenTransaksi'] == 'terima') {
                     $dataDetail = array(
                         'id_transaksi'      =>  $row['id_transaksi'],
                         'idmutasi'          => $row['idheader'],
@@ -325,6 +326,54 @@ class PemohonController extends Controller
                     // $insertStatus = DB::table('tr_statusmutasi')->where('idmutasi', $row['idmutasi'])->update($dataStatus, true);
                     UpdtSaldoHelper::updateTambahSaldoNamaLimbah($row['idlimbah'], $row['jumlah']);
                     UpdtSaldoHelper::updateTambahPackNamaLimbah($row['idlimbah'], $jmlh_pack);
+                }else if($row['hiddenTransaksi'] == 'proses'){
+                    $dataDetail1 = array(
+                        'id_transaksi'      =>  $row['id_transaksi'],
+                        'idmutasi'          => $row['idheader'],
+                        'idlimbah'          =>  $row['idlimbah'],
+                        'tgl'                =>  $row['tgl'],
+                        'idasallimbah'        =>  $row['idasallimbah'],
+                        'idjenislimbah'       => $row['idjenislimbah'],
+                        'idstatus'            =>  2,
+                        'jumlah'            =>  $row['jumlah'], 
+                        'np_penerima'           =>$row['np'],
+                        'idsatuan'            =>  $row['satuan'],
+                        'limbah3r'            =>  $row['limbah3r'],
+                        'created_at'        => date('Y-m-d'),
+                        // 'np_pemohon'          => $row['np_pemohon'],
+                        'created_by'            => $username,
+
+                    );
+                    $dataDetail2 = array(
+                        'id_transaksi'      =>  $row['id_transaksi'],
+                        'idmutasi'          => $row['idheader'],
+                        'idlimbah'          =>  $row['idlimbah'],
+                        'tgl'                =>  $row['tgl'],
+                        'idasallimbah'        =>  $row['idasallimbah'],
+                        'idjenislimbah'       => $row['idjenislimbah'],
+                        'idstatus'            =>  4,
+                        'jumlah'            =>  $row['jumlah'],
+                        'np_pemroses'           => $row['np'],
+                        'idsatuan'            =>  $row['satuan'],
+                        'limbah3r'            =>  $row['limbah3r'],
+                        'created_at'        => date('Y-m-d'),
+                        // 'np_pemohon'          => $row['np_pemohon'],
+                        'created_by'            => $username,
+
+                    );
+                    $dataStatus = array(
+                        'idstatus'          =>  4,
+                        'pack_in'           =>  $jmlh_pack,
+                        'np_penerima'       =>  $row['np'],
+                        'updated_at'        =>  date('Y-m-d'),
+                        'changed_by'        =>  $username,
+                    );
+                    $insertDetail = DB::table('tr_detailmutasi')->insert($dataDetail1, true);
+                    $insertDetail = DB::table('tr_detailmutasi')->insert($dataDetail2, true);
+                    $updateHeaderValidasi = DB::table('tr_headermutasi')->where('id', $row['idheader'])->update($dataStatus, true);
+                    // $insertStatus = DB::table('tr_statusmutasi')->where('idmutasi', $row['idmutasi'])->update($dataStatus, true);
+                    // UpdtSaldoHelper::updateTambahSaldoNamaLimbah($row['idlimbah'], $row['jumlah']);
+                    // UpdtSaldoHelper::updateTambahPackNamaLimbah($row['idlimbah'], $jmlh_pack);
                 }
             }
             return response()->json(['success' => 'Data Berhasil Di Simpan']);

@@ -17,7 +17,7 @@
                             <label>Asal Limbah</label>
                             <select name="limbahasal" id="limbahasal" class="form-control select2bs4"
                                 style="width: 100%;">
-                                <option value="" disabled selected>-Pilih Asal Limbah-</option>
+                                <option value=""  selected>-</option>
                                 @foreach($penghasilLimbah as $data)
                                 <option value="{{$data->id}}">{{$data->seksi}}</option>
                                 @endforeach
@@ -30,7 +30,7 @@
                             <label>Jenis Limbah</label>
                             <select name="jenislimbah" id="jenislimbah" class="form-control select2bs4"
                                 style="width: 100%;">
-                                <option value="" disabled selected>-Pilih Jenis Limbah-</option>
+                                <option value=""  selected>-</option>
                                 @foreach($jenisLimbah as $data)
                                 <option value="{{$data->id}}">{{$data->jenislimbah}} </option>
                                 @endforeach
@@ -49,7 +49,7 @@
                             <select name="namalimbah" id="namalimbah" class="form-control select2bs4"
                                 style="width: 100%;">
                                 {{-- <option value="-" selected="selected">Pilih Salah Satu</option> --}}
-                                <option value="" disabled selected>-Pilih Nama Limbah-</option>
+                                <option value=""  selected>-</option>
                                 @foreach($namaLimbah as $data)
                                 <option value="{{$data->id}}">{{$data->namalimbah}} </option>
                                 @endforeach

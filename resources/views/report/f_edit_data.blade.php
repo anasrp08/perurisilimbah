@@ -26,7 +26,7 @@
                 </div>
                 <div class="form-group pihakketiga">
                     <label>Total</label>
-                    <input type="number" id="total" name="total" class="formproses form-control float-right"
+                    <input type="text" id="total" name="total" class="numberinput formproses form-control float-right"
                         autocomplete="off">
                 </div>
                 <div class="form-group nonpihakketiga">

@@ -266,7 +266,7 @@
                             selected: true
                         }).data()
                         console.log(data)
-                        if (data.count() > 1) {
+                        if (data.count() > 1 || data.count() == 0 ) {
                             toastr.warning('Harus pilih salah satu', 'Warning', {
                                 timeOut: 5000
                             });
@@ -296,6 +296,40 @@
                             $('#hidden_id').val(data[0].idheader)
                             $('#modalrevisi').modal('show')
                         }
+
+
+                    }
+
+
+                },
+                {
+                    text: 'Proses Langsung',
+                    className: 'proses btn btn-danger',
+                    action: function (e, dt, node, config) {
+                        var dataSelected = table.rows({
+                            selected: true
+                        }).data()
+
+                       var  isProsesLgsg=true
+                        console.log(dataSelected)
+                        for (i = 0; i < dataSelected.count(); i++) {
+                            if (dataSelected[i].is_lgsg_proses == '' || dataSelected[i].is_lgsg_proses == null) {
+
+                                toastr.warning('Ada limbah yang tidak diijinkan untuk proses langsung', 'Perhatian', {
+                                    timeOut: 5000
+                                });
+                                return false
+                                break;
+                            }
+                        }
+                        if(isProsesLgsg){
+                        $('#title_konfirmasi').text('Di Proses Langsung Oleh: ')
+                        $('#hidden_transaksi').val('proses')
+                        $('#modalconfirm').modal('show')
+                        }else{
+
+                        }
+                       
 
 
                     }
@@ -555,8 +589,8 @@
             } else {
 
                 for (i = 0; i < data1.count(); i++) {
-                    // if (data1[i].validated_by != '') {
-                       
+                    // if (data1[i].is_lgsg_proses != '') {
+
                     //     toastr.warning('Sudah Ada Data Yang Tervalidasi', 'Warning', {
                     //         timeOut: 5000
                     //     });
@@ -586,58 +620,60 @@
 
                 }
                 var url = ''
-            // if(tipeTransaksi=='terima'){
-            //     url="{{ route('pemohon.updatevalid') }}"
-            // }else{
-            //     url="{{ route('satpam.valid') }}"
-            // }
+                // if(tipeTransaksi=='terima'){
+                //     url="{{ route('pemohon.updatevalid') }}"
+                // }else{
+                //     url="{{ route('satpam.valid') }}"
+                // }
 
 
-            console.log(jsonData)
-            url = "{{ route('pemohon.updatevalid') }}"
-            $.ajax({
-                url: url,
-                method: "POST",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                        'content')
-                },
-                data: JSON.stringify(jsonData),
-                // contentType: 'json',
-                // cache: false,
-                // processData: false,
-                // dataType: "json",
-                beforeSend: function () {
-                    $('#saveentri').text('proses menyimpan...');
-                },
-                success: function (data) {
-                    // console.log(data)
-                    if (data.errors) {
-                        toastr.success(data.errors, 'Success', {
-                            timeOut: 5000
-                        });
+                console.log(jsonData)
+                url = "{{ route('pemohon.updatevalid') }}"
+                $.ajax({
+                    url: url,
+                    method: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                            'content')
+                    },
+                    data: JSON.stringify(jsonData),
+                    // contentType: 'json',
+                    // cache: false,
+                    // processData: false,
+                    // dataType: "json",
+                    beforeSend: function () {
+                        $('#submit').text('proses menyimpan...');
+                        $('#submit').prop('disabled',true);
+                    },
+                    success: function (data) {
+                        // console.log(data)
+                        if (data.errors) {
+                            toastr.success(data.errors, 'Success', {
+                                timeOut: 5000
+                            });
+                        }
+                        if (data.success) {
+                            toastr.success(data.success, 'Success', {
+                                timeOut: 5000
+                            });
+                            $('#daftar_pemohon').DataTable().ajax.reload();
+                            // $('#counterentries').text(data.count);
+
+                            $('#submit').text('Submit');
+                        $('#submit').prop('disabled',false);
+                            // $('#tblorder').DataTable().ajax.reload();
+                            // renderTgl()
+
+                        }
+
                     }
-                    if (data.success) {
-                        toastr.success(data.success, 'Success', {
-                            timeOut: 5000
-                        });
-                        $('#daftar_pemohon').DataTable().ajax.reload();
-                        // $('#counterentries').text(data.count);
-
-                        $('#saveentri').text('Simpan');
-                        // $('#tblorder').DataTable().ajax.reload();
-                        // renderTgl()
-
-                    }
-
-                }
-            })
-            $('#np').val('').change()
-            $('#modalconfirm').modal('toggle')
+                })
+                $('#np').val('').change()
+                $('#modalconfirm').modal('toggle')
 
             }
             // var tipeTransaksi=('#hidden_transaksi').val()
-           
+
         })
         $('#daftar_pemohon tbody').on('click', 'tr', function () {
             $(this).toggleClass('selected');
@@ -654,6 +690,24 @@
             // updateValid(paramData)
 
         });
+        // $(document).on('click', '.proses', function () {
+        //     var dataSelected = table.rows({
+        //         selected: true
+        //     }).data()
+
+        //     for (i = 0; i < dataSelected.count(); i++) {
+        //         if (data1[i].is_lgsg_proses != '') {
+
+        //                toastr.warning('Sudah Ada Data Yang Tervalidasi', 'Warning', {
+        //                    timeOut: 5000
+        //                });
+        //                break;
+        //            }
+        //     }
+
+
+
+        // });
 
 
         // var user_id;

@@ -27,9 +27,11 @@
 
 @section('scripts')
 <script>
-    $(document).ready(function () { 
+    $(document).ready(function () {
+        var seksi = '<?php echo $username->seksi ?>'
+        // console.log(username)
         var table = $('#tbl_formulir').DataTable({
- 
+
             columnDefs: [{
                     className: 'text-center',
                     targets: [1, 2, 3]
@@ -38,7 +40,7 @@
                     className: 'dt-body-nowrap',
                     targets: -1
                 }
-            ],  
+            ],
             columnDefs: [{
                     className: 'text-center',
                     targets: [1, 2, 3, 4]
@@ -62,7 +64,7 @@
             // dom: 'Bfrti',
             language: {
                 emptyTable: "Tidak Ada Data Formulir"
-            }, 
+            },
             order: [
                 [0, 'asc']
             ],
@@ -78,14 +80,14 @@
                     data: 'created_at',
                     name: 'created_at',
                     render: function (data, type, row) {
-                        if (data == null || data == ""|| data == "NULL") {
+                        if (data == null || data == "" || data == "NULL") {
                             return '-'
                         } else {
                             return moment(data).format('DD/MM/YYYY');
                         }
 
                     }
-                    
+
                 },
                 {
                     data: 'seksi',
@@ -99,11 +101,11 @@
                     data: 'limbah3r',
                     name: 'limbah3r',
                     render: function (data, type, row) {
-                        if (data == null || data == ""||
+                        if (data == null || data == "" ||
                             data == "NULL") {
                             return '-'
                         } else {
-                           return data
+                            return data
                         }
 
                     }
@@ -111,7 +113,7 @@
                 {
                     data: 'keterangan',
                     name: 'keterangan',
-                    
+
                 },
                 {
                     data: 'action',
@@ -126,12 +128,18 @@
 
             var dataRow = table.row($(this).parents('tr')).data();
             console.log(dataRow)
-            var url =
-                '{{ route("formulir.cetak",[":id"])}}';
-            url = url.replace(":id", dataRow.id_transaksi);
-           
+            if (seksi == dataRow.idasallimbah || seksi == 'admin' || seksi == 'operator' || seksi ==
+                'pengawas') {
+                var url =
+                    '{{ route("formulir.cetak",[":id"])}}';
+                url = url.replace(":id", dataRow.id_transaksi);
+                document.location.href = url;
+            } else {
+                toastr.warning('User yang dipakai tidak diijinkan', 'Perhatian', {
+                    timeOut: 5000
+                });
+            }
 
-            document.location.href = url;
 
 
 

@@ -29,8 +29,8 @@
                                 </div> 
                                 <div class="form-group pihakketiga">
                                     <label>Total</label>
-                                    <input type="number" id="add_total" name="add_total"
-                                        class="formproses form-control float-right" autocomplete="off">
+                                    <input type="text" id="add_total" name="add_total"
+                                        class="numberinput formproses form-control float-right" autocomplete="off">
                                 </div> 
                                 <div class="form-group nonpihakketiga">
                                     <label>Diinput Oleh</label>

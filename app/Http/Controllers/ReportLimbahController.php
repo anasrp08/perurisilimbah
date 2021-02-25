@@ -314,7 +314,16 @@ class ReportLimbahController extends Controller
         if (request()->ajax()) {
             $queryData = DB::table('md_kuota')
                 ->join('md_tipelimbah', 'md_tipelimbah.id', 'md_kuota.tipe_limbah')
-                ->select('md_tipelimbah.tipelimbah', 'md_kuota.id', 'md_kuota.tipe_limbah', 'md_kuota.jumlah', 'md_kuota.konsumsi', 'md_kuota.sisa', 'md_kuota.tahun', 'md_kuota.np')->get();
+                // ->join('md_namalimbah','md_kuota.tipe_limbah', 'md_namalimbah.tipe_kuota_limbah')
+                ->select('md_tipelimbah.tipelimbah', 
+                'md_tipelimbah.id as idtipe', 
+                'md_kuota.id', 'md_kuota.tipe_limbah', 
+                'md_kuota.jumlah', 'md_kuota.konsumsi', 
+                'md_kuota.sisa', 'md_kuota.tahun', 
+                // 'md_namalimbah.tipe_kuota_limbah',
+                'md_kuota.np')->get();
+
+                // dd($queryData);
             return datatables()->of($queryData)
 
                 ->addIndexColumn()
@@ -323,6 +332,20 @@ class ReportLimbahController extends Controller
 
                 ->make(true);
         }
+    }
+    public function editData(Request $request)
+    {
+        //
+        // dd($request->all());
+        $dataTipeKuota=DB::table('md_namalimbah')->where('tipe_kuota_limbah',$request->idtipe)->first();
+        return response()->json([
+            'dataHarga' =>$dataTipeKuota->harga_satuan_konversi,
+            'dataSatuan' =>$dataTipeKuota->konversi_kuota]);
+         
+    }
+    public function edit($id)
+    {
+        //
     }
     public function viewIndexPenghasil()
     {
@@ -337,11 +360,39 @@ class ReportLimbahController extends Controller
                 ->join('md_namalimbah', 'tr_headermutasi.idlimbah', 'md_namalimbah.id')
                 ->join('md_penghasillimbah', 'tr_headermutasi.idasallimbah', 'md_penghasillimbah.id')
                 ->join('md_tps', 'tr_headermutasi.idtps', 'md_tps.id')
-                ->select('md_namalimbah.namalimbah', 'md_namalimbah.jenislimbah', 'md_penghasillimbah.seksi', 'md_tps.namatps', DB::raw('sum(tr_headermutasi.jumlah) as jumlah'))
+                ->select('md_namalimbah.namalimbah', 
+                'md_namalimbah.id as idlimbah', 
+                'md_namalimbah.jenislimbah', 
+                // 'md_namalimbah.idjenis', 
+                'md_penghasillimbah.seksi', 
+                'md_penghasillimbah.id as idasal', 
+                'md_tps.namatps', 
+                DB::raw('sum(tr_headermutasi.jumlah) as jumlah'))
                 ->groupBy('md_penghasillimbah.seksi', 'md_namalimbah.namalimbah');
             $queryData = $queryData->get();
+            $jenisLimbah=DB::table('md_jenislimbah')->where('id',$request->jenislimbah)->first();
+            
             // dd( $queryData);
             return datatables()->of($queryData)
+            ->filter(function ($instance) use ($request,$jenisLimbah) {
+                if (!empty($request->get('namalimbah'))) {
+                    $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                        return Str::contains(Str::lower($row['idlimbah']), Str::lower($request->get('namalimbah'))) ? true : false;
+                    });
+                }
+                if (!empty($request->get('jenislimbah'))) {
+                    $instance->collection = $instance->collection->filter(function ($row) use ($request,$jenisLimbah) {
+                        return Str::contains($row['jenislimbah'],  $jenisLimbah->jenislimbah) ? true : false;
+                    });
+                }
+
+                if (!empty($request->get('limbahasal'))) {
+                    $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                        return Str::contains($row['idasal'], $request->get('limbahasal')) ? true : false;
+                    });
+                }
+                 
+            })
 
                 ->addIndexColumn()
                 // ->addColumn('action', 'action_butt_pemohon')
@@ -683,10 +734,7 @@ class ReportLimbahController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
-    }
+    
 
     /**
      * Update the specified resource in storage.

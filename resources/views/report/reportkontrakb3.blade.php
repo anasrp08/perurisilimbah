@@ -76,6 +76,13 @@
         $('.select2bs4').select2({
             theme: 'bootstrap4'
         })
+        $(".numberinput").autoNumeric('init', {
+            aSep: '.', 
+            aDec: ',',
+            aForm: true,
+            vMax: '999999999999999',
+            vMin: '-999999999999999'
+        });
 
         $('input[name="f_tglinput"]').daterangepicker({
             format: 'DD/MM/YYYY',
@@ -102,7 +109,8 @@
             var data = table.row($(this).closest('tr')).data();
             $('#tipelimbah').val(data.tipe_limbah).change()
             $('#tahun').val(data.tahun) 
-            $('#total').val(data.jumlah) 
+            var addSeparator=numberWithCommas(data.jumlah)
+            $('#total').val(addSeparator) 
             $('#np').val(data.np).change() 
             $('#hidden_id').val(data.id) 
             
@@ -116,16 +124,39 @@
         $(document).on('click', '.transaksi', function () {
             user_id = $(this).data('id'); 
             var data = table.row($(this).closest('tr')).data();
-            $('#transaksi_konsumsi').val('')
-            $('#transaksi_tipelimbah').val(data.tipe_limbah).change()
-            $('#transaksi_tahun').val(data.tahun) 
-            $('#transaksi_total').val(data.jumlah) 
-            $('#transaksi_np').val(data.np).change() 
-            $('#anggaran_id').val(data.id) 
-            $('#transaksi_tipelimbah').prop('disabled','disabled')
-            $('#transaksi_tahun').prop('disabled',true)
-            $('#transaksi_total').prop('disabled',true)  
-            $('#transaksiKuota').modal();
+            // var addSeparator=numberWithCommas(data.jumlah)
+            var dataParam={
+                idtipe:data.idtipe
+            }
+            $.ajax({
+                url: "{{ route('kontrak.editdata') }}", 
+                method: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                data: dataParam,
+                // contentType: false,
+                // cache: false,
+                // processData: false,
+                // dataType: "json",
+                 
+                success: function (result) {
+                    $('#transaksi_konsumsi').val('')
+                    $('#transaksi_tipelimbah').val(data.tipe_limbah).change()
+                    $('#transaksi_tahun').val(data.tahun) 
+                    $('#transaksi_total').val(numberWithCommas(data.jumlah)) 
+                    $('#dataharga').val(result.dataHarga)
+                    $('#transaksi_np').val(data.np).change() 
+                    $('#anggaran_id').val(data.id) 
+                    $('#labelharga').text('Harga / '+result.dataSatuan)
+                    
+                    $('#transaksi_tipelimbah').prop('disabled','disabled')
+                    $('#transaksi_tahun').prop('disabled',true)
+                    $('#transaksi_total').prop('disabled',true)  
+                    $('#transaksiKuota').modal();
+                }
+            });
+           
 
         });
         
@@ -323,6 +354,9 @@
             });
 
         })
+        function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
 
         var table = $('#daftar_kuota').DataTable({
             processing: true,
@@ -381,10 +415,11 @@
                 {
                     data: 'jumlah',
                     name: 'jumlah',
-                    // render: function (data, type, row) {
-                    //     // var totalKuota = parseInt(row.konsumsi) + parseInt(row.sisa)
-                    //     return data
-                    // }
+                    render: function (data, type, row) {
+                        // var totalKuota = parseInt(row.konsumsi) + parseInt(row.sisa)
+                        return numberWithCommas(data)
+                        // return data
+                    }
                 },
                 {
                     data: 'konsumsi',
@@ -394,7 +429,7 @@
                         if(data=="" || data==null ){
                             return 0
                         }else{
-                            return data
+                            return numberWithCommas(data)
                         }
                         
                     }
@@ -407,7 +442,7 @@
                         if(data=="" || data==null ){
                             return 0
                         }else{
-                            return data
+                            return numberWithCommas(data)
                         }
                     }
                 },
@@ -422,7 +457,7 @@
                     data: 'sisa',
                     name: 'sisa',
                     render: function (data, type, row) {
-                        console.log(row.konsumsi)
+                        // console.log(row.konsumsi)
                         var totalKuota = parseInt(row.konsumsi) + parseInt(row.sisa)
                         var kuota_danger = Math.round(parseInt(totalKuota) * parseInt(90) /
                             parseInt(100))
