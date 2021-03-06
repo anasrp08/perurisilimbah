@@ -67,16 +67,11 @@ class NeracaProsesExport implements FromCollection,WithHeadings,WithTitle
         ->whereMonth('tr_detailmutasi.created_at', '=',   $this->month)
         ->whereYear('tr_detailmutasi.created_at', '=',   $this->year)    
         ->whereIn('tr_detailmutasi.idstatus', ['5','6','7','8','9'])
+        ->where('tr_detailmutasi.idjenislimbah', '=','1')
         ->orderBy('tr_detailmutasi.created_at','desc'); 
  
 
-        $queryData = $queryData->get();
-           
-        
-        
-         
-
-        // return User::query()->where('name', 'like', '%'. $this->name);
+        $queryData = $queryData->get(); 
         return  $queryData;
     }
     public function headings(): array
@@ -93,24 +88,10 @@ class NeracaProsesExport implements FromCollection,WithHeadings,WithTitle
             'Tgl. Diproses'     
             
         ];
-    }
-    // public function sheets(): array
-    // {
-    //     $sheets = [];
-    //     $sheets = [
-    //         new ReportGeneralExport($this->sheets['general']),
-    //         new ReportLeadsExport($this->sheets['leads']),
-    //         new ReportVideoExport($this->sheets['video'])
-    //     ];
-    //     // for ($month = 1; $month <= 2; $month++) {
-    //     //     $sheets[] = new InvoicesPerMonthSheet($this->year, $month);
-    //     // }
-
-    //     return $sheets;
-    // }
+    } 
     public function title(): string
     {
-        return 'Mutasi ' . $this->status;
+        return 'Limbah B3 Mutasi ' . $this->status;
     }
     
 

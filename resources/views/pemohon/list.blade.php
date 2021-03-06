@@ -82,7 +82,7 @@
             format: 'dd/mm/yyyy',
             todayHighlight: true
         });
-        
+
         $('#nonb3').hide()
         // $('.select2').select2()
         $('#jenislimbah').change(function () {
@@ -147,8 +147,8 @@
                 selected: true
             }).data()
             var radio
- 
-            var arrValue = [] 
+
+            var arrValue = []
             arrValue.push($('#prosesdate').val())
             arrValue.push($('#vendor').val())
             arrValue.push($('#nomanifest').val())
@@ -187,7 +187,7 @@
                     // arrValue.push(7)
                     break;
             }
- 
+
             formatedData(data, arrValue)
 
         })
@@ -198,67 +198,45 @@
             var dataNonInput = []
             var output1 = []
             var isEmptyCounter = 0
-            console.log(data.toArray()) 
+            console.log(data.toArray())
             var countData = data.count()
-            // $("#detail_pack tbody tr").each(function () {
-            //     var obj = {};
-            //     //memasukkan jmlh proses yang isi nya kosong
-            //     if ($(":input[name=jmlh_proses]", this).val() == "") {
-            //         isEmptyCounter++
 
-            //     }
-            //     obj.jmlh_proses = $(":input[name=jmlh_proses]", this).val();
-
-            //     output1.push(obj);
-            //     // dataNonInput
-            // })
-
-            // if (countData == isEmptyCounter) {
-            //     toastr.warning('Belum Ada Jumlah Yang Di Proses', 'Perhatian', {
-            //         timeOut: 5000
-            //     });
-            // } else {
-                for (i = 0; i < data.count(); i++) {
-                    var obj = {};
-                    // console.log(output1[i].jmlh_proses)
-                    // if (output1[i].jmlh_proses == '' || output1[i].jmlh_proses == 0) {
-                    //     continue;
-                    // } else {
-                        obj.limbah3r = data[i].limbah3r;
-                        obj.tgl = data[i].tgl;
-                        obj.id_transaksi = data[i].id_transaksi;
-                        obj.idheader = data[i].id;
-                        obj.idasallimbah = data[i].idasallimbah;
-                        obj.idsatuan = data[i].idsatuan;
-                        obj.idlimbah = data[i].idlimbah;
-                        obj.idstatus = arrValue[5];
-                        obj.fisik = data[i].fisik;
-                        obj.idtps = data[i].idtps;
-                        obj.no_packing = data[i].no_packing;
-                        obj.tipelimbah = data[i].tipelimbah;
-                        obj.idjenislimbah = data[i].idjenislimbah;
-                        obj.jumlah = data[i].jumlah_in;
-                        obj.pack = data[i].pack_in;
-                        obj.hiddenTransaksi='proses'
-                        // obj.jmlh_proses = data[i].jumlah_in;
-                        obj.limbah3r = data[i].limbah3r;
-                        obj.tglproses = arrValue[0];
-                        obj.idvendor = arrValue[1];
-                        obj.nomanifest = arrValue[2];
-                        obj.nokendaraan = arrValue[3];
-                        obj.nospbe = arrValue[4];
-                        obj.status_lama = data[i].idstatus;
-                        obj.np_pemroses = $('#np_pemroses').val();
-                        output.push(obj);
-                        jsonData["Order"] = output
-                    // }
+            for (i = 0; i < data.count(); i++) {
+                var obj = {};
+                obj.limbah3r = data[i].limbah3r;
+                obj.tgl = data[i].tgl;
+                obj.id_transaksi = data[i].id_transaksi;
+                obj.idheader = data[i].id;
+                obj.idasallimbah = data[i].idasallimbah;
+                obj.idsatuan = data[i].idsatuan;
+                obj.idlimbah = data[i].idlimbah;
+                obj.idstatus = arrValue[5];
+                obj.fisik = data[i].fisik;
+                obj.idtps = data[i].idtps;
+                obj.no_packing = data[i].no_packing;
+                obj.tipelimbah = data[i].tipelimbah;
+                obj.idjenislimbah = data[i].idjenislimbah;
+                obj.jumlah = data[i].jumlah_in;
+                obj.pack = data[i].pack_in;
+                obj.hiddenTransaksi = 'proses'
+                obj.limbah3r = data[i].limbah3r;
+                obj.tglproses = arrValue[0];
+                obj.idvendor = arrValue[1];
+                obj.nomanifest = arrValue[2];
+                obj.nokendaraan = arrValue[3];
+                obj.nospbe = arrValue[4];
+                obj.status_lama = data[i].idstatus;
+                obj.np_pemroses = $('#np_pemroses').val();
+                output.push(obj);
+                jsonData["Order"] = output
 
 
 
-                }
-                console.log(jsonData)
-                packLimbah(jsonData)
-            // }
+
+            }
+            console.log(jsonData)
+            packLimbah(jsonData)
+
 
 
         }
@@ -272,13 +250,9 @@
                         'content')
                 },
                 data: JSON.stringify(jsonData),
-                // contentType: 'json',
-                // cache: false,
-                // processData: false,
-                // dataType: "json",
                 beforeSend: function () {
                     $('#submit_proses').text('proses menyimpan...');
-                    $('#submit_proses').prop('disable',true);
+                    $('#submit_proses').prop('disable', true);
                 },
                 success: function (data) {
                     if (data.errors) {
@@ -296,7 +270,7 @@
                         $('.radioPilihan').prop('checked', false);
                         $('#np_pemroses').val('').change();
                         $('#submit_proses').text('Proses');
-                        $('#submit_proses').prop('disable',false);
+                        $('#submit_proses').prop('disable', false);
 
                     }
 
@@ -647,7 +621,7 @@
                     //     });
                     //     break;
                     // } else {
-                    var obj = {}; 
+                    var obj = {};
                     obj.idheader = data1[i].id;
                     obj.limbah3r = data1[i].limbah3r;
                     obj.limbah3r = data1[i].limbah3r;

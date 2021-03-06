@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 
-class NeracaMasukExport implements FromCollection,WithHeadings,WithTitle,WithColumnFormatting
+class NeracaMasukNonB3Export implements FromCollection,WithHeadings,WithTitle,WithColumnFormatting
 {
     /**
     * @return \Illuminate\Support\Collection
@@ -69,7 +69,7 @@ class NeracaMasukExport implements FromCollection,WithHeadings,WithTitle,WithCol
         ->whereMonth('tr_detailmutasi.created_at', '=',   $this->month)
         ->whereYear('tr_detailmutasi.created_at', '=',   $this->year)    
         ->where('tr_detailmutasi.idstatus', '=','2')
-        ->where('tr_detailmutasi.idjenislimbah', '=','1')
+        ->where('tr_detailmutasi.idjenislimbah', '=','2')
         // ->groupBy('md_namalimbah.namalimbah')
         // ->orderBy('tr_detailmutasi.created_at','desc'); 
         ->orderBy('tr_detailmutasi.created_at','desc','md_namalimbah.namalimbah','asc'); 
@@ -117,7 +117,7 @@ class NeracaMasukExport implements FromCollection,WithHeadings,WithTitle,WithCol
     // }
     public function title(): string
     {
-        return 'Limbah B3 Mutasi ' . $this->status;
+        return 'Limbah Non B3 Mutasi ' . $this->status;
     }
     
 

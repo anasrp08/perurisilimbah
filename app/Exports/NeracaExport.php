@@ -61,40 +61,7 @@ public function forStatus(string $status)
     public function headings(): array
     {
         return [
-            'Id Jadwal',
-            'Pilihan Uji',
-            'No. Surat',
-            'Kantor Pemohon',
-            'Instansi',
-            'Tgl. Surat Pemohon',
-            'Tgl. Surat Perintah',
-            'Status',
-            'Tgl. Dibuat',
-            'Mod A',
-            'Mod B',
-            'Charge',
-            'Code',
-            'Description',
-            'Pos',
-            'Mod A',
-            'Mod B',
-            'Charge',
-            'Code',
-            'Description',
-            'Pos',
-            'Mod A',
-            'Mod B',
-            'Charge',
-            'Code',
-            'Description',
-            'Pos',
-            'Mod A',
-            'Mod B',
-            'Charge',
-            'Code',
-            'Description',
-            'Pos',
-            'Mod A',
+             
             
         ];
     }
@@ -108,7 +75,9 @@ public function forStatus(string $status)
         // for ($month = 1; $month <= 2; $month++) {
             $sheets = [
                 new NeracaMasukExport( $this->month,$this->year,'Masuk'),
-                new NeracaProsesExport( $this->month,$this->year,'Proses'),
+                new NeracaProsesExport( $this->month,$this->year,'Keluar'),
+                new NeracaMasukNonB3Export( $this->month,$this->year,'Masuk'),
+                new NeracaProsesNonB3Export( $this->month,$this->year,'Keluar'),
             ];
         // }
 

@@ -63,9 +63,9 @@
             <label>Bulan</label>
             <input type="text" id="f_date" name="f_date" class="entridate form-control float-right" autocomplete="off">
         </div>
-        <button type="button" name="refresh" id="refresh" class="btn btn-success "><i class="fa  fa-sync"></i>
+        <button type="button" name="refresh" id="refresh" class="btn btn-success"><i class="fa  fa-sync"></i>
             Refresh</button>
-            <a name="download" id="download"   class="btn btn-success my-3" target="_blank">EXPORT EXCEL</a>
+            <a name="download" id="download"  class="btn btn-info" target="_blank"><i class="fa fa-download"></i>EXPORT EXCEL</a>
             {{-- <button type="button" name="export" id="export" class="btn btn-success "><i class="fa  fa-sync"></i>
                 Export</button> --}}
     </div>

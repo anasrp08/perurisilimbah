@@ -65,7 +65,7 @@ class ExportDataController extends Controller
     //         });
     //     })->download($type);
     // https://laracasts.com/discuss/channels/laravel/how-to-pass-the-sumfields-to-excel-conversion-using-maatwebsite-in-laravel
-        return Excel::download(new NeracaExport($month,$year), 'neraca.xlsx');
+        return Excel::download(new NeracaExport($month,$year), 'Export Neraca-'.$month.'-'.$year.'.xlsx');
     }
      
 
