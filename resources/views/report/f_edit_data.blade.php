@@ -19,17 +19,17 @@
                     </select>
                 </div>
 
-                <div class="form-group pihakketiga">
+                <div class="form-group">
                     <label>Tahun</label>
-                    <input type="number" id="tahun" name="tahun" class="formproses form-control float-right"
+                    <input type="number" id="tahun" name="tahun" class="formproses form-control"
                         autocomplete="off">
                 </div>
-                <div class="form-group pihakketiga">
+                <div class="form-group">
                     <label>Total</label>
-                    <input type="text" id="total" name="total" class="numberinput formproses form-control float-right"
+                    <input type="text" id="total" name="total" class="numberinput formproses form-control"
                         autocomplete="off">
                 </div>
-                <div class="form-group nonpihakketiga">
+                <div class="form-group">
                     <label>Diinput Oleh</label>
                     <select name="np" id="np" class="formproses form-control select2bs4" style="width: 100%;">
                         {{-- <option value="-" selected="selected">Pilih Salah Satu</option> --}}

@@ -32,7 +32,9 @@
         text-align: center;
         color: red;
     }
-
+    td table {
+  width: 100%;
+}
 </style>
 
 
@@ -425,7 +427,9 @@
                 $(id + ' tbody').on('click', 'td.details-control', function () {
                     var tr = $(this).closest('tr');
                     var row = table.row(tr);
+
                     var rowData = row.data();
+                    console.log(rowData)
                     var tdi = tr.find("i.fa");
 
                     //get index to use for child table ID
@@ -455,7 +459,7 @@
                             idtblchild='childMasuk'
                         }
                         row.child( 
-                            '<table class="child_table" id = "'+idtblchild+ index +'" cellpadding="5" cellspacing="0" border="0" style="padding-left:10px;">' +
+                            '<table class="child_table" id = "'+idtblchild+ index +'" cellpadding="2" cellspacing="0" border="0" style="padding-left:10px;table-layout:fixed;">' +
                             '<thead><th>Tgl. Permohonan</th>' +
                             '<th>Nama Limbah</th> ' +
                             '<th>Jumlah</th>' +

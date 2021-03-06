@@ -35,7 +35,7 @@
         {{-- <button type="button" name="download" id="download" class="btn btn-success "><i class="fa  fa-refresh"></i>
             Download Excel</button> --}}
         <button type="button" name="tambah" id="tambah" class="btn btn-success "><i class="fa  fa-plus"></i>
-            Tambah Data Kuota Anggaran</button>
+            Tambah Master Data Kuota Anggaran</button>
         {{-- <button type="button" name="transaksi" id="transaksi" class="btn btn-success "><i class="fa  fa-save"></i>
             Transaksi Konsumsi Anggaran</button> --}}
     </div>
@@ -77,7 +77,7 @@
             theme: 'bootstrap4'
         })
         $(".numberinput").autoNumeric('init', {
-            aSep: '.', 
+            aSep: '.',
             aDec: ',',
             aForm: true,
             vMax: '999999999999999',
@@ -96,83 +96,105 @@
         $('input[name="f_tglinput"]').on('apply.daterangepicker', function (ev, picker) {
             $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format(
                 'DD/MM/YYYY'));
-        }); 
+        });
 
 
         $('#refresh').click(function () {
 
             $('#daftar_kuota').DataTable().ajax.reload();
         })
-        $('#download').click(function () {})
-        $(document).on('click', '.edit', function () {
-            user_id = $(this).data('id'); 
-            var data = table.row($(this).closest('tr')).data();
-            $('#tipelimbah').val(data.tipe_limbah).change()
-            $('#tahun').val(data.tahun) 
-            var addSeparator=numberWithCommas(data.jumlah)
-            $('#total').val(addSeparator) 
-            $('#np').val(data.np).change() 
-            $('#hidden_id').val(data.id) 
-            
-            $('#modalEdit').modal();
-
-        });
-         
         $('#tambah').click(function () {
             $('#tambahData').modal();
         })
+        // $('#download').click(function () {})
+        $(document).on('click', '.edit', function () {
+            user_id = $(this).data('id');
+            var data = table.row($(this).closest('tr')).data();
+            $('#tipelimbah').val(data.tipe_limbah).change()
+            $('#tahun').val(data.tahun)
+            var addSeparator = numberWithCommas(data.jumlah)
+            $('#total').val(addSeparator)
+            $('#np').val(data.np).change()
+            $('#hidden_id').val(data.id)
+
+            $('#modalEdit').modal();
+
+        });
+
+
         $(document).on('click', '.transaksi', function () {
-            user_id = $(this).data('id'); 
+            user_id = $(this).data('id');
             var data = table.row($(this).closest('tr')).data();
             // var addSeparator=numberWithCommas(data.jumlah)
-            var dataParam={
-                idtipe:data.idtipe
+            var dataParam = {
+                idtipe: data.idtipe
             }
             $.ajax({
-                url: "{{ route('kontrak.editdata') }}", 
+                url: "{{ route('kontrak.editdata') }}",
                 method: "POST",
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 data: dataParam,
                 // contentType: false,
                 // cache: false,
                 // processData: false,
                 // dataType: "json",
-                 
+
                 success: function (result) {
                     $('#transaksi_konsumsi').val('')
                     $('#transaksi_tipelimbah').val(data.tipe_limbah).change()
-                    $('#transaksi_tahun').val(data.tahun) 
-                    $('#transaksi_total').val(numberWithCommas(data.jumlah)) 
+                    $('#transaksi_tahun').val(data.tahun)
+                    $('#transaksi_total').val(numberWithCommas(data.jumlah))
                     $('#dataharga').val(result.dataHarga)
-                    $('#transaksi_np').val(data.np).change() 
-                    $('#anggaran_id').val(data.id) 
-                    $('#labelharga').text('Harga / '+result.dataSatuan)
-                    
-                    $('#transaksi_tipelimbah').prop('disabled','disabled')
-                    $('#transaksi_tahun').prop('disabled',true)
-                    $('#transaksi_total').prop('disabled',true)  
+                    $('#transaksi_np').val(data.np).change()
+                    $('#anggaran_id').val(data.id)
+                    $('#labelharga').text('Harga / ' + result.dataSatuan)
+
+                    $('#transaksi_tipelimbah').prop('disabled', 'disabled')
+                    $('#transaksi_tahun').prop('disabled', true)
+                    $('#transaksi_total').prop('disabled', true)
                     $('#transaksiKuota').modal();
                 }
             });
-           
-
         });
-        
+        $('#transaksiKuota').on('hidden.bs.modal', function (e) {
+            // do something…
+            $('#jmlhlimbah').val('')
+            $('#transaksi_konsumsi').val('')
+        })
+        $('#modalEdit').on('hidden.bs.modal', function (e) {
+            // do something…
+            $(this)
+    .find("input,textarea,select")
+       .val('')
+       .end()
+    .find("input[type=checkbox], input[type=radio]")
+       .prop("checked", "")
+       .end();
+            // $('#total').val('') 
+        })
+
+        $('#jmlhlimbah').on('change', function () {
+            // console.log(this)
+            var valJumlah = $(this).val()
+            var harga = $('#dataharga').val()
+            var result = parseInt(valJumlah) * parseInt(harga)
+            $('#transaksi_konsumsi').val(result)
+        })
         $('#simpan_transaksi').click(function () {
             var paramData = {
                 konsumsi: $('#transaksi_konsumsi').val(),
-               
+
                 np: $('#transaksi_np').val(),
                 id: $('#anggaran_id').val(),
             }
             $.ajax({
-                url: "{{ route('kontrak.konsumsi_anggaran') }}", 
+                url: "{{ route('kontrak.konsumsi_anggaran') }}",
                 method: "POST",
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 data: paramData,
                 // contentType: false,
                 // cache: false,
@@ -199,7 +221,7 @@
                         $('#transaksi_total').val('')
                         $('#transaksi_np').val('')
                         $('#transaksi_konsumsi').val('')
-                        
+
                         $('#simpan_transaksi').text('Simpan');
                         $('#daftar_kuota').DataTable().ajax.reload();
                         setTimeout(function () {
@@ -219,11 +241,11 @@
                 np: $('#add_np').val()
             }
             $.ajax({
-                url: "{{ route('kontrak.save_anggaran') }}", 
+                url: "{{ route('kontrak.save_anggaran') }}",
                 method: "POST",
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 data: paramData,
                 // contentType: false,
                 // cache: false,
@@ -260,7 +282,7 @@
             // $('#daftarlimbah').DataTable().ajax.reload();
 
         })
-        
+
         $('#simpan_edit').click(function () {
             var paramData = {
                 tipelimbah: $('#tipelimbah').val(),
@@ -270,11 +292,11 @@
                 id: $('#hidden_id').val(),
             }
             $.ajax({
-                url: "{{ route('kontrak.update_anggaran') }}", 
+                url: "{{ route('kontrak.update_anggaran') }}",
                 method: "POST",
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 data: paramData,
                 // contentType: false,
                 // cache: false,
@@ -312,8 +334,9 @@
             // $('#daftarlimbah').DataTable().ajax.reload();
 
         })
+        $('#tambah_kuota').on('submit', function (event) {})
 
-        
+
         $('#tambah_kuota').on('submit', function (event) {
             event.preventDefault();
 
@@ -354,9 +377,10 @@
             });
 
         })
+
         function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-}
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
 
         var table = $('#daftar_kuota').DataTable({
             processing: true,
@@ -424,24 +448,24 @@
                 {
                     data: 'konsumsi',
                     name: 'konsumsi',
-                     render: function (data, type, row) {
+                    render: function (data, type, row) {
                         // var totalKuota = parseInt(row.konsumsi) + parseInt(row.sisa)
-                        if(data=="" || data==null ){
+                        if (data == "" || data == null) {
                             return 0
-                        }else{
+                        } else {
                             return numberWithCommas(data)
                         }
-                        
+
                     }
                 },
                 {
                     data: 'sisa',
                     name: 'sisa',
-                     render: function (data, type, row) {
+                    render: function (data, type, row) {
                         // var totalKuota = parseInt(row.konsumsi) + parseInt(row.sisa)
-                        if(data=="" || data==null ){
+                        if (data == "" || data == null) {
                             return 0
-                        }else{
+                        } else {
                             return numberWithCommas(data)
                         }
                     }
@@ -463,8 +487,8 @@
                             parseInt(100))
                         var kuota_warning = Math.round(parseInt(totalKuota) * parseInt(75) /
                             parseInt(100))
-                            
-                        if(row.konsumsi == 0 ){
+
+                        if (row.konsumsi == 0) {
                             return '<span class="badge badge-success">Aman</span>'
                         }
 

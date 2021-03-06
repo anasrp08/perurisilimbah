@@ -31,32 +31,22 @@ class PemrosesanLimbahController extends Controller
         $this->middleware('auth');
     }
     public function index(Request $request)
-    {
-        //
-
-        // $status= DB::table('tr_mutasilimbah')->get();
+    { 
         if (request()->ajax()) {
-            $queryData = DB::table('tr_headermutasi')
-                // ->join('tr_packing', 'tr_packing.idmutasi', '=', 'tr_headermutasi.id')
-                // ->join('tr_headermutasi', 'tr_packing.idmutasi', '=', 'tr_headermutasi.id')
+            $queryData = DB::table('tr_headermutasi') 
                 ->join('md_namalimbah', 'tr_headermutasi.idlimbah', '=', 'md_namalimbah.id')
-                ->join('md_tps', 'tr_headermutasi.idtps', '=', 'md_tps.id')
-                // ->join('md_jenislimbah', 'md_jenislimbah.id', '=', 'md_namalimbah.idjenislimbah')
-                // ->join('md_statusmutasi', 'tr_headermutasi.idstatus', '=', 'md_statusmutasi.id')
+                ->join('md_tps', 'tr_headermutasi.idtps', '=', 'md_tps.id') 
                 ->join('md_satuan', 'tr_headermutasi.idsatuan', '=', 'md_satuan.id')
                 ->select(
                     'tr_headermutasi.id_transaksi',
                     'tr_headermutasi.idlimbah',
-                    'md_tps.namatps',
-                    // 'md_statusmutasi.keterangan',
-                    // 'tr_packing.*',
+                    'md_tps.namatps', 
                     'md_satuan.satuan',
                     'md_namalimbah.*',
-                    DB::raw('SUM(tr_headermutasi.jumlah) as total_saldo')
+                    DB::raw('SUM(tr_headermutasi.jumlah_in) as total_saldo')
 
                 )
-                ->where('tr_headermutasi.jumlah', '!=', 0)
-                // ->whereIn('tr_packing.idstatus',['3','4','5','6','7'])
+                ->where('tr_headermutasi.jumlah_in', '!=', 0) 
                 ->groupBy('tr_headermutasi.idlimbah');
 
             $queryData = $queryData->get();
@@ -86,17 +76,15 @@ class PemrosesanLimbahController extends Controller
      
     public function detaillist(Request $request)
     {
-        // dd($request->all());
         if (request()->ajax()) {
             $queryData = DB::table('tr_packing')
                 ->join('tr_headermutasi', 'tr_packing.idmutasi', '=', 'tr_headermutasi.id')
                 ->join('md_namalimbah', 'tr_packing.idlimbah', '=', 'md_namalimbah.id')
-                ->join('md_tps', 'tr_packing.idtps', '=', 'md_tps.id')
-                // ->join('tr_statusmutasi', 'tr_packing.idmutasi', '=', 'tr_statusmutasi.idmutasi')
-                // ->join('md_statusmutasi', 'tr_statusmutasi.idstatus', '=', 'md_statusmutasi.id')
+                ->join('md_tps', 'tr_packing.idtps', '=', 'md_tps.id') 
                 ->join('md_satuan', 'tr_headermutasi.idsatuan', '=', 'md_satuan.id')
                 ->select(
                     'tr_packing.*',
+                    'tr_headermutasi.id as idmutasi',
                     'tr_headermutasi.id_transaksi',
                     'tr_headermutasi.idlimbah',
                     'tr_headermutasi.idjenislimbah',
@@ -105,20 +93,18 @@ class PemrosesanLimbahController extends Controller
                     'tr_headermutasi.tgl',
                     'tr_headermutasi.idsatuan',
                     'tr_headermutasi.limbah3r',
-                    'tr_headermutasi.jumlah',
+                    'tr_headermutasi.jumlah_in',
+                    'tr_headermutasi.jumlah_out',
                     'tr_headermutasi.tgl as tgl_permohonan',
-                    'md_satuan.satuan as nama_satuan',
-                    // 'tr_statusmutasi.jumlah', 
-                    // DB::raw('COUNT(tr_packing.idlimbah) as total_pack'),
-
+                    'md_satuan.satuan as nama_satuan',                   
                     'md_namalimbah.*',
                     'md_tps.*',
                     'md_satuan.satuan as nama_satuan'
                 )
-                // ->where('tr_packing.kode_pack','=',$request->kodepack)
                 ->where('tr_packing.idlimbah', '=', $request->idlimbah)
-                ->where('tr_headermutasi.jumlah', '!=', 0)
-                ->groupBy('tr_packing.idmutasi');
+                ->where('tr_headermutasi.jumlah_in', '!=', 0)
+                ->groupBy('tr_packing.idmutasi')
+                ->orderBy('tr_headermutasi.id','asc');
 
             $queryData = $queryData->get();
 
@@ -148,15 +134,11 @@ class PemrosesanLimbahController extends Controller
         try {
             foreach ($dataRequest as $row) {
                 $dataHeader = DB::table('tr_headermutasi')->where('id', $row['idmutasi'])->first();
-                // $dataStatus = DB::table('tr_statusmutasi')->where('idmutasi', $row['idmutasi'])->first();
-                if ($row['idlimbah'] == 1 || $row['idlimbah'] == 2 || $row['idlimbah'] == 3) {
-                    $jmlh_pack =0;
-                }else{
-                    $jmlh_pack = UpdtSaldoHelper::convertJumlahToPack($row['idlimbah'], $row['jmlh_proses']);
-                }
-                // $jmlh_pack=UpdtSaldoHelper::convertJumlahToPack($row['idlimbah'],$row['jmlh_proses']);
-                $jmlh = $dataHeader->jumlah;
-                $valJumlah = (int)$row['jumlah'] - (int)$row['jmlh_proses'];
+                
+                $jmlh_pack = UpdtSaldoHelper::convertJumlahToPack($row['idlimbah'], $row['jmlh_proses']);
+             
+                $jmlh = $dataHeader->jumlah_in;
+                $valJumlah = (int)$row['jumlah_in'] - (int)$row['jmlh_proses'];
                 
                 $status = null;
                 if ($valJumlah == 0) {
@@ -176,10 +158,9 @@ class PemrosesanLimbahController extends Controller
                     'idasallimbah'        => $row['idasallimbah'],
                     'idtps'               => $row['idtps'],
                     'tgl'                 => $row['tgl'],
-                    'jumlah'              => $row['jmlh_proses'],
                     'idsatuan'            => $row['idsatuan'],
-                    'pack_out'            =>  $jmlh_pack,
-                    // 'jumlah_out'            => $row['jmlh_proses'], 
+                    'pack'                  =>  $jmlh_pack,
+                    'jumlah'                => $row['jmlh_proses'], 
                     'limbah3r'            => $row['limbah3r'],
                     'created_at'            => date('Y-m-d'),
                     'np_pemroses'           => $row['np_pemroses'],
@@ -190,19 +171,19 @@ class PemrosesanLimbahController extends Controller
                 $dataHeader = array(
                     'id_transaksi'          =>  $row['id_transaksi'],
                     'idstatus'              =>  $status,
-                    'updated_at'            => date('Y-m-d'),
-                    'jumlah'                => $valJumlah,
-                    'jumlah_out'            => $jmlhOut,
+                    'updated_at'            =>  date('Y-m-d'),
+                    'jumlah_in'             =>  $valJumlah,
+                    'jumlah_out'            =>  $jmlhOut,
                     'pack_in'               =>  $valPackIn,
-                    'pack_out'              => $jmlhOutPack,
-                    'idsatuan'              => $row['idsatuan'],
-                    'idtps'                 => $row['idtps'],
-                    'idvendor'              => $row['idvendor'],
-                    'no_manifest'           => $row['nomanifest'],
-                    'no_spbe'               => $row['nospbe'],
-                    'no_kendaraan'          => $row['nokendaraan'],
-                    'np_pemroses'           => $row['np_pemroses'],
-                    'changed_by'            => $username,
+                    'pack_out'              =>  $jmlhOutPack,
+                    'idsatuan'              =>  $row['idsatuan'],
+                    'idtps'                 =>  $row['idtps'],
+                    'idvendor'              =>  $row['idvendor'],
+                    'no_manifest'           =>  $row['nomanifest'],
+                    'no_spbe'               =>  $row['nospbe'],
+                    'no_kendaraan'          =>  $row['nokendaraan'],
+                    'np_pemroses'           =>  $row['np_pemroses'],
+                    'changed_by'            =>  $username,
                 );
                 // $dataPacking = array(
                 //     'id_transaksi'          =>  $row['id_transaksi'],
@@ -223,9 +204,7 @@ class PemrosesanLimbahController extends Controller
                 // 'no_manifest' => $row['nomanifest'],
                 // 'no_spbe' => $row['nospbe'],
                 // 'no_kendaraan' => $row['nokendaraan'],
-                // );
-
-                // dd($dataDetail);
+                // ); 
                 $insertDetail = DB::table('tr_detailmutasi')->insert($dataDetail);
                 $insertHeader = DB::table('tr_headermutasi')->where('id', $row['idmutasi'])->update($dataHeader);
                 // $insertPacking = DB::table('tr_packing')->where('idmutasi', $row['idmutasi'])->update($dataPacking);
@@ -242,8 +221,7 @@ class PemrosesanLimbahController extends Controller
         }
     }
     public function prosesLain(Request $request)
-    {
-        //  dd($request->all());
+    { 
         $error =null;
         $rules = array(
             'nama_limbah' => 'required',
@@ -254,9 +232,7 @@ class PemrosesanLimbahController extends Controller
             'satuan'=> 'required',
             'np_pemroses'=> 'required',
             'file'=>'nullable|mimes:pdf|max:10048'
-        );
-
-       
+        ); 
         $messages = array(
             'nama_limbah' => 'Nama Limbah Harus Diisi',
             'tgl_proses'=> 'Tgl PermohonanHarus Diisi', 
@@ -295,8 +271,7 @@ class PemrosesanLimbahController extends Controller
                     File::makeDirectory($path_file_proses, $mode = 0777, true, true);
                 }
                 $upload_file=$request->file('file');
-                $file=$upload_file->getClientOriginalName(); 
-                // $filename_srtkantor='SURATKANTOR'.'_'.$pathname1[0].'.'.$extension;
+                $file=$upload_file->getClientOriginalName();  
                 $upload_file->move($path_file_proses, $file);
                 $savepath_file=AppHelper::savePath('File Proses', $file); 
                 
@@ -329,12 +304,6 @@ class PemrosesanLimbahController extends Controller
 
         $vendor = DB::table('md_vendorlimbah')->groupBy('namavendor')->get();
         $np = DB::table('tbl_np')->get();
-        // $namaLimbah=DB::table('md_namalimbah')->get();
-        // $tipeLimbah=DB::table('md_tipelimbah')->get();
-        // $penghasilLimbah=DB::table('md_penghasillimbah')->get();
-        // $satuanLimbah=DB::table('md_satuan')->get();
-        // $tpsLimbah=DB::table('md_tps')->get();
-        // dd($vendor);
         return view('pemrosesan.list', [
             'vendor' => $vendor,
             'np' => $np
@@ -348,13 +317,7 @@ class PemrosesanLimbahController extends Controller
 
         $vendor = DB::table('md_vendorlimbah')->groupBy('namavendor')->get();
         $np = DB::table('tbl_np')->get();
-         $penghasilLimbah=DB::table('md_penghasillimbah')->get();
-        // $namaLimbah=DB::table('md_namalimbah')->get();
-        // $tipeLimbah=DB::table('md_tipelimbah')->get();
-        // $penghasilLimbah=DB::table('md_penghasillimbah')->get();
-        // $satuanLimbah=DB::table('md_satuan')->get();
-        // $tpsLimbah=DB::table('md_tps')->get();
-        // dd($vendor);
+         $penghasilLimbah=DB::table('md_penghasillimbah')->get(); 
         return view('pemrosesan.list_lain', [ 
             'np' => $np,
             'penghasilLimbah' => $penghasilLimbah,

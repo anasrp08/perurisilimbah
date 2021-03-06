@@ -135,11 +135,17 @@
                 {
                     data: 'kapasitasjumlah',
                     name: 'kapasitasjumlah',
+                    render: function (data, type, row) {
+                        return data +' '+ row.satuan2
+                    }
 
                 },
                 {
                     data: 'saldo',
                     name: 'saldo',
+                    render: function (data, type, row) {
+                        return data +' '+ row.satuan2
+                    }
 
                 },
                 {

@@ -23,7 +23,9 @@ Route::post('/dashboard/data', 'HomeController@dataDashboard')->name('dashboard.
 Route::post('/dashboard/data_kuota', 'HomeController@dataKuota')->name('dashboard.kuota');
 Route::post('/dashboard/data_neraca', 'HomeController@dataNeraca')->name('dashboard.neraca');
 Route::post('/dashboard/data_penghasil', 'HomeController@dataPenghasil')->name('dashboard.penghasil');
-Route::post('/dashboard/data_kadaluarsa', 'HomeController@dashboardToBeKadaluarsa1')->name('dashboard.kadaluarsa');
+Route::post('/dashboard/data_kadaluarsa', 'HomeController@dashboardToBeKadaluarsa1')->name('data.kadaluarsa');
+Route::post('/dashboard/neraca_kuota_anggaran', 'HomeController@dashboardNeracaKuota')->name('dashboard.graf_kuota_anggaran');
+
 
 Route::post('/dashboard/notifikasi', 'HomeController@dataNotifikasi')->name('notifikasi.data');
 

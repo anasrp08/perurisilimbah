@@ -114,24 +114,7 @@
                         
                     }
                 },
-                // {
-                //     text: 'Jumbo Bag',
-                //     className: 'btn btn-warning',
-                //     action: function (e, dt, node, config) {
-                //         $('#type').val('Padat')
-                //         $('#modalconfirm').modal('show')
-                        
-                //     }
-                // },
-                // {
-                //     text: 'TPS Kolam Cair',
-                //     className: 'btn btn-info',
-                //     action: function (e, dt, node, config) {
-                //         $('#type').val('Cair')
-                //         $('#modalconfirm').modal('show')
-                        
-                //     }
-                // },
+ 
                 {
                     extend: "selectAll",
                     text: 'Pilih Semua',
@@ -195,8 +178,8 @@
                     name: 'namalimbah'
                 },
                 {
-                    data: 'jumlah',
-                    name: 'jumlah'
+                    data: 'jumlah_in',
+                    name: 'jumlah_in'
                 },
                 {
                     data: 'satuan',
@@ -272,15 +255,9 @@
                 toastr.warning('Belum Ada Item Yang Dipilih', 'Warning', {
                     timeOut: 5000
                 });
-            } else {
-                // if (fisik == 'Cair') {
+            } else { 
                     for (i = 0; i < data1.count(); i++) {
-                        // if (data1[i].fisik == 'Padat') {
-                        //     toastr.warning('Ada Item Limbah Padat Yang Dipilih Baris Ke- '+[i+1], 'Warning', {
-                        //         timeOut: 5000
-                        //     });
-                        //     break;
-                        // } else {
+                       
                             var obj = {};
                             obj.limbah3r = data1[i].limbah3r;
                             obj.tgl = data1[i].tgl;
@@ -291,53 +268,18 @@
                             obj.idstatus = 3;
                             obj.fisik = data1[i].fisik;
                             obj.tps = data1[i].tps;
-                            obj.pack_in = data1[i].pack_in;
+                            obj.pack = data1[i].pack_in;
                             obj.packing_besar = data1[i].packing_besar;
                             obj.idjenislimbah = data1[i].idjenislimbah;
-                            obj.jumlah = data1[i].jumlah; 
+                            obj.jumlah = data1[i].jumlah_in; 
                             obj.max_packing = data1[i].max_packing; 
                             obj.np_packer = $('#np_packer').val();
-                            output.push(obj);
-                            jsonData["Order"] = output
+                            output.push(obj)
                             
-                        // }
-
                     }
+                    jsonData["Order"] = output
+                    // console.log(jsonData)
                     packLimbah(jsonData)
-                // } else {
-                    
-                //     for (i = 0; i < data1.count(); i++) {
-                //         if (data1[i].fisik == 'Cair') {
-                //             toastr.warning('Ada Item Limbah Cair Yang Dipilih Baris Ke- '+[i+1], 'Warning', {
-                //                 timeOut: 5000
-                //             });
-                //             break;
-                //         } else {
-                //             var obj = {};
-                //             // console.log(value)
-                //             obj.limbah3r = data1[i].limbah3r;
-                //             obj.tgl = data1[i].tgl;
-                //             obj.idmutasi = data1[i].idmutasi;
-                //             obj.id_transaksi = data1[i].id_transaksi;
-                //             obj.idasallimbah = data1[i].idasallimbah;
-                //             obj.idlimbah = data1[i].idlimbah;
-                //             obj.idstatus = 3;
-                //             obj.fisik = data1[i].fisik;
-                //             obj.packing_besar = data1[i].packing_besar;
-                //             obj.idjenislimbah = data1[i].idjenislimbah;
-                //             obj.jumlah = data1[i].jumlah; 
-                //             obj.np = $('#np').val();
-                //             output.push(obj);
-                //             jsonData["Order"] = output
-                           
-
-                //         }
-
-                //     }
-                //     packLimbah(jsonData)
-
-                // }
-
             }
             $('#np').val('').change()
             $('#modalconfirm').modal('toggle')
@@ -372,11 +314,7 @@
                             timeOut: 5000
                         });
                         $('#daftar_masuk').DataTable().ajax.reload();
-                        // $('#counterentries').text(data.count);
-
-                        // $('#saveentri').text('Simpan');
-                        // $('#tblorder').DataTable().ajax.reload();
-                        // renderTgl()
+                       
 
                     }
 
@@ -384,21 +322,7 @@
             })
         }
 
-        // new $.fn.dataTable.FixedColumns(table, {
-        //     leftColumns: 3,
-        //     heightMatch: 'auto'
-        // });
-
-
-
-        // $(document).on('click', '.delete', function () {
-        //     user_id = $(this).data('id');
-        //     $("#success-alert").hide();
-        //     var data = table.row($(this).closest('tr')).data();
-
-        //     $('#confirmModal').modal();
-
-        // });
+      
         $('#daftar_masuk tbody').on('click', 'tr', function () {
             $(this).toggleClass('selected');
         });
@@ -410,123 +334,9 @@
             });
             user_id = $(this).data('id');
             var data = table.row($(this).closest('tr')).data();
-            console.log(data)
-            // updateValid(paramData)
+             
 
-        });
-
-
-        // var user_id;
-        // $('body').on('click', '.edit', function () {
-
-        //     var id = $(this).data('id');
-        //     var data = table.row($(this).closest('tr')).data();
-        //     var tglCatat
-        //     // var tglCatat = moment(data.tgl).format('DD/MM/YYYY');
-        //     if (data.tgl == "-" || data.tgl == "0000-00-00 00:00:00" || data.tgl === null) {
-        //         tglCatat = ""
-        //     } else {
-        //         tglCatat = moment(data.tgl).format('DD/MM/YYYY');
-        //     }
-        //     $('#jenislimbah').val(data.jenislimbah).change()
-        //     $('#entridate').val(tglCatat)
-        //     $('#satuan').val(data.satuan).change()
-        //     $('#namalimbah').val(data.namalimbah).change()
-        //     $('#fisiklimbah').val(data.fisik).change()
-        //     $('#tps').val(data.tps).change()
-        //     $('#limbahasal').val(data.asallimbah).change()
-        //     $('#jmlhlimbah').val(data.jumlah)
-        //     $('#limbah3r').val(data.limbah3r).change()
-        //     $('#hidden_id').val(data.id)
-        //     $('#jumlahlama').val(data.jumlah)
-        //     $('#idnamalimbah').val(data.idnama)
-
-
-
-        //     $('#formEdit').modal();
-
-
-
-
-        // });
-
-        // $('#edit_limbah').on('submit', function (event) {
-        //     event.preventDefault();
-
-        //         $.ajax({
-        //             url: "{{ route('limbah.update') }}",
-        //             method: "POST",
-        //             data: new FormData(this),
-        //             contentType: false,
-        //             cache: false,
-        //             processData: false,
-        //             dataType: "json",
-        //             beforeSend: function () {
-        //                 $('#action_button').val('menyimpan...');
-        //             },
-        //             success: function (data) {
-        //                 var html = '';
-        //                 if (data.errors) {
-        //                     html = '<div id=error class="alert alert-danger">';
-        //                     for (var count = 0; count < data.errors.length; count++) {
-        //                         html += '<p>' + data.errors[count] + '</p>';
-        //                     }
-        //                     html += '</div>';
-        //                     $('#form_result').html(html);
-        //                     $('#action_button').val('Simpan');
-        //                 }
-        //                 if (data.success) {
-        //                     toastr.success(data.success, 'Tersimpan', {
-        //                         timeOut: 5000
-        //                     });
-        //                     $('#edit_limbah')[0].reset();
-        //                     $('#action_button').val('Simpan');
-        //                     $('#daftarlimbah').DataTable().ajax.reload();
-        //                     setTimeout(function () {
-        //                         $('#formEdit').modal('toggle');
-        //                     }, 1000);
-        //                 }
-        //             }
-        //         });
-
-        // })
-        function updateValid(paramData) {
-            // $.ajax({
-            //             url: "{{ route('limbah.update') }}",
-            //             method: "POST",
-            //             data: new FormData(this),
-            //             contentType: false,
-            //             cache: false,
-            //             processData: false,
-            //             dataType: "json",
-            //             beforeSend: function () {
-            //                 $('#action_button').val('menyimpan...');
-            //             },
-            //             success: function (data) {
-            //                 var html = '';
-            //                 if (data.errors) {
-            //                     html = '<div id=error class="alert alert-danger">';
-            //                     for (var count = 0; count < data.errors.length; count++) {
-            //                         html += '<p>' + data.errors[count] + '</p>';
-            //                     }
-            //                     html += '</div>';
-            //                     $('#form_result').html(html);
-            //                     $('#action_button').val('Simpan');
-            //                 }
-            //                 if (data.success) {
-            //                     toastr.success(data.success, 'Tersimpan', {
-            //                         timeOut: 5000
-            //                     });
-            //                     $('#edit_limbah')[0].reset();
-            //                     $('#action_button').val('Simpan');
-            //                     $('#daftarlimbah').DataTable().ajax.reload();
-            //                     setTimeout(function () {
-            //                         $('#formEdit').modal('toggle');
-            //                     }, 1000);
-            //                 }
-            //             }
-            // });
-        }
+        }); 
 
 
 

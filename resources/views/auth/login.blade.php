@@ -1,98 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+	<meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
-    <title>Login</title>
-
-    <!-- Custom fonts for this template-->
-    {{-- <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css"> --}}
-    <link rel="stylesheet" href="{{ asset('/adminlte3/fontawesome-free/css/all.min.css') }}">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-
-    <!-- Custom styles for this template-->
-    <link rel="stylesheet" href="{{ asset('/adminlte3/sb-admin-2.min.css') }}">
-    {{-- <link href="css/sb-admin-2.min.css" rel="stylesheet"> --}}
-
+	<title>Login SIMBAH</title>
+	<link rel="stylesheet" type="text/css" href="{{ asset('/adminlte3/css/style.css')}}">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+	<script src="https://kit.fontawesome.com/a81368914c.js"></script>
+	<style>
+	input {
+ outline:none;
+}
+	</style>
 </head>
-
-<body class="bg-gradient-primary">
-
-    <div class="container" style="margin-top: 11%;">
-
-        <!-- Outer Row -->
-        <div class="row justify-content-center">
-
-            <div class="col-xl-10 col-lg-12 col-md-9">
-
-                <div class="card o-hidden border-0 shadow-lg my-5">
-                    <div class="card-body p-0">
-                        <!-- Nested Row within Card Body -->
-                        <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
-                            <div class="col-lg-6">
-                                <div class="p-5">
-                                    <div class="text-center">
-                                        {{-- <span class="badge badge-primary">Primary</span>
-                    <button class="btn btn-primary">Messages <span class="badge badge-white">5</span></button>
-                    <button class="btn btn-secondary">Notifications <span class="badge badge-white">3</span></button> --}}
-                                        <h1 class="h4 text-gray-900 mb-4">SIMBAH</h1>
-                                        <h1 class="h4 text-gray-900 mb-4">Sistem Informasi Limbah</h1>
-                                    </div>
-                                    <form class="user" method="POST" action="{{ route('login') }}">
-                                        @csrf
-                                        <div class="form-group">
-                                            <input type="email" class="form-control form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus
-                                                id="email" aria-describedby="emailHelp"
-                                                placeholder="Enter Username">
-                                            @error('email')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password"
-                                                id="password" placeholder="Password">
+<body>
+	<img class="wave" src="{{ asset('/img/wave.png')}}">
+	<div class="container">
+		<div class="img">
+			<img src="{{ asset('img/factory.svg')}}">
+		</div>
+		<div class="login-content">
+			<form class="user" method="POST" action="{{ route('login') }}">
+				@csrf
+				<img src="{{ asset('/img/logo.png') }}">
+				<h2 class="title">SIMBAH</h2>
+				<h3 class="kepanjangan">Sistem Informasi Limbah</h3><br>
+           		<div class="input-div one">
+           		   <div class="i">
+           		   		<i class="fas fa-user"></i>
+           		   </div>
+           		   <div class="div">
+           		   		<h5>Username</h5>
+							  <input type="text" class="input" name="email" value="{{ old('email') }}" required autocomplete="off" 
+							  id="email" aria-describedby="emailHelp" >
+						  @error('email')
+						  <span class="invalid-feedback" role="alert">
+							  <strong>{{ $message }}</strong>
+						  </span>
+						  @enderror
+           		   </div>
+           		</div>
+           		<div class="input-div pass">
+           		   <div class="i"> 
+           		    	<i class="fas fa-lock"></i>
+           		   </div>
+           		   <div class="div">
+           		    	<h5>Password</h5>
+           		    	<input type="password" class="input @error('password') is-invalid @enderror" name="password" required autocomplete="current-password"
+                                                id="password">
                                             @error('password')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
                                             @enderror
-                                        </div>
-
-                                        <hr>
-                                        <button type="submit" class="btn btn-primary">
-                                            {{ __('Login') }}
-                                        </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
+            	   </div>
+            	</div>
+            	<!-- <a href="#">Forgot Password?</a> -->
+            	{{-- <input type="submit" class="btn" value="Login"> --}}
+				<button type="submit" class="btn">
+					{{ __('Login') }}
+				</button>
+            </form>
         </div>
-
     </div>
-
-    <!-- Bootstrap core JavaScript-->
-    <script src="{{ asset('/adminlte3/plugins/jquery/jquery.min.js') }}"></script>
-    <!-- Bootstrap -->
-    <script src="{{ asset('/adminlte3/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('/adminlte3/sb-admin-2.min.js') }}"></script>
-    <script src="{{ asset('/adminlte3/jquery-easing/jquery.easing.min.js') }}"></script>
-
-
+    <script type="text/javascript" src="{{ asset('/adminlte3/js/main.js')}}"></script>
 </body>
-
 </html>

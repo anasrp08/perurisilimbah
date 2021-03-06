@@ -1,6 +1,6 @@
-<div class="form-group">
+{{-- <div class="form-group"> --}}
 
      
-    <input type="text" id="jmlh_proses" name="jmlh_proses" class="jmlh_proses form-control float-right"
-        autocomplete="on">
-</div>
+    <input type="number" data-id="{{$idmutasi}}" id="jmlh_proses_{{$idmutasi}}" name="jmlh_proses" class="jmlh_proses form-control float-right"
+        autocomplete="on" disabled>
+{{-- </div> --}}

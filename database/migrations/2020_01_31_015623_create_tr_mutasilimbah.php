@@ -34,7 +34,8 @@ class CreateTrMutasilimbah extends Migration
             $table->string('no_spbe')->nullable();
             $table->string('no_kendaraan')->nullable();
             $table->date('tgl'); 
-            $table->integer('jumlah');  
+            $table->date('tgl_kadaluarsa'); 
+            $table->integer('jumlah_in');  
             $table->integer('jumlah_out');  
 
             $table->double('pack_in',8,1);  

@@ -57,6 +57,7 @@
                   </figure>
                   {{-- <div id="container" style="min-width: 310px; max-width: 400px; height: 300px; margin: 0 auto"></div> --}}
                 </div>
+                
                 {{-- <div class="col-md-4">
                   <figure class="highcharts-figure">
                     <div id="tps6"></div>
@@ -65,13 +66,8 @@
                   
                 </div> --}}
           </div>
-                
-
-            {{-- </div> --}}
+                 
         </div><!-- /.card-body -->
-    </div>
-    {{-- <div class="row justify-content-center">
-        
-    </div> --}}
+    </div> 
 
 </section>

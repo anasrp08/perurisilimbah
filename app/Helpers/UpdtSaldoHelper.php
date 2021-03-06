@@ -35,7 +35,7 @@ class UpdtSaldoHelper
         $jumlah=$saldoTPS->saldo;
         $jumlah=$jumlah+(int)$saldo; 
         $updateJumlah = array ( 
-            'saldo'	        =>  (int)$jumlah, 
+            'saldo_satuan_kecil'	        =>  (int)$jumlah, 
             'updated_at'=>date('Y-m-d')
         );
         $queryUpdate=DB::table('md_tps')->where('id','=',$tps)->update($updateJumlah);
@@ -47,7 +47,7 @@ class UpdtSaldoHelper
         $jumlah=$saldoTPS->saldo;
         $jumlah=$jumlah-(int)$saldo; 
         $updateJumlah = array ( 
-            'saldo'	        =>  (int)$jumlah, 
+            'saldo_satuan_kecil'	        =>  (int)$jumlah, 
             'updated_at'=>date('Y-m-d')
         );
         $queryUpdate=DB::table('md_tps')->where('id','=',$tps)->update($updateJumlah);
@@ -78,12 +78,48 @@ class UpdtSaldoHelper
         $queryUpdate=DB::table('md_tps')->where('id','=',$tps)->update($updateJumlah);
  
     }
+    public static function updateTambahPackTPS($tps,$jmlh_pack){
+        $saldoTPS=DB::table('md_tps')->where('id','=',$tps)->first();
+        // dd($queryNamaLimbah);
+        $jumlah=$saldoTPS->saldo;
+        $jumlah=$jumlah+(double)$jmlh_pack; 
+        $updateJumlah = array ( 
+            'saldo'	        =>  (double)$jumlah, 
+            'updated_at'=>date('Y-m-d')
+        );
+        $queryUpdate=DB::table('md_tps')->where('id','=',$tps)->update($updateJumlah);
+ 
+    }
+    public static function updateKurangPackTPS($tps,$jmlh_pack){
+        $saldoTPS=DB::table('md_tps')->where('id','=',$tps)->first();
+        // dd($queryNamaLimbah);
+        $jumlah=$saldoTPS->saldo;
+        $jumlah=$jumlah-(double)$jmlh_pack; 
+        $updateJumlah = array ( 
+            'saldo'	        =>  (double)$jumlah, 
+            'updated_at'=>date('Y-m-d')
+        );
+        $queryUpdate=DB::table('md_tps')->where('id','=',$tps)->update($updateJumlah);
+ 
+    }
     public static function convertJumlahToPack($idlimbah,$saldo){
+
         $dataNamalimbah=DB::table('md_namalimbah')->where('id','=',$idlimbah)->first();
         $max_packing=$dataNamalimbah->max_packing;
-        //pembulatan ke bawah
-        $jmlh_pack=(int)$saldo / (int) $max_packing;
-        $jmlhFinal=round($jmlh_pack, 1); 
+        $jmlhFinal=null;
+        if($dataNamalimbah->packing_besar == 'TPS Cair' ){
+            //convert liter to m2
+            $jmlh_pack=(int)$saldo / (int) 1000;
+            $jmlhFinal=round($jmlh_pack, 1); 
+        }else if($dataNamalimbah->packing_besar == 'TPS Abu' ){
+            $jmlh_pack=(int)$saldo / (int) 1000;
+            $jmlhFinal=round($jmlh_pack, 1); 
+        }else{
+            //pembulatan ke bawah
+            $jmlh_pack=(int)$saldo / (int) $max_packing;
+            $jmlhFinal=round($jmlh_pack, 1); 
+        }
+        
         return $jmlhFinal;
          
         
@@ -115,30 +151,7 @@ class UpdtSaldoHelper
  
     }
 
-    public static function updateTambahPackTPS($tps,$jmlh_pack){
-        $saldoTPS=DB::table('md_tps')->where('id','=',$tps)->first();
-        // dd($queryNamaLimbah);
-        $jumlah=$saldoTPS->saldo;
-        $jumlah=$jumlah+(double)$jmlh_pack; 
-        $updateJumlah = array ( 
-            'saldo'	        =>  (double)$jumlah, 
-            'updated_at'=>date('Y-m-d')
-        );
-        $queryUpdate=DB::table('md_tps')->where('id','=',$tps)->update($updateJumlah);
- 
-    }
-    public static function updateKurangPackTPS($tps,$jmlh_pack){
-        $saldoTPS=DB::table('md_tps')->where('id','=',$tps)->first();
-        // dd($queryNamaLimbah);
-        $jumlah=$saldoTPS->saldo;
-        $jumlah=$jumlah-(double)$jmlh_pack; 
-        $updateJumlah = array ( 
-            'saldo'	        =>  (double)$jumlah, 
-            'updated_at'=>date('Y-m-d')
-        );
-        $queryUpdate=DB::table('md_tps')->where('id','=',$tps)->update($updateJumlah);
- 
-    }
+    
      
     
      

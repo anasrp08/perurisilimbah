@@ -128,13 +128,14 @@ class ReportLimbahController extends Controller
                 $queryData = collect($queryData);
                 //sort by idlimbah
                 $sorted=$queryData->sortBy('idlimbah');
+                // dd($sorted);
                
                 $transactionsWithTotalCharge = $sorted->map(function ($transaction) use($prevMonth,$prevYear) {
                     // $transactionsWithTotalCharge = $queryData->each(function ($transaction, $key) {
                     // $prevPeriod=(int)$period - 1;
                     $limbahMasuk=null;
                     $limbahKeluar=null;
-                    if($transaction->isWiping == 'WS'){
+                    if($transaction->isWiping == 'Wiping Solution'){
                     //    dd($prevMonth);
                         $limbahMasuk = DB::table('tr_detailmutasi')
                         // ->where('idlimbah', $transaction->idlimbah)
@@ -210,9 +211,9 @@ class ReportLimbahController extends Controller
     }
     public function detailNeraca(Request $request)
     {
-        //    dd($request->all());
+            
         $queryData=null;
-        if($request->isWiping == '-'){
+        if($request->isWiping == '-' || $request->isWiping == null || $request->isWiping == ''){
             $queryData = DB::table('tr_detailmutasi')
             ->join('tr_headermutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
             ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id')
@@ -238,7 +239,7 @@ class ReportLimbahController extends Controller
             ->where('tr_detailmutasi.idstatus', $request->idstatus)
             ->orderBy('tr_detailmutasi.created_at', 'desc');
         $queryData = $queryData->get();
-        }else{
+        }else if($request->isWiping == 'Wiping Solution'){
             $queryData = DB::table('tr_detailmutasi')
             ->join('tr_headermutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
             ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id')
@@ -616,6 +617,7 @@ class ReportLimbahController extends Controller
     }
     public function updateKonsumsi(Request $request)
     {
+        dd($request->all());
         $error = null;
         $rules = array(
             'konsumsi' => 'required',

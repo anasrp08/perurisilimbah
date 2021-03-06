@@ -1,38 +1,13 @@
-<div class="modal fade" id="modaldetail">
+<div class="modal fade" id="modalproses">
     <div class="modal-dialog modal-lg" style="width:100%;">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Detail Pack</h4>
+                <h4 class="modal-title">Data Proses Langsung</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <table id="detail_pack" class="table table-hover table-bordered" >
-                    <thead>
-                        <tr>
-                            <th>No. </th>
-                            <th>Tgl. Permohonan</th>
-                            <th>Tgl. Kadaluarsa</th>
-                            <th>Nama Limbah</th>
-                            {{-- <th>Jumlah Pack</th> --}}
-                            <th>Jumlah Saldo</th>
-                            {{-- <th>Satuan</th> --}}
-                            <th>Jumlah Proses</th>
-                            
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr> 
-                            <th colspan="4" style="text-align:center">Total</th>
-                            <th></th>
-                            <th></th>
-                            {{-- <th></th>
-                            <th></th> --}}
-                        </tr>
-                    </tfoot>
-
-                </table>
+            <div class="modal-body"> 
                 <div class="row">
                     <div class="col-sm-12">
                         <!-- radio -->
@@ -127,14 +102,15 @@
                         </div>
                     </div>
 
-
+                    {{-- <input type="hidden" id="hiddenTransaksi" name="hiddenTransaksi"
+                    class="formproses form-control float-right" autocomplete="off"> --}}
                 </div>
 
             </div>
 
             <div class="modal-footer justify-content-between">
 
-                <button type="button" class="btn btn-primary" id="proses">Proses</button>
+                <button type="button" class="btn btn-primary" id="submit_proses" name="submit_proses">Proses</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>

@@ -35,9 +35,7 @@ class PenyimpananLimbahController extends Controller
         if (request()->ajax()) {
             $queryData = DB::table('tr_headermutasi')
                 ->join('md_namalimbah', 'tr_headermutasi.idlimbah', '=', 'md_namalimbah.id')
-
                 ->join('md_statusmutasi', 'tr_headermutasi.idstatus', '=', 'md_statusmutasi.id')
-
                 ->join('md_penghasillimbah', 'tr_headermutasi.idasallimbah', '=', 'md_penghasillimbah.id')
                 ->join('md_satuan', 'tr_headermutasi.idsatuan', '=', 'md_satuan.id')
                 ->select(
@@ -56,13 +54,7 @@ class PenyimpananLimbahController extends Controller
                 )
                 ->where('tr_headermutasi.idstatus', 2)
                 ->orderBy('tr_headermutasi.tgl', 'asc');
-
-            // if(!empty($request->tglinput)){
-
-            //     $splitDate2=explode(" - ",$request->tglinput);
-            //     $queryData->whereBetween('tr_mutasilimbah.tgl',array(  AppHelper::convertDateYmd($splitDate2[0]),  AppHelper::convertDateYmd($splitDate2[1])));
-
-            // } 
+ 
 
             $queryData = $queryData->get();
             return datatables()->of($queryData)
@@ -105,105 +97,16 @@ class PenyimpananLimbahController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    // public static function toTPSCategory($row)
-    // {
-
-    //     $category = [];
-    //     switch ($row['treatmen_limbah']) {
-    //         case 'Abu':
-    //             $dataJB = DB::table('tr_packing')->where('treatmen_limbah', 'Abu')->latest('no_packing')->first();
-    //             $dataTPS = DB::table('md_tps')->where('treatmen_limbah', 'Abu')->first();
-    //             if ($dataJB == null) {
-    //                 $nopack = 1;
-    //             } else {
-    //                 $nopack = $dataJB->no_packing;
-    //                 $nopack++;
-    //             }
-
-    //             array_push($category, $nopack, 'Abu - ' . $nopack, $dataTPS->id);
-
-    //             break;
-    //         case 'Sludge':
-
-    //             $dataJB = DB::table('tr_packing')->where('treatmen_limbah', 'Sludge')->latest('no_packing')->first();
-    //             $dataTPS = DB::table('md_tps')->where('treatmen_limbah', 'Sludge')->first();
-    //             if ($dataJB == null) {
-    //                 $nopack = 1;
-    //             } else {
-    //                 $nopack = $dataJB->no_packing;
-    //                 $nopack + 1;
-    //             }
-    //             array_push($category, $nopack + 1, 'Sludge - ' . $nopack, $dataTPS->id);
-    //             break;
-    //         case 'Sampah Kontaminasi':
-    //             $dataJB = DB::table('tr_packing')->where('treatmen_limbah', 'Sampah Kontaminasi')->latest('no_packing')->first();
-    //             $dataTPS = DB::table('md_tps')->where('treatmen_limbah', 'Sampah Kontaminasi')->first();
-    //             if ($dataJB == null) {
-    //                 $nopack = 1;
-    //             } else {
-    //                 $nopack = $dataJB->no_packing;
-    //                 $nopack + 1;
-    //             }
-    //             array_push($category, $nopack, 'SK - ' . $nopack, $dataTPS->id);
-    //             break;
-    //         case 'Kaleng':
-    //             $dataJB = DB::table('tr_packing')->where('treatmen_limbah', 'Kaleng')->latest('no_packing')->first();
-    //             $dataTPS = DB::table('md_tps')->where('treatmen_limbah', 'Kaleng')->first();
-    //             if ($dataJB == null) {
-    //                 $nopack = 1;
-    //             } else {
-    //                 $nopack = $dataJB->no_packing;
-    //                 $nopack++;
-    //             }
-    //             array_push($category, $nopack, 'Kaleng - ' . $nopack, $dataTPS->id);
-    //             break;
-    //         case 'Drum':
-    //             $dataJB = DB::table('tr_packing')->where('treatmen_limbah', 'Drum')->latest('no_packing')->first();
-    //             $dataTPS = DB::table('md_tps')->where('treatmen_limbah', 'Drum')->first();
-    //             if ($dataJB == null) {
-    //                 $nopack = 1;
-    //             } else {
-    //                 $nopack = $dataJB->no_packing;
-    //                 $nopack++;
-    //             }
-
-    //             array_push($category, $nopack, 'Drum - ' . $nopack, $dataTPS->id);
-    //             break;
-
-
-    //         default:
-    //             $dataJB = DB::table('tr_packing')->where('treatmen_limbah', 'Limbah Cair')->latest('no_packing')->first();
-    //             $dataTPS = DB::table('md_tps')->where('treatmen_limbah', 'Limbah Cair')->first();
-    //             // dd(count($dataJB));
-    //             if ($dataJB == null) {
-    //                 $nopack = 1;
-    //             } else {
-    //                 $nopack = $dataJB->no_packing;
-    //                 $nopack++;
-    //             }
-
-    //             array_push($category, $nopack, 'Cair - ' . $nopack, $dataTPS->id);
-    //             // dd($category);
-
-    //             break;
-    //     }
-    //     return $category;
-    // }
+ 
 
     public static function toPackingTPS($row)
     {
 
         $category = [];
-        $nopack = 0;
-        // tinggal packing per material limbah
-        // dd($row);
+        $nopack = 0; 
         $dataPacking = DB::table('tr_packing')
             ->where('packing_besar', $row['packing_besar'])
-            ->latest('no_packing')->first();
-        // dd($dataPacking);
-
-        // cari cara untuk max packing dan mengurangi TPS dari packing besar
-        // $dataTPS = DB::table('md_tps')->where('id', $row['tps'])->first();
+            ->latest('no_packing')->first(); 
         $dataParamPack = null;
         $username = AuthHelper::getAuthUser()[0]->email;
         $dateKadaluarsa = date('Y-m-d', strtotime("+ 90 day", strtotime($row['tgl'])));
@@ -461,9 +364,9 @@ class PenyimpananLimbahController extends Controller
                     'idstatus'            => $row['idstatus'],
                     'idasallimbah'            => $row['idasallimbah'],
                     'idtps'                 => $row['tps'],
-                    'tgl'            => $row['tgl'],
+                    'tgl'                => $row['tgl'],
                     'jumlah'            => $row['jumlah'],
-                    'pack_in'            => $row['pack_in'],
+                    'pack'            => $row['pack'],
                     'limbah3r'            => $row['limbah3r'],
                     'created_at'        => date('Y-m-d'),
                     'np_packer'                   => $row['np_packer'],
@@ -473,6 +376,7 @@ class PenyimpananLimbahController extends Controller
                 $dataHeader = array(
                     // 'id_transaksi'      =>  $row['id_transaksi'],
                     'idstatus'          =>  $row['idstatus'],
+                    'tgl_kadaluarsa'    => $dateKadaluarsa,
                     'updated_at'        => date('Y-m-d'),
                     'idtps'             => $row['tps'],
                     'changed_by'            => $username,
@@ -480,15 +384,12 @@ class PenyimpananLimbahController extends Controller
 
                 );
                 $dataTPS = array('idtps'  => $row['tps']);
-
-                // $nopack = $this->toTPSCategory($row);
-
+ 
                 $insertDetail = DB::table('tr_detailmutasi')->insert($dataDetail, true);
-                // $insertStatus = DB::table('tr_headermutasi')->where('id', $row['idheader'])->update($dataStatus, true);
-
+                
                 $updHeader = DB::table('tr_headermutasi')->where('id', $row['idheader'])->update($dataHeader);
-                // UpdtSaldoHelper::updateTambahSaldoTPS($row['tps'], $row['jumlah']);
-                UpdtSaldoHelper::updateTambahPackTPS($row['tps'], $row['pack_in']);
+                UpdtSaldoHelper::updateTambahSaldoTPS($row['tps'], $row['jumlah']);
+                UpdtSaldoHelper::updateTambahPackTPS($row['tps'], $row['pack']);
                 // $updHeader = DB::table('tr_headermutasi')->where('id', $row['idmutasi'])->update($dataTPS);
                 // UpdtSaldoHelper::updateTambahSaldoNamaLimbah($row['idlimbah'], $row['jumlah']);
             }
