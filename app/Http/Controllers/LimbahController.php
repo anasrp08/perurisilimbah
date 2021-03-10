@@ -351,7 +351,7 @@ class LimbahController extends Controller
         // ->where('fisik', $request->fisik)
         ->get();
         
-        $html .='<option value="-">-</option>';
+        $html .='<option value="">-</option>';
         foreach ($namalimbah as $nama) {
             $html .= '<option value="'.$nama->id.'">'.$nama->namalimbah.'</option>';
         }

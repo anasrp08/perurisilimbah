@@ -16,13 +16,13 @@
 
                             <label>Tanggal Permohonan</label>
                             <input type="text" id="entridate" name="entridate"
-                                class="entridate form-control float-right" autocomplete="off">
+                                class="entridate form-control" autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label>Asal Limbah</label>
                             <select name="limbahasal" id="limbahasal" class="form-control select2bs4"
                                 style="width: 100%;">
-                                <option value="" disabled selected>-Pilih Asal Limbah-</option>
+                                <option value=""  selected>-</option>
                                 @foreach($penghasilLimbah as $data)
                                 <option value="{{$data->id}}">{{$data->seksi}}</option>
                                 @endforeach
@@ -36,7 +36,7 @@
                             <label>Jenis Limbah</label>
                             <select name="jenislimbah" id="jenislimbah" class="form-control select2bs4"
                                 style="width: 100%;">
-                                <option value="" disabled selected>-Pilih Jenis Limbah-</option>
+                                <option value="" selected>-</option>
                                 @foreach($jenisLimbah as $data)
                                 <option value="{{$data->id}}">{{$data->jenislimbah}} </option>
                                 @endforeach
@@ -45,7 +45,7 @@
                         <div class="form-group">
                             <label>Status</label>
                             <select name="status" id="status" class="form-control select2bs4" style="width: 100%;">
-                                <option value="" disabled selected>-Pilih Status-</option>
+                                <option value=""  selected>-</option>
                                 @foreach($status as $data)
                                 <option value="{{$data->id}}">{{$data->keterangan}} </option>
                                 @endforeach
@@ -74,7 +74,7 @@
                             <select name="namalimbah" id="namalimbah" class="form-control select2bs4"
                                 style="width: 100%;">
                                 {{-- <option value="-" selected="selected">Pilih Salah Satu</option> --}}
-                                <option value="" disabled selected>-Pilih Nama Limbah-</option>
+                                <option value=""  selected>-</option>
                                 @foreach($namaLimbah as $data)
                                 <option value="{{$data->id}}">{{$data->namalimbah}} </option>
                                 @endforeach

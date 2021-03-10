@@ -149,7 +149,7 @@
 
             columnDefs: [{
                     className: 'text-center',
-                    targets: [1,4,5,6,7]
+                    targets: [1,5,6,7]
                 },
                 {
                     className: 'dt-body-nowrap',
@@ -171,11 +171,9 @@
                 },
                 data: function (d) {
                     d.status=$('#status').val()
-                    d.namalimbah=$('#namalimbah').val()
-                    // d.np=$('#np').val()
+                    d.namalimbah=$('#namalimbah').val() 
                     d.jenislimbah=$('#jenislimbah').val()
-                    d.limbahasal=$('#limbahasal').val()
-                    // d.entridate=$('#entridate').val()
+                    d.limbahasal=$('#limbahasal').val() 
 
                 }
             },
@@ -222,17 +220,7 @@
                     data: 'jenislimbah',
                     name: 'jenislimbah',
 
-                },
-                // {
-                //     data: 'treatmen_limbah',
-                //     name: 'treatmen_limbah',
-
-                // },
-                // {
-                //     data: 'namatps',
-                //     name: 'namatps',
-
-                // },
+                }, 
                  
                 
                 {

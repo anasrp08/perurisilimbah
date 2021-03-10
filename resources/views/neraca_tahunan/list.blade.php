@@ -71,15 +71,15 @@
                     <label>Nama Limbah</label>
                     <select name="namalimbah" id="namalimbah" class="form-control select2bs4" style="width: 100%;">
                         <option value="" disabled selected>-</option>
-                        <option value="1,2,3">Limbah Wiping Solution</option>
-                        <option value="7">Tinta Ex Cetak Dalam Kemesan Drum @ 200 Liter</option>
-                        <option value="8">Limbah Sisiran LKU (Potongan Karung)</option>
-                        <option value="9">Limbah Punch Bintang</option>
-                        <option value="25">Lembar Kertas Sementara (LKS)</option>
-                        <option value="34">Sludge IPAL</option>
-                        <option value="35">Kain majun bekas (used rags) dan yang sejenis</option>
-                        <option value="38">Slag atau bottom ash insinerator</option>
-                        <option value="39">Lampu TL, Printer, PCB</option>
+                        <option value="1,2,3">Limbah Wiping Solution - Ton</option>
+                        <option value="7">Tinta Ex Cetak Dalam Kemesan Drum @ 200 Liter - Ton</option>
+                        <option value="8">Limbah Sisiran LKU (Potongan Karung) - Ton</option>
+                        <option value="9">Limbah Punch Bintang - Ton</option>
+                        <option value="25">Lembar Kertas Sementara (LKS) - Ton</option>
+                        <option value="34">Sludge IPAL - Ton</option>
+                        <option value="35">Kain majun bekas (used rags) dan yang sejenis - M<sup>3</sup></option>
+                        <option value="38">Slag atau bottom ash insinerator - Ton</option>
+                        <option value="39">Lampu TL, Printer, PCB - Kg</option>
                         {{-- <option value="2021">2021</option>
                     <option value="2020">2020</option> --}}
                         {{-- @foreach($tahun as $data)
@@ -133,7 +133,7 @@
 
         // })
         $('#filter').click(function () {
-            console.log($('#namalimbah').val())
+          
             if($('#namalimbah').val() ==null){
                 toastr.warning('Belum Memilih Nama Limbah', 'Peringatan', {
                             timeOut: 5000
@@ -165,7 +165,7 @@
                 extend: 'pdfHtml5',
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
-                title: 'Laporan Neraca Limbah Periode '+  $('#tahun_neraca').val(),
+                title: 'Laporan Neraca Limbah '+$('#namalimbah option:selected').text()+'\n'+' Periode '+  $('#tahun_neraca').val(),
                 download: 'open',
                 // exportOptions: {
 				// 		columns: ':visible',
@@ -176,7 +176,7 @@
                 extend: 'excel',
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
-                title: 'Laporan Neraca Limbah Periode '+  $('#tahun_neraca').val(),
+                title: 'Laporan Neraca Limbah '+$('#namalimbah option:selected').text()+'  Periode '+  $('#tahun_neraca').val(),
                 download: 'open'
             },
             

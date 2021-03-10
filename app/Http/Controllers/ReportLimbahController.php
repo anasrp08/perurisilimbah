@@ -875,7 +875,7 @@ class ReportLimbahController extends Controller
                 ->join('tr_detailmutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
                 ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id')
                 ->join('md_jenislimbah', 'tr_detailmutasi.idjenislimbah', '=', 'md_jenislimbah.id')
-                ->join('md_penghasillimbah', 'tr_detailmutasi.idlimbah', '=', 'md_penghasillimbah.id')
+                ->join('md_penghasillimbah', 'tr_detailmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
                 ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
                 // ->join('md_tps', 'tr_detailmutasi.idtps', '=', 'md_tps.id')
                 ->select('tr_detailmutasi.*', 
@@ -884,42 +884,39 @@ class ReportLimbahController extends Controller
                 'tr_headermutasi.np_perevisi',
                 'tr_headermutasi.np_packer',
                 'tr_headermutasi.np_pemroses',
+                'tr_detailmutasi.idlimbah',
+                'tr_detailmutasi.idstatus',
+                'tr_detailmutasi.idjenislimbah', 
+                'tr_headermutasi.idasallimbah as headerasal',
+                'tr_detailmutasi.idasallimbah', 
                 'md_namalimbah.id as idnama',
                 'md_namalimbah.namalimbah', 
-                'md_namalimbah.satuan', 
+                'md_namalimbah.satuan',  
                 'md_namalimbah.jenislimbah', 
                 'md_namalimbah.treatmen_limbah', 
-                'md_penghasillimbah.id as idseksi', 
-                'md_penghasillimbah.seksi', 
-                'md_statusmutasi.id as idmdstatus',
-                'md_statusmutasi.keterangan as status',
-                )
+                'md_penghasillimbah.seksi',  
+                'md_statusmutasi.keterangan as status')
                 ->orderBy('tr_detailmutasi.created_at', 'desc');
 
             // if (!empty($request->tglinput)) {
 
             //     $splitDate2 = explode(" - ", $request->tglinput);
             //     $queryData->whereBetween('tr_mutasilimbah.tgl', array(AppHelper::convertDateYmd($splitDate2[0]),  AppHelper::convertDateYmd($splitDate2[1])));
-            // }
-            $queryData = $queryData->get();
+            // } 
+            $queryData = $queryData->get(); 
             return datatables()->of($queryData)
                 ->filter(function ($instance) use ($request) {
                     if (!empty($request->get('status'))) {
                         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                            return Str::contains($row['idmdstatus'], $request->get('status')) ? true : false;
+                            return Str::contains($row['idstatus'], $request->get('status')) ? true : false;
                         });
                     }
                     if (!empty($request->get('namalimbah'))) {
                         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                            return Str::contains($row['idnama'], $request->get('namalimbah')) ? true : false;
+                            return Str::contains($row['idlimbah'], $request->get('namalimbah')) ? true : false;
                         });
                     }
-
-                    // if (!empty($request->get('np'))) {
-                    //     $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                    //         return Str::contains($row['np_pemohon'], $request->get('np')) ? true : false;
-                    //     });
-                    // }
+ 
                     if (!empty($request->get('jenislimbah'))) {
                         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
                             return Str::contains($row['idjenislimbah'], $request->get('jenislimbah')) ? true : false;
@@ -927,23 +924,12 @@ class ReportLimbahController extends Controller
                     }
                     if (!empty($request->get('limbahasal'))) {
                         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                            return Str::contains($row['idseksi'], $request->get('limbahasal')) ? true : false;
+                            return Str::contains($row['idasallimbah'], $request->get('limbahasal')) ? true : false;
                         });
                     }
-                    // if (!empty($request->get('tpslimbah'))) {
-                    //     $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                    //         return Str::contains($row['tps'], $request->get('tpslimbah')) ? true : false;
-                    //     });
-                    // }
-                    // if (!empty($request->get('limbah3r'))) {
-                    //     $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                    //         return Str::contains($row['limbah3r'], $request->get('limbah3r')) ? true : false;
-                    //     });
-                    // }
+                     
                 })
-                ->addIndexColumn()
-                // ->addColumn('action', 'action_butt_limbah')
-                // ->rawColumns(['action'])
+                ->addIndexColumn() 
 
                 ->make(true);
         }
