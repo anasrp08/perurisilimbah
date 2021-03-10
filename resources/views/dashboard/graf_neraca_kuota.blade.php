@@ -22,127 +22,109 @@
                             @foreach($tahun as $data)
                             <option value="{{$data}}">{{$data}}</option>
                             @endforeach
-                        </select> 
+                        </select>
                     </div>
 
-                </div> 
-                <div class="col-md-4" > 
+                </div>
+
+
+                <div class="col-md-1">
                     <button style="position: absolute;bottom: 17px;" name="display_kuota" id="display_kuota"
                         class="btn btn-primary">Tampilkan</button>
 
 
-            </div>
-            
-            {{-- <div class="col-md-4">
-                <div class="form-group">
-                    <label>Penghasil Limbah</label>
-                    <select name="limbahasal" id="limbahasal" class="form-control select2bs4" style="width: 100%;">
-                        <option value="" disabled selected>-Pilih Asal Limbah-</option>
-                        @foreach($penghasilLimbah as $data)
-                        <option value="{{$data->id}}">{{$data->seksi}}</option>
-                        @endforeach
-                    </select>
+
                 </div>
-                <div class="text-center">
-                    <button name="display_penghasil" id="display_penghasil" class="btn btn-primary">Tampilkan</button>
-                </div>
+                {{-- <div class="col-md-3">
+                    <button style="position: absolute;bottom: 17px;" name="lihat_detail" id="lihat_detail"
+                        class="btn btn-success">Lihat Detail</button>
+
+
+
+                </div> --}}
             </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>Nama Limbah</label>
-                    <select name="namalimbah" id="namalimbah" class="form-control select2bs4" style="width: 100%;">
-                        <option value="" disabled selected>-Pilih Nama Limbah-</option>
-                        @foreach($namaLimbah as $data)
-                        <option value="{{$data->id}}">{{$data->namalimbah}}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div> --}}
-            
-             
-        </div>
-        <div class="row">
-            <div class="col-md-8">
-                <div class="chart tab-pane" id="revenue-chart" style="position: relative;">
-                    <canvas id="graf_kuota_cair" ></canvas>
-                    <div id="js-legend" class="chart-legend"></div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="chart tab-pane" id="revenue-chart" style="position: relative;">
-                    <canvas id="cair"></canvas>
-                    <div id="js-legend" class="chart-legend"></div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-8">
-            <div class="chart tab-pane" id="sales-chart" style="position: relative;">
-                <canvas id="graf_kuota_sk" ></canvas>
-                <div id="js-legend" class="chart-legend"></div>
-            </div>
-        </div>
-        
-        <div class="col-md-4">
-            <div class="chart tab-pane" id="sales-chart" style="position: relative;">
-                <canvas id="sk"></canvas>
-                <div id="js-legend" class="chart-legend"></div>
-            </div>
-        </div>
-    </div>
             <div class="row">
                 <div class="col-md-8">
-                <div class="chart tab-pane" id="sales-chart" style="position: relative;">
-                    <canvas id="graf_kuota_sludge" ></canvas>
-                    <div id="js-legend" class="chart-legend"></div>
+                    <div class="chart tab-pane" id="revenue-chart" style="position: relative;">
+                        <canvas id="graf_kuota_cair"></canvas>
+                        <div id="js-legend" class="chart-legend"></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="chart tab-pane" id="revenue-chart" style="position: relative;">
+                        <canvas id="cair"></canvas>
+                        <div id="js-legend" class="chart-legend"></div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="chart tab-pane" id="sales-chart" style="position: relative;">
-                    <canvas id="sludge"></canvas>
-                    <div id="js-legend" class="chart-legend"></div>
-                </div>
-            </div>
-            </div>
-           
-            <div class="row">
-                <div class="col-md-8"> 
-                <div class="chart tab-pane" id="sales-chart" style="position: relative;">
-                    <canvas id="graf_kuota_abu" ></canvas>
-                    <div id="js-legend" class="chart-legend"></div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="chart tab-pane" id="sales-chart" style="position: relative;">
-                    <canvas id="abu"></canvas>
-                    <div id="js-legend" class="chart-legend"></div>
-                </div>
-            </div>
-        </div>
             <div class="row">
                 <div class="col-md-8">
-                <div class="chart tab-pane" id="sales-chart" style="position: relative;">
-                    <canvas id="graf_kuota_TL" ></canvas>
-                    <div id="js-legend" class="chart-legend"></div>
+                    <div class="chart tab-pane" id="sales-chart" style="position: relative;">
+                        <canvas id="graf_kuota_sk"></canvas>
+                        <div id="js-legend" class="chart-legend"></div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="chart tab-pane" id="sales-chart" style="position: relative;">
+                        <canvas id="sk"></canvas>
+                        <div id="js-legend" class="chart-legend"></div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="chart tab-pane" id="sales-chart" style="position: relative;">
-                    <canvas id="lamputl"></canvas>
-                    <div id="js-legend" class="chart-legend"></div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="chart tab-pane" id="sales-chart" style="position: relative;">
+                        <canvas id="graf_kuota_sludge"></canvas>
+                        <div id="js-legend" class="chart-legend"></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="chart tab-pane" id="sales-chart" style="position: relative;">
+                        <canvas id="sludge"></canvas>
+                        <div id="js-legend" class="chart-legend"></div>
+                    </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="chart tab-pane" id="sales-chart" style="position: relative;">
+                        <canvas id="graf_kuota_abu"></canvas>
+                        <div id="js-legend" class="chart-legend"></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="chart tab-pane" id="sales-chart" style="position: relative;">
+                        <canvas id="abu"></canvas>
+                        <div id="js-legend" class="chart-legend"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="chart tab-pane" id="sales-chart" style="position: relative;">
+                        <canvas id="graf_kuota_TL"></canvas>
+                        <div id="js-legend" class="chart-legend"></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="chart tab-pane" id="sales-chart" style="position: relative;">
+                        <canvas id="lamputl"></canvas>
+                        <div id="js-legend" class="chart-legend"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
-            {{-- <div class="tab-content p-0"> --}}
-            <!-- Morris chart - Sales -->
-            {{-- <div class="chart tab-pane active" id="revenue-chart" style="position: relative; "> --}}
-            
-            {{-- </div> --}}
+        {{-- <div class="tab-content p-0"> --}}
+        <!-- Morris chart - Sales -->
+        {{-- <div class="chart tab-pane active" id="revenue-chart" style="position: relative; "> --}}
 
-            {{-- </div> --}}
-        </div><!-- /.card-body -->
+        {{-- </div> --}}
+
+        {{-- </div> --}}
+    </div><!-- /.card-body -->
     </div>
     {{-- <div class="row justify-content-center">
   

@@ -210,7 +210,7 @@ class PemrosesanLimbahController extends Controller
                 // $insertPacking = DB::table('tr_packing')->where('idmutasi', $row['idmutasi'])->update($dataPacking);
 
 
-                // UpdtSaldoHelper::updateKurangSaldoTPS($row['idtps'], $row['jmlh_proses']);
+                UpdtSaldoHelper::updateKurangSaldoTPS($row['idtps'], $row['jmlh_proses']);
                 UpdtSaldoHelper::updateKurangSaldoNamaLimbah($row['idlimbah'], $row['jmlh_proses']);
                 UpdtSaldoHelper::updateKurangPackTPS($row['idtps'], $jmlh_pack);
                 UpdtSaldoHelper::updateKurangPackNamaLimbah($row['idlimbah'], $jmlh_pack);

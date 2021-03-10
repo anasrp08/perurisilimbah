@@ -368,6 +368,7 @@ class PenyimpananLimbahController extends Controller
                     'jumlah'            => $row['jumlah'],
                     'pack'            => $row['pack'],
                     'limbah3r'            => $row['limbah3r'],
+                    'idsatuan'            => $row['idsatuan'],
                     'created_at'        => date('Y-m-d'),
                     'np_packer'                   => $row['np_packer'],
                     'created_by'            => $username,

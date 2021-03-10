@@ -31,8 +31,8 @@ class UpdtSaldoHelper
     }
     public static function updateTambahSaldoTPS($tps,$saldo){
         $saldoTPS=DB::table('md_tps')->where('id','=',$tps)->first();
-        // dd($queryNamaLimbah);
-        $jumlah=$saldoTPS->saldo;
+        // dd($saldoTPS);
+        $jumlah=$saldoTPS->saldo_satuan_kecil;
         $jumlah=$jumlah+(int)$saldo; 
         $updateJumlah = array ( 
             'saldo_satuan_kecil'	        =>  (int)$jumlah, 
@@ -44,7 +44,7 @@ class UpdtSaldoHelper
     public static function updateKurangSaldoTPS($tps,$saldo){
         $saldoTPS=DB::table('md_tps')->where('id','=',$tps)->first();
         // dd($queryNamaLimbah);
-        $jumlah=$saldoTPS->saldo;
+        $jumlah=$saldoTPS->saldo_satuan_kecil;
         $jumlah=$jumlah-(int)$saldo; 
         $updateJumlah = array ( 
             'saldo_satuan_kecil'	        =>  (int)$jumlah, 

@@ -373,7 +373,7 @@
                             });
                         }
                         if (data.success) {
-                            $('#save').text('Saveproses menyimpan...');
+                            $('#save').text('Save');
                             $('#save').prop('disabled',false);
                             toastr.success(data.success, 'Tersimpan', {
                                 timeOut: 3000

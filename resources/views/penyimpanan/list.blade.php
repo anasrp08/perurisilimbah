@@ -272,6 +272,7 @@
                             obj.packing_besar = data1[i].packing_besar;
                             obj.idjenislimbah = data1[i].idjenislimbah;
                             obj.jumlah = data1[i].jumlah_in; 
+                            obj.idsatuan = data1[i].idsatuan; 
                             obj.max_packing = data1[i].max_packing; 
                             obj.np_packer = $('#np_packer').val();
                             output.push(obj)

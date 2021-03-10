@@ -127,6 +127,12 @@
         $('#tahun').val(moment().format('YYYY')).change()
         $('#tahun_kuota').val(moment().format('YYYY')).change()
         $('#tahun_neraca').val(moment().format('YYYY')).change()
+        $('#lihat_detail').on('click',function(){
+            // localStorage.setItem('tahun',$('#tahun_neraca').val())
+            var url = '{{ route("neraca_tahunan.list")}}';
+            // url = url.replace(':tahun', $('#tahun_neraca').val());
+            document.location.href = url;
+        })
         dashboardNeracaKuota()
 
         function dashboardNeracaKuota() {

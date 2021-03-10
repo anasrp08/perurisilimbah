@@ -21,19 +21,14 @@
     <link rel="stylesheet" href="{{ asset('/adminlte3/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('/adminlte3/plugins/toastr/toastr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/adminlte3/plugins/daterangepicker/daterangepicker.css') }}">
-
-    
-
     <link rel="stylesheet" href="{{ asset('/adminlte3/plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
-    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.1/css/select.bootstrap4.min.css">
-    
-    
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.bootstrap4.min.css">
-    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.bootstrap4.min.css"> --}}
-
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.1/css/select.bootstrap4.min.css">     
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.bootstrap4.min.css"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/rowgroup/1.1.2/css/rowGroup.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css">
+   
     
 
     <!-- Google Font: Source Sans Pro -->
@@ -65,25 +60,7 @@
                         <span class="badge badge-danger navbar-badge" id="jumlahnotif">0</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right "id='divkapasitas'>
-                        {{-- <span class="dropdown-item dropdown-header" id='jmlhnotif'>0</span> --}}
-                        {{-- <div class="dropdown-divider"></div> --}}
-                        {{-- <a href="#" class="dropdown-item" id='warning_msg'> --}}
-                            {{-- <i class="fas fa-envelope mr-2"></i> - --}}
-                            {{-- <span class="float-right text-muted text-sm">3 mins</span> --}}
-                        {{-- </a> --}}
-                        {{-- <div class="dropdown-divider"></div> --}}
-                        {{-- <a href="#" class="dropdown-item" id='danger_msg'> --}}
-                            {{-- <i class="fas fa-users mr-2"></i> - --}}
-                            {{-- <span class="float-right text-muted text-sm">12 hours</span> --}}
-                        {{-- </a> --}}
-                        {{-- <div class="dropdown-divider" ></div> --}}
-                        {{-- <a href="#" class="dropdown-item">
-                            <i class="fas fa-file mr-2" id='kapasitas'></i> 3 new reports --}}
-                            {{-- <span class="float-right text-muted text-sm">2 days</span> --}}
-                        {{-- </a> --}}
-                        {{-- <div class="dropdown-divider"></div> --}}
-                        {{-- <a href="{{route('pemrosesan.listview')}}" class="dropdown-item dropdown-footer">Lihat Semua
-                            Data</a> --}}
+                        
                     </div>
                 </li>
                 <li class="nav-item">
@@ -222,8 +199,7 @@
         <script src="{{ asset('/adminlte3/dist/js/demo.js') }}"></script>
         <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
         <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="{{ asset('/adminlte3/plugins/toastr/toastr.min.js') }}"></script> 
-
+        <script type="text/javascript" src="{{ asset('/adminlte3/plugins/toastr/toastr.min.js') }}"></script>  
         <script src="{{ asset('/adminlte3/plugins/datatables/jquery.dataTables.js') }}"></script>
         <script src="{{ asset('/adminlte3/plugins/datatables-bs4/js/dataTables.bootstrap4.js') }}"></script>
        
@@ -238,8 +214,13 @@
         <script src="https://cdn.datatables.net/rowgroup/1.1.2/js/dataTables.rowGroup.min.js"></script>
         <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
         {{-- <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.bootstrap4.min.js"></script> --}}
-        <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/1.8.2/autoNumeric.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script> 
+        <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script> 
+       
         <script>
             $(document).ready(function () {
                 var pProv = {
@@ -325,13 +306,7 @@
             })
 
         </script>
-
-
-
-
-        {{-- <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> --}}
-
-        <!-- Page specific script -->
+ 
 
         @yield('scripts')
 </body>

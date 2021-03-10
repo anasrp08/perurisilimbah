@@ -81,6 +81,8 @@ Route::post('penghasil/daftar', 'ReportLimbahController@indexPenghasil')->name('
 Route::get('histori/viewlist', 'ReportLimbahController@viewHistory')->name('history.listview');
 Route::post('histori/data', 'ReportLimbahController@indexHistory')->name('history.data');
 
+Route::get('report_neraca/listview/', 'NeracaTahunanController@viewIndexNeracaTahunan')->name('neraca_tahunan.list');
+Route::post('report_neraca/listview', 'NeracaTahunanController@index')->name('neraca_tahunan.data');
 
 
 

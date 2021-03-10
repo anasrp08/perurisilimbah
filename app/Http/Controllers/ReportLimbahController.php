@@ -616,8 +616,7 @@ class ReportLimbahController extends Controller
         }
     }
     public function updateKonsumsi(Request $request)
-    {
-        dd($request->all());
+    { 
         $error = null;
         $rules = array(
             'konsumsi' => 'required',

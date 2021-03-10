@@ -62,7 +62,7 @@
 <!-- modal -->
 @include('pemohon.f_revisi')
 @include('pemohon.f_proses_lgsg')
-{{-- @include('pemohon.f_confirmnp') --}}
+@include('pemohon.f_confirmnp')
 
 
 {{-- @include('layouts.confimdelete') --}}
@@ -363,8 +363,7 @@
                         var isProsesLgsg = true
                         console.log(dataSelected)
                         for (i = 0; i < dataSelected.count(); i++) {
-                            if (dataSelected[i].is_lgsg_proses == '' || dataSelected[i]
-                                .is_lgsg_proses == null) {
+                            if (dataSelected[i].is_lgsg_proses == '' || dataSelected[i].is_lgsg_proses == null || dataSelected[i].is_lgsg_proses == 'NULL') {
 
                                 toastr.warning(
                                     'Ada limbah yang tidak diijinkan untuk proses langsung',
