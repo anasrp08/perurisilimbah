@@ -9,8 +9,11 @@
 <body>
     <style type="text/css">
         .page-break {
-            page-break-after: always;
+            page-break-before: always;
         }
+        /* div.breakNow {
+            page-break-after: always;
+        } */
 
         table.center {
             margin-left: auto;
@@ -73,10 +76,10 @@
         td.headerow2left {
             font-size: 13pt;
             text-align: right;
-            padding-right: 40px; 
+            padding-right: 40px;
             /* border:2px solid black; */
             margin-left: 10rem;
-            
+
         }
 
         td.headerow2right {
@@ -125,6 +128,7 @@
             padding-right: 5px;
             text-align: center;
         }
+
         td.namalimbah {
             font-size: 12pt;
             padding-top: 5px;
@@ -133,6 +137,7 @@
             padding-right: 5px;
             text-align: left;
         }
+
         td.no {
             font-size: 12pt;
             padding-top: 5px;
@@ -146,6 +151,7 @@
             border-left-width: thin;
             text-align: center;
         }
+
         td.no {
             font-size: 12pt;
             padding-top: 5px;
@@ -159,6 +165,7 @@
             border-right-width: thin;
             text-align: center;
         }
+
         td.keterangan {
             font-size: 12pt;
             padding-top: 5px;
@@ -168,11 +175,11 @@
             /* border: 1px solid black; */
             border-right-style: solid;
             border-right-width: thin;
-            
+
             text-align: center;
         }
 
-        
+
         td.ttdbottom {
             font-size: 12pt;
             /* padding-top: 10px;
@@ -260,11 +267,12 @@
             min-width: 50%;
             color: yellow;
         }
+
         .background1 {
             position: absolute;
             z-index: 0;
             background: white;
-            display: block; 
+            display: block;
             color: yellow;
         }
 
@@ -283,14 +291,14 @@
 
     </style>
 
-    <div id="background"> 
-         <img class='background'src="{{ public_path('/img/perurilogo.jpg') }}" alt="AdminLTE Logo" width="700px" height="800px" 
-    style="opacity: .10;margin-top: 100px;">
+<div id="background">
+    <img class='background' src="{{ public_path('/img/perurilogo.jpg') }}" alt="AdminLTE Logo" width="700px"
+        height="800px" style="opacity: .10;margin-top: 100px;">
 
-    <img class='background1' src="{{ public_path('/img/validbiru1.png') }}" alt="AdminLTE Logo" width="250px" height="75px" 
-       style="opacity: .5;margin-top: 100px;margin-left:200px;bottom: 150;transform: rotate(-30deg)">
-    </div> 
-    <div id='content'> 
+    <img class='background1' src="{{ public_path('/img/validbiru1.png') }}" alt="AdminLTE Logo" width="250px"
+        height="75px" style="opacity: .5;margin-top: 100px;margin-left:200px;bottom: 150;transform: rotate(-30deg)">
+</div>
+    <div id='content'>
         <table class="table">
             <tr>
                 <td class='logokiri' colspan="4">
@@ -310,7 +318,7 @@
                 <td class="headerow2left" colspan="6">
                     Nomor :
                 </td>
-                
+
 
                 <td class="headerow2right" colspan="4">
                     {{$no_surat}}
@@ -330,7 +338,7 @@
         <table class="table2">
 
 
-             
+
             <tr>
                 <td class="headerow3left" colspan="3">
                     Jenis Limbah
@@ -375,7 +383,7 @@
                     :
                 </td>
                 <td class="headerow3right" colspan="4">
-            {{$maksud}}
+                    {{$maksud}}
                 </td>
 
             </tr>
@@ -386,192 +394,195 @@
            
         </tr> --}}
         </table>
-        <hr class="new1">
-       
+        <hr class="new1"> 
+        
         <table class="table1" style="width: 100%;">
-
             <tr>
-
                 <th class="headeruji" style='width:3%;' colspan="1">No.</th>
                 <th class="headeruji" colspan="5">Nama Barang</th>
                 <th class="headeruji" style='width:15%;' colspan="2">Jumlah</th>
-                <th class="headeruji" style='width:20%;' colspan="2">Keterangan</th> 
+                <th class="headeruji" style='width:20%;' colspan="2">Keterangan</th>
             </tr>
-            @foreach($listlimbah as $data)
+            @php($i=1)
+            <tbody>
+                @foreach($listlimbah as $data) 
+                <tr>
+                    {{-- $loop->iteration --}}
+                    <td class="no">{{$loop->iteration}}</td>
+                    <td class="namalimbah" colspan="5">{{$data->namalimbah}}</td>
+                    <td class="no" colspan="2">{{$data->jumlah_in}}</td>
+                    <td class="keterangan" colspan="2">{{$data->keterangan}}</td>
+                </tr>
+                
+                
+                @if( $i % 20 == 0 )
+            </tbody>
+        </table>
+        <div class="page-break">  
+            <div id="background">
+                <img class='background' src="{{ public_path('/img/perurilogo.jpg') }}" alt="AdminLTE Logo" width="700px"
+                    height="800px" style="opacity: .10;margin-top: 100px;">
+        
+                <img class='background1' src="{{ public_path('/img/validbiru1.png') }}" alt="AdminLTE Logo" width="250px"
+                    height="75px" style="opacity: .5;margin-top: 100px;margin-left:200px;bottom: 150;transform: rotate(-30deg)">
+            </div>
+        </div>
+        <table class="table1" style="width: 100%;">
             <tr>
-
+                <th class="headeruji" style='width:3%;' colspan="1">No.</th>
+                <th class="headeruji" colspan="5">Nama Barang</th>
+                <th class="headeruji" style='width:15%;' colspan="2">Jumlah</th>
+                <th class="headeruji" style='width:20%;' colspan="2">Keterangan</th>
+            </tr>
+            <tr>
+                {{-- $loop->iteration --}}
                 <td class="no">{{$loop->iteration}}</td>
                 <td class="namalimbah" colspan="5">{{$data->namalimbah}}</td>
-                <td class="no" colspan="2">{{$data->jumlah}}</td>
+                <td class="no" colspan="2">{{$data->jumlah_in}}</td>
                 <td class="keterangan" colspan="2">{{$data->keterangan}}</td>
-
-
             </tr>
-            @endforeach
-            {{$length= 29 - count($listlimbah)}}
-            
-            @for ($i = 0; $i <$length ; $i++)
-            <tr>
+        @endif
+        @php($i++)
+        @endforeach
+    </table>
 
-                <td class="no"></td>
-                <td class="namalimbah" colspan="5"></td>
-                <td class="no" colspan="2"></td>
-                <td class="keterangan" colspan="2"></td>
+        <div style="bottom:100;">
+            <table class="table1" style="width: 95,9%;position: absolute;bottom:150;">
 
+                <tr>
+                    <th class="ttd" colspan="4">Yang Menerima,</th>
+                    <th class="ttd" colspan="4">Pengawas,</th>
+                    <th class="ttd" colspan="4">Yang Menyerahkan,</th>
 
-            </tr>
-@endfor
-            {{-- @if(count($listlimbah))
-            @endif --}}
-            {{-- 14 --}}
-            
-            
+                </tr>
+                <tr>
+                    <td class="ttdbottom" style=width:1rem;">
+                        Nama
+                    </td>
+                    <td class="ttdbottom" style=width:0.5rem;">
+                        :
+                    </td>
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                        {{$ttdPenerima->nama}}
+                    </td>
+                    <td class="ttdbottom" style=width:1rem;">
+                        Nama
+                    </td>
+                    <td class="ttdbottom" style=width:0.5rem;">
+                        :
+                    </td>
+                    @if($ttdPengawas == null)
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
 
-        </table>
-        <div style="bottom:50;">
-        <table class="table1" style="width: 95,9%;position: absolute;bottom:150;">
+                    </td>
+                    @else
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                        {{$ttdPengawas->nama}}
+                    </td>
+                    @endif
+                    {{-- </td> --}}
+                    {{-- <td class="itemuji"> --}}
+                    <td class="ttdbottom" style=width:1rem;">
+                        Nama
+                    </td>
+                    <td class="ttdbottom" style=width:0.5rem;">
+                        :
+                    </td>
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                        {{$ttdMenyerahkan->nama}}
+                    </td>
 
-            <tr>
-                <th class="ttd" colspan="4">Yang Menerima,</th>
-                <th class="ttd" colspan="4">Pengawas,</th>
-                <th class="ttd" colspan="4">Yang Menyerahkan,</th>
+                </tr>
+                <tr>
+                    <td class="ttdbottom" style=width:1rem;">
+                        NP
+                    </td>
+                    <td class="ttdbottom" style=width:0.5rem;">
+                        :
+                    </td>
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                        {{$ttdPenerima->np}}
+                    </td>
+                    {{-- </td> --}}
+                    {{-- <td class="itemuji"> --}}
+                    <td class="ttdbottom" style=width:1rem;">
+                        NP
+                    </td>
+                    <td class="ttdbottom" style=width:0.5rem;">
+                        :
+                    </td>
+                    @if($ttdPengawas == null)
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
 
-            </tr>
-            <tr>
-                {{-- <td class="itemuji"> --}}
-                <td class="ttdbottom" style=width:1rem;">
-                    Nama
-                </td>
-                <td class="ttdbottom" style=width:0.5rem;">
-                    :
-                </td>
-                <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
-                    {{$ttdPenerima->nama}}
-                </td>
-                {{-- </td> --}}
-                {{-- <td class="itemuji"> --}}
-                <td class="ttdbottom" style=width:1rem;">
-                    Nama
-                </td>
-                <td class="ttdbottom" style=width:0.5rem;">
-                    :
-                </td>
-                @if($ttdPengawas == null)
-                <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
-                    
-                </td>
-                @else
-                <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
-                    {{$ttdPengawas->nama}}
-                </td>
-                @endif 
-                {{-- </td> --}}
-                {{-- <td class="itemuji"> --}}
-                <td class="ttdbottom" style=width:1rem;">
-                    Nama
-                </td>
-                <td class="ttdbottom" style=width:0.5rem;">
-                    :
-                </td>
-                <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
-                    {{$ttdMenyerahkan->nama}}
-                </td>
-                {{-- </td> --}}
+                    </td>
+                    @else
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                        {{$ttdPengawas->np}}
+                    </td>
+                    @endif
+                    {{-- </td> --}}
+                    {{-- <td class="itemuji"> --}}
+                    <td class="ttdbottom" style=width:1rem;">
+                        NP
+                    </td>
+                    <td class="ttdbottom" style=width:0.5rem;">
+                        :
+                    </td>
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                        {{$ttdMenyerahkan->np}}
+                    </td>
+                    {{-- </td> --}}
 
-            </tr>
-            <tr>
-                {{-- <td class="itemuji"> --}}
-                <td class="ttdbottom" style=width:1rem;">
-                    NP
-                </td>
-                <td class="ttdbottom" style=width:0.5rem;">
-                    :
-                </td>
-                <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
-                    {{$ttdPenerima->np}}
-                </td>
-                {{-- </td> --}}
-                {{-- <td class="itemuji"> --}}
-                <td class="ttdbottom" style=width:1rem;">
-                    NP
-                </td>
-                <td class="ttdbottom" style=width:0.5rem;">
-                    :
-                </td>
-                @if($ttdPengawas == null)
-                <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
-                    
-                </td>
-                @else
-                <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
-                    {{$ttdPengawas->np}}
-                </td>
-                @endif
-                {{-- </td> --}}
-                {{-- <td class="itemuji"> --}}
-                <td class="ttdbottom" style=width:1rem;">
-                    NP
-                </td>
-                <td class="ttdbottom" style=width:0.5rem;">
-                    :
-                </td>
-                <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
-                    {{$ttdMenyerahkan->np}}
-                </td>
-                {{-- </td> --}}
+                </tr>
+                <tr>
+                    {{-- <td class="itemuji"> --}}
+                    <td class="ttdbottom" style=width:1rem;">
+                        Unit Kerja
+                    </td>
+                    <td class="ttdbottom" style=width:0.5rem;">
+                        :
+                    </td>
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                        {{$ttdPenerima->unitkerja}}
+                    </td>
+                    {{-- </td> --}}
+                    {{-- <td class="itemuji"> --}}
+                    <td class="ttdbottom" style=width:1rem;">
+                        Unit Kerja
+                    </td>
+                    <td class="ttdbottom" style=width:0.5rem;">
+                        :
+                    </td>
+                    @if($ttdPengawas == null)
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
 
-            </tr>
-            <tr>
-                {{-- <td class="itemuji"> --}}
-                <td class="ttdbottom" style=width:1rem;">
-                    Unit Kerja
-                </td>
-                <td class="ttdbottom" style=width:0.5rem;">
-                    :
-                </td>
-                <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
-                    {{$ttdPenerima->unitkerja}}
-                </td>
-                {{-- </td> --}}
-                {{-- <td class="itemuji"> --}}
-                <td class="ttdbottom" style=width:1rem;">
-                    Unit Kerja
-                </td>
-                <td class="ttdbottom" style=width:0.5rem;">
-                    :
-                </td>
-                @if($ttdPengawas == null)
-                <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
-                    
-                </td>
-                @else
-                <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
-                    {{$ttdPengawas->unitkerja}}
-                </td>
-                @endif
-                
-                {{-- </td> --}}
-                {{-- <td class="itemuji"> --}}
-                <td class="ttdbottom" style=width:1rem;">
-                    Unit Kerja
-                </td>
-                <td class="ttdbottom" style=width:0.5rem;">
-                    :
-                </td>
-                <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
-                    {{$ttdMenyerahkan->unitkerja}}
-                </td>
-                {{-- </td> --}}
+                    </td>
+                    @else
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                        {{$ttdPengawas->unitkerja}}
+                    </td>
+                    @endif
 
-            </tr>
+                    {{-- </td> --}}
+                    {{-- <td class="itemuji"> --}}
+                    <td class="ttdbottom" style=width:1rem;">
+                        Unit Kerja
+                    </td>
+                    <td class="ttdbottom" style=width:0.5rem;">
+                        :
+                    </td>
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                        {{$ttdMenyerahkan->unitkerja}}
+                    </td>
+                    {{-- </td> --}}
 
+                </tr>
 
-
-        </table>
+            </table>
         </div>
-        
-    <div class="page-break">
     </div>
+
+
 
     {{-- <h1>Page 2</h1> --}}
 

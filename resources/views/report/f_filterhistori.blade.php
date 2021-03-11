@@ -12,11 +12,21 @@
 
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="form-group">
+                        {{-- <div class="form-group">
 
                             <label>Tanggal Permohonan</label>
                             <input type="text" id="entridate" name="entridate"
                                 class="entridate form-control" autocomplete="off">
+                        </div> --}}
+                        <div class="form-group">
+                            <label>Tanggal Surat Perintah</label> 
+                            <div class="input-group date">
+                                <div class="input-group-addon">
+                                    {{-- <i class="fa fa-calendar"></i> --}}
+                                </div>
+                                <input type="text" name="f_date" id="f_date"
+                                    class="form-control pull-right" autocomplete="off">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>Asal Limbah</label>

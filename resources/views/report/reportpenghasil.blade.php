@@ -46,21 +46,21 @@
     </div>
     <div class="card-body">
         @include('report.f_filter_penghasil')
-       
+
         <table id="daftar_penghasil" class="table table-hover" style="width:100%;">
             <thead>
                 <tr>
                     <th>No. </th>
                     <th>Unit Kerja</th>
                     <th>Nama Limbah</th>
-                    <th>Jenis Limbah</th> 
-                    <th>Jumlah</th>  
+                    <th>Jenis Limbah</th>
+                    <th>Jumlah</th>
                 </tr>
             </thead>
 
         </table>
     </div>
-</div> 
+</div>
 
 
 
@@ -71,7 +71,7 @@
 @section('scripts')
 <script>
     $(document).ready(function () {
-        
+
 
         $('.select2bs4').select2({
             theme: 'bootstrap4'
@@ -82,55 +82,56 @@
             $('#daftar_penghasil').DataTable().ajax.reload();
 
         })
-        $("#jenislimbah").change(function () {
-            console.log($(this).val())
-            getDropdown('{{ route("limbah.getnama")}}', "", $(this).val(), "namalimbah")
+        // $("#jenislimbah").change(function () {
+        //     console.log($(this).val())
+        //     getDropdown('{{ route("limbah.getnama")}}', "", $(this).val(), "namalimbah")
 
-        });
+        // });
         $('#filter').click(function () {
             $('#daftar_penghasil').DataTable().draw(true);
         })
+
         function getDropdown(paramUrl, param1, param2, idkomponen) {
 
-var paramData
-if (idkomponen == 'namalimbah') {
-    // console.log(param1)
-    paramData = {
-        jenis: param2,
-        // fisik: param2
-    }
-    $.ajax({
-        url: paramUrl,
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        data: paramData,
-        success: function (data) { 
-            // if(data==''){
+            var paramData
+            if (idkomponen == 'namalimbah') {
+                // console.log(param1)
+                paramData = {
+                    jenis: param2,
+                    // fisik: param2
+                }
+                $.ajax({
+                    url: paramUrl,
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: paramData,
+                    success: function (data) {
+                        // if(data==''){
 
-            // }
-            $("#" + idkomponen).html(data.html);
-        }
-    });
-} else {
-    paramData = {
-        idlimbah: param2
+                        // }
+                        $("#" + idkomponen).html(data.html);
+                    }
+                });
+            } else {
+                paramData = {
+                    idlimbah: param2
 
-    } 
-    $.ajax({
-        url: paramUrl,
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        data: paramData,
-        success: function (data) {
-            $("#" + idkomponen).text(data.satuan);
+                }
+                $.ajax({
+                    url: paramUrl,
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: paramData,
+                    success: function (data) {
+                        $("#" + idkomponen).text(data.satuan);
+                    }
+                });
+            }
         }
-    });
-} 
-} 
 
         var table = $('#daftar_penghasil').DataTable({
             processing: true,
@@ -161,10 +162,10 @@ if (idkomponen == 'namalimbah') {
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                data: function (d) { 
-                    d.namalimbah=$('#namalimbah').val() 
-                    d.jenislimbah=$('#jenislimbah').val()
-                    d.limbahasal=$('#limbahasal').val()
+                data: function (d) {
+                    d.namalimbah = $('#namalimbah').val()
+                    d.jenislimbah = $('#jenislimbah').val()
+                    d.limbahasal = $('#limbahasal').val()
                 }
             },
             // bFilter: false,
@@ -189,20 +190,20 @@ if (idkomponen == 'namalimbah') {
                     name: 'jenislimbah',
 
                 },
-                
-                
-                 
+
+
+
                 {
                     data: 'jumlah',
                     name: 'jumlah',
 
                 },
-               
-                 
+
+
 
             ]
         });
-          
+
 
     })
 

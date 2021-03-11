@@ -268,7 +268,6 @@ class ReportLimbahController extends Controller
         
         return response()->json(['data' => $queryData]);
     }
-
     public function viewKuota()
     {
         //
@@ -304,10 +303,7 @@ class ReportLimbahController extends Controller
         // return view('report.reportkapasitas',QueryHelper::getDropDown());
     }
     public function viewIndexKontrak()
-    {
-        //
-        // dd('tes');
-
+    { 
         return view('report.reportkontrakb3', QueryHelper::getDropDown());
     }
     public function indexKontrak(Request $request)
@@ -368,7 +364,7 @@ class ReportLimbahController extends Controller
                 'md_penghasillimbah.seksi', 
                 'md_penghasillimbah.id as idasal', 
                 'md_tps.namatps', 
-                DB::raw('sum(tr_headermutasi.jumlah) as jumlah'))
+                DB::raw('sum(tr_headermutasi.jumlah_in) as jumlah'))
                 ->groupBy('md_penghasillimbah.seksi', 'md_namalimbah.namalimbah');
             $queryData = $queryData->get();
             $jenisLimbah=DB::table('md_jenislimbah')->where('id',$request->jenislimbah)->first();
@@ -406,10 +402,7 @@ class ReportLimbahController extends Controller
     }
 
     public function index(Request $request)
-    {
-        //
-
-        // $status= DB::table('tr_mutasilimbah')->get();
+    { 
         if (request()->ajax()) {
             $queryData = DB::table('tr_mutasilimbah')
                 ->join('md_namalimbah', 'tr_mutasilimbah.namalimbah', '=', 'md_namalimbah.namalimbah')
@@ -868,26 +861,17 @@ class ReportLimbahController extends Controller
         return response()->json(['html' => $html]);
     }
     public function indexHistory(Request $request)
-    {
-    //    dd($request->all());
+    { 
         if (request()->ajax()) {
-            $queryData = DB::table('tr_headermutasi')
-                ->join('tr_detailmutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
+            $queryData = DB::table('tr_detailmutasi') 
                 ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id')
                 ->join('md_jenislimbah', 'tr_detailmutasi.idjenislimbah', '=', 'md_jenislimbah.id')
                 ->join('md_penghasillimbah', 'tr_detailmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
-                ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
-                // ->join('md_tps', 'tr_detailmutasi.idtps', '=', 'md_tps.id')
-                ->select('tr_detailmutasi.*', 
-                'tr_headermutasi.np_pemohon',
-                'tr_headermutasi.np_penerima',
-                'tr_headermutasi.np_perevisi',
-                'tr_headermutasi.np_packer',
-                'tr_headermutasi.np_pemroses',
+                ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id') 
+                ->select('tr_detailmutasi.*',  
                 'tr_detailmutasi.idlimbah',
                 'tr_detailmutasi.idstatus',
-                'tr_detailmutasi.idjenislimbah', 
-                'tr_headermutasi.idasallimbah as headerasal',
+                'tr_detailmutasi.idjenislimbah',  
                 'tr_detailmutasi.idasallimbah', 
                 'md_namalimbah.id as idnama',
                 'md_namalimbah.namalimbah', 
@@ -898,11 +882,11 @@ class ReportLimbahController extends Controller
                 'md_statusmutasi.keterangan as status')
                 ->orderBy('tr_detailmutasi.created_at', 'desc');
 
-            // if (!empty($request->tglinput)) {
+            if (!empty($request->f_date)) {
 
-            //     $splitDate2 = explode(" - ", $request->tglinput);
-            //     $queryData->whereBetween('tr_mutasilimbah.tgl', array(AppHelper::convertDateYmd($splitDate2[0]),  AppHelper::convertDateYmd($splitDate2[1])));
-            // } 
+                $splitDate2 = explode(" - ", $request->f_date);
+                $queryData->whereBetween('tr_detailmutasi.created_at', array(AppHelper::convertDateYmd($splitDate2[0]),  AppHelper::convertDateYmd($splitDate2[1])));
+            } 
             $queryData = $queryData->get(); 
             return datatables()->of($queryData)
                 ->filter(function ($instance) use ($request) {

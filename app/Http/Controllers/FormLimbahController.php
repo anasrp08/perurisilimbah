@@ -200,7 +200,7 @@ class FormLimbahController extends Controller
             ->join('md_jenislimbah', 'tr_headermutasi.idjenislimbah', '=', 'md_jenislimbah.id')
             ->select('tr_headermutasi.no_surat',
             'tr_headermutasi.created_at as tgldibuat',
-            'tr_headermutasi.jumlah',
+            'tr_headermutasi.jumlah_in',
             'tr_headermutasi.keterangan',
             'tr_headermutasi.maksud',
             'md_jenislimbah.jenislimbah',

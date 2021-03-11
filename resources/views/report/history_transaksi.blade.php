@@ -75,6 +75,19 @@
 @section('scripts')
 <script>
     $(document).ready(function () {
+        $('input[name="f_date"]').daterangepicker({
+            format: 'DD/MM/YYYY',
+            autoUpdateInput: false,
+            autoclose: true,
+            todayHighlight: true,
+            locale: {
+                cancelLabel: 'Clear'
+            }
+
+        })
+        $('input[name="f_date"]').on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+        });
         $('.select2bs4').select2({
             theme: 'bootstrap4'
         })
@@ -89,11 +102,12 @@
         });
         
         
-        $("#jenislimbah").change(function () {
-            getDropdown('{{ route("limbah.getnama")}}', "", $(this).val(), "namalimbah")
+        // $("#jenislimbah").change(function () {
+        //     getDropdown('{{ route("limbah.getnama")}}', "", $(this).val(), "namalimbah")
 
-        });
+        // });
         $('#filter').click(function () {
+            console.log($('#jenislimbah').val())
             $('#daftar_histori').DataTable().draw(true);
         })
  
@@ -174,7 +188,7 @@
                     d.namalimbah=$('#namalimbah').val() 
                     d.jenislimbah=$('#jenislimbah').val()
                     d.limbahasal=$('#limbahasal').val() 
-
+                    d.f_date=$('#f_date').val() 
                 }
             },
             // bFilter: false,
