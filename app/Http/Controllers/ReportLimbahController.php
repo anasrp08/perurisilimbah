@@ -37,8 +37,7 @@ class ReportLimbahController extends Controller
     }
     
     public function indexNeraca(Request $request)
-    { 
-        // dd($request->period);
+    {  
         if (request()->ajax()) {
             $splitPeriod = explode("/",$request->period);
             $currMonth= $splitPeriod[0];
@@ -75,53 +74,52 @@ class ReportLimbahController extends Controller
                     DB::raw('SUM(tr_detailmutasi.jumlah) as jumlah2'),
                     
                 )
-                ->whereMonth('tr_detailmutasi.created_at', '=',  $currMonth)
-                ->whereYear('tr_detailmutasi.created_at', '=',  $currYear)    
+                ->whereMonth('tr_detailmutasi.tgl', '=',  $currMonth)
+                ->whereYear('tr_detailmutasi.tgl', '=',  $currYear)    
                 ->whereIn('tr_detailmutasi.idstatus',  $filterStatus)
                 //filter yang bukan wiping solution
-                ->whereNotIn('tr_detailmutasi.idlimbah', ['1', '2', '3']) 
+                // ->whereNotIn('tr_detailmutasi.idlimbah', ['1', '2', '3']) 
                 ->groupBy('tr_detailmutasi.idstatus', 'tr_detailmutasi.idlimbah');
 
             $queryData = $queryData->get();
              
             //penggabungan limbah cair B3
-            $dataLimbahCair = DB::table('tr_detailmutasi')
-            ->join('tr_headermutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
-            ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id')
-            // ->join('md_tps', 'tr_headermutasi.idtps', '=', 'md_tps.id')
-            ->join('md_penghasillimbah', 'tr_detailmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
-            ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
-            ->join('md_satuan', 'md_satuan.id', '=', 'tr_detailmutasi.idsatuan')
-            ->select(
-                'md_namalimbah.namalimbah',
-                'md_namalimbah.keterangan as isWiping',
-                'md_namalimbah.jenislimbah', 
-                'md_statusmutasi.keterangan as keterangan_mutasi',
-                'md_statusmutasi.mutasi',
-                'md_penghasillimbah.seksi',
-                'tr_detailmutasi.*',
-                'md_satuan.satuan',
-                DB::raw('SUM(tr_detailmutasi.jumlah) as jumlah2'),                
-            )
-            ->whereMonth('tr_detailmutasi.created_at', '=',  $currMonth)
-            ->whereYear('tr_detailmutasi.created_at', '=',  $currYear)    
-            ->whereIn('tr_detailmutasi.idstatus',  $filterStatus)
-            ->whereIn('tr_detailmutasi.idlimbah', ['1', '2', '3'])
-            ->where('md_namalimbah.keterangan','Wiping Solution')
-            ->groupBy('tr_detailmutasi.idstatus', 'md_namalimbah.keterangan');
+        //     $dataLimbahCair = DB::table('tr_detailmutasi')
+        //     ->join('tr_headermutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
+        //     ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id')
+        //     // ->join('md_tps', 'tr_headermutasi.idtps', '=', 'md_tps.id')
+        //     ->join('md_penghasillimbah', 'tr_detailmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
+        //     ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
+        //     ->join('md_satuan', 'md_satuan.id', '=', 'tr_detailmutasi.idsatuan')
+        //     ->select(
+        //         'md_namalimbah.namalimbah',
+        //         'md_namalimbah.keterangan as isWiping',
+        //         'md_namalimbah.jenislimbah', 
+        //         'md_statusmutasi.keterangan as keterangan_mutasi',
+        //         'md_statusmutasi.mutasi',
+        //         'md_penghasillimbah.seksi',
+        //         'tr_detailmutasi.*',
+        //         'md_satuan.satuan',
+        //         DB::raw('SUM(tr_detailmutasi.jumlah) as jumlah2'),                
+        //     )
+        //     ->whereMonth('tr_detailmutasi.tgl', '=',  $currMonth)
+        //     ->whereYear('tr_detailmutasi.tgl', '=',  $currYear)    
+        //     ->whereIn('tr_detailmutasi.idstatus',  $filterStatus)
+        //     ->whereIn('tr_detailmutasi.idlimbah', ['1', '2', '3'])
+        //     ->where('md_namalimbah.keterangan','Wiping Solution')
+        //     ->groupBy('tr_detailmutasi.idstatus', 'md_namalimbah.keterangan');
  
 
-        $dataLimbahCair = $dataLimbahCair->get();
+        // $dataLimbahCair = $dataLimbahCair->get();
 
         $sorted=null;
-        if($dataLimbahCair->count()==0){
-            // $sorted=$dataLimbahCair;
-            $sorted=$queryData->sortBy('idlimbah');
+        // if($dataLimbahCair->count()==0){ 
+        //     $sorted=$queryData->sortBy('idlimbah');
            
-        }else{
-            $dataLimbahCair[0]->namalimbah='Limbah Cair Wiping Solution';
+        // }else{
+            // $dataLimbahCair[0]->namalimbah='Limbah Cair Wiping Solution';
             //merged 2 colection with id limbah 1,2,3 to Limbah cair Wiping solution
-            $queryData = $queryData->merge($dataLimbahCair);
+            // $queryData = $queryData->merge($dataLimbahCair);
 
             $period=$request->period;
             
@@ -135,43 +133,43 @@ class ReportLimbahController extends Controller
                     // $prevPeriod=(int)$period - 1;
                     $limbahMasuk=null;
                     $limbahKeluar=null;
-                    if($transaction->isWiping == 'Wiping Solution'){
-                    //    dd($prevMonth);
-                        $limbahMasuk = DB::table('tr_detailmutasi')
-                        // ->where('idlimbah', $transaction->idlimbah)
-                        ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
+                    // if($transaction->isWiping == 'Wiping Solution'){
+                    // //    dd($prevMonth);
+                    //     $limbahMasuk = DB::table('tr_detailmutasi')
+                    //     // ->where('idlimbah', $transaction->idlimbah)
+                    //     ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
                         
-                        ->whereMonth('tr_detailmutasi.created_at', '=',  $prevMonth)
-                        ->whereYear('tr_detailmutasi.created_at', '=',  $prevYear)   
-                        ->where('md_statusmutasi.mutasi', 'Masuk')
-                        ->whereIn('tr_detailmutasi.idlimbah', ['1', '2', '3'])
-                        ->sum('tr_detailmutasi.jumlah');
-                        $limbahKeluar = DB::table('tr_detailmutasi')
-                        // ->where('idlimbah', $transaction->idlimbah)
-                        ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id') 
-                        ->whereMonth('tr_detailmutasi.created_at', '=',  $prevMonth)
-                        ->whereYear('tr_detailmutasi.created_at', '=',  $prevYear)   
-                        ->whereIn('tr_detailmutasi.idlimbah', ['1', '2', '3'])
-                        ->where('md_statusmutasi.mutasi', 'Proses')
-                        ->sum('jumlah'); 
-                    }else{
+                    //     ->whereMonth('tr_detailmutasi.tgl', '=',  $prevMonth)
+                    //     ->whereYear('tr_detailmutasi.tgl', '=',  $prevYear)   
+                    //     ->where('md_statusmutasi.mutasi', 'Masuk')
+                    //     ->whereIn('tr_detailmutasi.idlimbah', ['1', '2', '3'])
+                    //     ->sum('tr_detailmutasi.jumlah');
+                    //     $limbahKeluar = DB::table('tr_detailmutasi')
+                    //     // ->where('idlimbah', $transaction->idlimbah)
+                    //     ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id') 
+                    //     ->whereMonth('tr_detailmutasi.tgl', '=',  $prevMonth)
+                    //     ->whereYear('tr_detailmutasi.tgl', '=',  $prevYear)   
+                    //     ->whereIn('tr_detailmutasi.idlimbah', ['1', '2', '3'])
+                    //     ->where('md_statusmutasi.mutasi', 'Proses')
+                    //     ->sum('jumlah'); 
+                    // }else{
                         $limbahMasuk = DB::table('tr_detailmutasi')->where('idlimbah', $transaction->idlimbah)
                         ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
                         
-                        ->whereMonth('tr_detailmutasi.created_at', '=',  $prevMonth)
-                        ->whereYear('tr_detailmutasi.created_at', '=',  $prevYear)   
+                        ->whereMonth('tr_detailmutasi.tgl', '=',  $prevMonth)
+                        ->whereYear('tr_detailmutasi.tgl', '=',  $prevYear)   
                         ->where('md_statusmutasi.mutasi', 'Masuk')
                         ->sum('tr_detailmutasi.jumlah');
     
                         $limbahKeluar = DB::table('tr_detailmutasi')->where('idlimbah', $transaction->idlimbah)
                         ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
                       
-                        ->whereMonth('tr_detailmutasi.created_at', '=',  $prevMonth)
-                        ->whereYear('tr_detailmutasi.created_at', '=',  $prevYear)   
+                        ->whereMonth('tr_detailmutasi.tgl', '=',  $prevMonth)
+                        ->whereYear('tr_detailmutasi.tgl', '=',  $prevYear)   
                         ->where('md_statusmutasi.mutasi', 'Proses')->sum('jumlah');
                         //dari master data limbah
                         
-                    }
+                    // }
                     $sisaSaldoLimbah = DB::table('md_namalimbah')->where('id', $transaction->idlimbah)->first();
                         
                     $sisaSaldo = (int)$limbahMasuk - (int)$limbahKeluar; 
@@ -187,7 +185,7 @@ class ReportLimbahController extends Controller
                      
                     return $transaction;
                 });
-        }
+        // }
         
 
 
@@ -213,7 +211,7 @@ class ReportLimbahController extends Controller
     {
             
         $queryData=null;
-        if($request->isWiping == '-' || $request->isWiping == null || $request->isWiping == ''){
+        // if($request->isWiping == '-' || $request->isWiping == null || $request->isWiping == ''){
             $queryData = DB::table('tr_detailmutasi')
             ->join('tr_headermutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
             ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id')
@@ -234,37 +232,37 @@ class ReportLimbahController extends Controller
                 'md_satuan.satuan',
 
             )
-            ->whereMonth('tr_detailmutasi.created_at', $request->bulan)
+            ->whereMonth('tr_detailmutasi.tgl', $request->bulan)
             ->where('tr_detailmutasi.idlimbah', $request->idlimbah)
             ->where('tr_detailmutasi.idstatus', $request->idstatus)
-            ->orderBy('tr_detailmutasi.created_at', 'desc');
+            ->orderBy('tr_detailmutasi.tgl', 'desc');
         $queryData = $queryData->get();
-        }else if($request->isWiping == 'Wiping Solution'){
-            $queryData = DB::table('tr_detailmutasi')
-            ->join('tr_headermutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
-            ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id')
-            // ->join('md_tps', 'tr_headermutasi.idtps', '=', 'md_tps.id')
-            ->join('md_penghasillimbah', 'tr_detailmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
-            ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
-            ->join('md_satuan', 'md_satuan.id', '=', 'tr_detailmutasi.idsatuan')
+        // }else if($request->isWiping == 'Wiping Solution'){
+        //     $queryData = DB::table('tr_detailmutasi')
+        //     ->join('tr_headermutasi', 'tr_detailmutasi.idmutasi', '=', 'tr_headermutasi.id')
+        //     ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', '=', 'md_namalimbah.id')
+        //     // ->join('md_tps', 'tr_headermutasi.idtps', '=', 'md_tps.id')
+        //     ->join('md_penghasillimbah', 'tr_detailmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
+        //     ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id')
+        //     ->join('md_satuan', 'md_satuan.id', '=', 'tr_detailmutasi.idsatuan')
 
-            ->select(
-                'md_namalimbah.namalimbah',
-                'md_namalimbah.jenislimbah',
-                // 'md_tps.namatps',
-                'md_statusmutasi.keterangan',
-                'md_statusmutasi.mutasi',
-                'md_penghasillimbah.seksi',
-                'tr_detailmutasi.*',
-                'md_satuan.satuan',
+        //     ->select(
+        //         'md_namalimbah.namalimbah',
+        //         'md_namalimbah.jenislimbah',
+        //         // 'md_tps.namatps',
+        //         'md_statusmutasi.keterangan',
+        //         'md_statusmutasi.mutasi',
+        //         'md_penghasillimbah.seksi',
+        //         'tr_detailmutasi.*',
+        //         'md_satuan.satuan',
 
-            )
-            ->whereMonth('tr_detailmutasi.created_at', $request->bulan)
-            ->whereIn('tr_detailmutasi.idlimbah', ['1','2','3'])
-            ->where('tr_detailmutasi.idstatus', $request->idstatus)
-            ->orderBy('tr_detailmutasi.created_at', 'desc');
-        $queryData = $queryData->get();
-        }
+        //     )
+        //     ->whereMonth('tr_detailmutasi.tgl', $request->bulan)
+        //     ->whereIn('tr_detailmutasi.idlimbah', ['1','2','3'])
+        //     ->where('tr_detailmutasi.idstatus', $request->idstatus)
+        //     ->orderBy('tr_detailmutasi.tgl', 'desc');
+        // $queryData = $queryData->get();
+        // }
         
         return response()->json(['data' => $queryData]);
     }
@@ -407,7 +405,7 @@ class ReportLimbahController extends Controller
             $queryData = DB::table('tr_mutasilimbah')
                 ->join('md_namalimbah', 'tr_mutasilimbah.namalimbah', '=', 'md_namalimbah.namalimbah')
                 ->select('tr_mutasilimbah.*', 'md_namalimbah.id as idnama', 'md_namalimbah.satuan', 'md_namalimbah.jenislimbah', 'md_namalimbah.fisik', 'md_namalimbah.saldo')
-                ->orderBy('tr_mutasilimbah.created_at', 'desc');
+                ->orderBy('tr_mutasilimbah.tgl', 'desc');
 
             if (!empty($request->tglinput)) {
 
@@ -880,37 +878,52 @@ class ReportLimbahController extends Controller
                 'md_namalimbah.treatmen_limbah', 
                 'md_penghasillimbah.seksi',  
                 'md_statusmutasi.keterangan as status')
-                ->orderBy('tr_detailmutasi.created_at', 'desc');
+                ->orderBy('tr_detailmutasi.tgl', 'asc');
 
             if (!empty($request->f_date)) {
 
                 $splitDate2 = explode(" - ", $request->f_date);
-                $queryData->whereBetween('tr_detailmutasi.created_at', array(AppHelper::convertDateYmd($splitDate2[0]),  AppHelper::convertDateYmd($splitDate2[1])));
+                $queryData->whereBetween('tr_detailmutasi.tgl', array(AppHelper::convertDateYmd($splitDate2[0]),  AppHelper::convertDateYmd($splitDate2[1])));
             } 
-            $queryData = $queryData->get(); 
+            if (!empty($request->namalimbah)) {
+
+                // $splitDate2 = explode(" - ", $request->f_date);
+                $queryData->where('tr_detailmutasi.idlimbah',$request->namalimbah );
+            } 
+            if (!empty($request->limbahasal)) {
+
+                // $splitDate2 = explode(" - ", $request->f_date);
+                $queryData->where('tr_detailmutasi.idasallimbah',$request->limbahasal );
+            } 
+            if (!empty($request->status)) {
+
+                // $splitDate2 = explode(" - ", $request->f_date);
+                $queryData->where('tr_detailmutasi.idstatus',$request->status );
+            } 
+            $queryData = $queryData->get();  
             return datatables()->of($queryData)
                 ->filter(function ($instance) use ($request) {
-                    if (!empty($request->get('status'))) {
-                        $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                            return Str::contains($row['idstatus'], $request->get('status')) ? true : false;
-                        });
-                    }
-                    if (!empty($request->get('namalimbah'))) {
-                        $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                            return Str::contains($row['idlimbah'], $request->get('namalimbah')) ? true : false;
-                        });
-                    }
+                    // if (!empty($request->get('status'))) {
+                    //     $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                    //         return Str::contains($row['idstatus'], $request->get('status')) ? true : false;
+                    //     });
+                    // }
+                    // if (!empty($request->get('namalimbah'))) {
+                    //     $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                    //         return Str::contains(Str::lower($row['idlimbah']), Str::lower($request->get('namalimbah'))) ? true : false;
+                    //     });
+                    // }
  
                     if (!empty($request->get('jenislimbah'))) {
                         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
                             return Str::contains($row['idjenislimbah'], $request->get('jenislimbah')) ? true : false;
                         });
                     }
-                    if (!empty($request->get('limbahasal'))) {
-                        $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                            return Str::contains($row['idasallimbah'], $request->get('limbahasal')) ? true : false;
-                        });
-                    }
+                    // if (!empty($request->get('limbahasal'))) {
+                    //     $instance->collection = $instance->collection->filter(function ($row) use ($request) {
+                    //         return Str::contains($row['idasallimbah'], $request->get('limbahasal')) ? true : false;
+                    //     });
+                    // }
                      
                 })
                 ->addIndexColumn() 

@@ -56,7 +56,7 @@
                     <th>No. </th>
                     <th>Nama Limbah</th>
                     <th>Jumlah</th>
-                    <th>Jenis Limbah</th> 
+                    <th>Jenis Limbah</th>
                     <th>TPS</th>
 
                 </tr>
@@ -66,9 +66,9 @@
     </div>
 </div>
 
- 
 
-@include('pemrosesan.detail_pack') 
+
+@include('pemrosesan.detail_pack')
 
 
 
@@ -148,7 +148,7 @@
                     orderable: false,
                     searchable: false
                 },
-                
+
                 {
                     data: 'namalimbah',
                     name: 'namalimbah',
@@ -169,7 +169,7 @@
                     name: 'jenislimbah',
 
                 },
-                 
+
                 {
                     data: 'namatps',
                     name: 'namatps'
@@ -205,14 +205,14 @@
         });
         var tableDetail = null
         $('#daftar_pack').on('click', 'tbody tr', function () {
-            var data = table.row(this).data() 
+            var data = table.row(this).data()
             tableDetail = $('#detail_pack').DataTable({
                 processing: true,
                 serverSide: true,
-                destroy: true, 
+                destroy: true,
                 language: {
                     emptyTable: "Tidak Ada Detail Data"
-                }, 
+                },
                 columnDefs: [{
                         className: 'text-center',
                         targets: [1, 2, 3]
@@ -250,34 +250,39 @@
                     },
 
                     {
-                        data: 'kadaluarsa',
-                        name: 'kadaluarsa',
+                        data: 'tgl_kadaluarsa',
+                        name: 'tgl_kadaluarsa',
                         orderable: false,
                         searchable: false,
                         render: function (data, type, row) {
-                            if(row.jenislimbah == "Limbah B3"){
-                                
-                           
-                            var currDate = moment().format('DD/MM/YYYY');
-                            var day7 = moment(data).subtract(7, 'd').format(
-                                'DD/MM/YYYY');
+                            if (row.jenislimbah == "Limbah B3") {
 
-                            var day3 = moment(data).subtract(3, 'd').format(
-                                'DD/MM/YYYY'); 
-                            if (currDate == day7) {
-                                return '<h5><span class="badge badge-warning">' +
-                                    moment(data)
-                                    .format('DD/MM/YYYY') + '</span></h5>'
-                            } else if (currDate == day3) {
-                                return '<h5><span class="badge badge-danger">' + moment(
-                                        data)
-                                    .format('DD/MM/YYYY') + '</span></h5>'
+
+                                var currDate = moment().format('DD/MM/YYYY');
+                                var day7 = moment(data).subtract(7, 'd').format(
+                                    'DD/MM/YYYY');
+
+                                var day3 = moment(data).subtract(3, 'd').format(
+                                    'DD/MM/YYYY');
+                                if (currDate == day7) {
+                                    return '<h5><span class="badge badge-warning">' +
+                                        moment(data)
+                                        .format('DD/MM/YYYY') + '</span></h5>'
+                                } else if (currDate == day3) {
+                                    return '<h5><span class="badge badge-danger">' +
+                                        moment(
+                                            data)
+                                        .format('DD/MM/YYYY') + '</span></h5>'
+                                } else {
+                                    return '<h5><span class="badge badge-success">' +
+                                        moment(
+                                            data)
+                                        .format('DD/MM/YYYY') + '</span></h5>'
+                                    // return moment(data).format('DD/MM/YYYY');
+                                }
                             } else {
-                                return moment(data).format('DD/MM/YYYY');
+                                return '<h5><span class="badge bg-gray">-</span>';
                             }
-                        }else{
-                            return "-";
-                        }
                         }
                     },
                     {
@@ -296,26 +301,26 @@
                             return data + ' (' + row.satuan + ')'
                         }
 
-                    }, 
+                    },
                     {
                         data: 'action',
                         name: 'action',
-                        
+
                         orderable: false,
                         searchable: false
                     },
 
                 ],
-               
-                drawCallback: function( settings ) {
+
+                drawCallback: function (settings) {
                     var api = this.api();
-                    // console.log(api.row(0).data())
-                    if(api.row(0).data().jumlah_in != 0){
-                        var comp=api.row(0).data().action
-                        var idComp=$(":input[name=jmlh_proses]", this).attr('id')
-                        $('#'+idComp).prop('disabled',false) 
+                    console.log(api.row())
+                    if (api.row(0).data().jumlah_in != 0) {
+                        var comp = api.row(0).data().action
+                        var idComp = $(":input[name=jmlh_proses]", this).attr('id')
+                        $('#' + idComp).prop('disabled', false)
                     }
-  
+
                 },
                 footerCallback: function (row, data, start, end, display) {
                     var api = this.api(),
@@ -348,38 +353,75 @@
             })
             $('#modaldetail').modal('show')
 
-        }) 
-        $(document).on('change', 'tr', '.jmlh_proses', function () { 
-            var currIndex = tableDetail.row( this ).index();
+        })
+        $(document).on('change', 'tr', '.jmlh_proses', function () {
+            var currIndex = tableDetail.row(this).index();
             var currData = tableDetail.row(currIndex).data();
-            var nextData = tableDetail.row( currIndex+1 ).data();
-            
-            var idCompDetail=$(":input[name=jmlh_proses]", this).attr('id')
-            var nextIDField=$(nextData.action).attr('id')
-            var nextField=$('#'+nextIDField) 
-            
+           
+            var idCompDetail = $(":input[name=jmlh_proses]", this).attr('id')
             var arrJumlahProses = []
-            var currJumlahProses=$('#'+idCompDetail)
-            //jika jumlah input sama dengan jumlah tersedia
-            if(currJumlahProses.val() == currData.jumlah_in){
-                nextField.prop('disabled',false)
-            }else if(currJumlahProses.val() < currData.jumlah_in){
-                nextField.prop('disabled',true)
-                nextField.val('')
-            }else if(currJumlahProses.val() > currData.jumlah_in){
-                currJumlahProses.val('')
+            var currJumlahProses = $('#' + idCompDetail)
+            console.log(currIndex != tableDetail.rows().count() - 1)
+            if (currIndex != tableDetail.rows().count() - 1) {
+                console.log('beda')
+                var nextData = tableDetail.row(currIndex + 1).data();
+                var nextIDField = $(nextData.action).attr('id')
+                var nextField = $('#' + nextIDField) 
+                
+                //jika jumlah input sama dengan jumlah tersedia
+                if (currJumlahProses.val() == currData.jumlah_in) {
+                    nextField.prop('disabled', false)
+                    nextField.val('0')
+                } else if (currJumlahProses.val() < currData.jumlah_in) {
+                    nextField.prop('disabled', true)
+                    nextField.val('')
+                } else if (currJumlahProses.val() > currData.jumlah_in) {
+                    
+                    currJumlahProses.val('0')
+                }
+            } else { 
+                console.log('sama')
+                if (currJumlahProses.val() > currData.jumlah_in) { 
+                    currJumlahProses.val('0')
+                }
+
             }
- 
+
+            var theRow = $(this).closest("tr")
+            $('[name="jmlh_proses"]', theRow).each(function () {
+                updateSum()
+            })
 
         });
+
+        function updateSum() {
+            var total = parseInt(0);
+            var data1 = tableDetail.$(':input[name=jmlh_proses]').serializeArray();
+            console.log(data1)
+            $.each(data1, function (index, value) {
+
+                total += parseInt(value.value)
+            });
+            var column = tableDetail.column(5);
+            $(column.footer()).html(
+                column.data().reduce(function (a, b) {
+                    // if (total > $('#maxkertas').val()) {
+                    //     isMax = true
+                    // }
+                    return total;
+                })
+            )
+        }
         $('#proses').click(function () {
             var data = $('#detail_pack').DataTable().rows().data()
             var radio
 
 
             var arrValue = []
-
-            arrValue.push($('#prosesdate').val())
+            var date = $('#prosesdate').val()
+            // console.log(date)
+            // console.log(moment(date, 'DD-MM-YYYY').format('YYYY-MM-DD'))
+            arrValue.push(moment(date, 'DD-MM-YYYY').format('YYYY-MM-DD'))
             arrValue.push($('#vendor').val())
             arrValue.push($('#nomanifest').val())
             arrValue.push($('#nokendaraan').val())
@@ -428,8 +470,8 @@
             var jsonData = {}
             var dataNonInput = []
             var output1 = []
-            var isEmptyCounter = 0 
-            console.log(data.toArray())
+            var isEmptyCounter = 0
+            console.log(arrValue)
 
             var countData = data.count()
             $("#detail_pack tbody tr").each(function () {
@@ -477,13 +519,13 @@
                         obj.nomanifest = arrValue[2];
                         obj.nokendaraan = arrValue[3];
                         obj.nospbe = arrValue[4];
-                        obj.status_lama = data[i].idstatus; 
+                        obj.status_lama = data[i].idstatus;
 
                         obj.np_pemroses = $('#np_pemroses').val();
                         output.push(obj);
                         jsonData["detail"] = output
                     }
- 
+
 
 
                 }
@@ -525,15 +567,18 @@
                         $('.formproses').val('');
                         $('.radioPilihan').prop('checked', false);
                         $('#np_pemroses').val('').change();
-                        
+
 
                     }
 
                 }
             })
         }
+        $('#modaldetail').on('hidden.bs.modal', function () {
+            $('#sumrow').html('0')
+  // do something…
+})
 
-        
         var user_id
 
 

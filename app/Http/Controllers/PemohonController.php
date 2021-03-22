@@ -54,7 +54,7 @@ class PemohonController extends Controller
                     'md_satuan.satuan'
                 )
                 ->where('tr_headermutasi.idstatus', 1)
-                ->orderBy('tr_headermutasi.created_at', 'desc'); 
+                ->orderBy('tr_headermutasi.tgl', 'asc'); 
             if (AuthHelper::getAuthUser()[0]->display_name == 'Pengawas') {
                 $queryData->orWhere('tr_headermutasi.validated_by', null)->where('tr_detailmutasi.idstatus', 9);
             }
@@ -206,7 +206,7 @@ class PemohonController extends Controller
                 'pack'              =>  $jmlh_pack,
                 'idsatuan'            =>  $row['satuan'],
                 'created_at'        => date('Y-m-d'),
-                'tgl'                =>  AppHelper::convertDate($row['tgl']),
+                'tgl'                =>  date('Y-m-d'),
                 'idasallimbah'        =>  $row['asal_limbah'],
                 'np_pemohon'                   => $row['np_pemohon'],
                 'idjenislimbah'       => $row['jenis_limbah'],
@@ -282,7 +282,7 @@ class PemohonController extends Controller
                         'id_transaksi'      =>  $row['id_transaksi'],
                         'idmutasi'          => $row['idheader'],
                         'idlimbah'          =>  $row['idlimbah'],
-                        'tgl'                =>  $row['tgl'],
+                        'tgl'                => date('Y-m-d'),
                         'idasallimbah'        =>  $row['idasallimbah'],
                         'idjenislimbah'       => $row['idjenislimbah'],
                         'idstatus'            =>  2,
@@ -320,7 +320,7 @@ class PemohonController extends Controller
                         'id_transaksi'      =>  $row['id_transaksi'],
                         'idmutasi'          => $row['idheader'],
                         'idlimbah'          =>  $row['idlimbah'],
-                        'tgl'                =>  $row['tgl'],
+                        'tgl'                =>  date('Y-m-d'),
                         'idasallimbah'        =>  $row['idasallimbah'],
                         'idjenislimbah'       => $row['idjenislimbah'],
                         'idstatus'            =>  2,
@@ -338,7 +338,7 @@ class PemohonController extends Controller
                         'id_transaksi'      =>  $row['id_transaksi'],
                         'idmutasi'          => $row['idheader'],
                         'idlimbah'          =>  $row['idlimbah'],
-                        'tgl'                =>  $row['tgl'],
+                        'tgl'                =>  date('Y-m-d'),
                         'idasallimbah'        =>  $row['idasallimbah'],
                         'idjenislimbah'       => $row['idjenislimbah'],
                         'idstatus'            =>  $row['idstatus'],
@@ -416,7 +416,7 @@ class PemohonController extends Controller
                 'pack'              =>  $jmlh_pack,
                 'idsatuan'          =>  $request->satuan,
                 'created_at'        =>  date('Y-m-d'),
-                'tgl'               =>  AppHelper::convertDate($request->entridate),
+                'tgl'               =>  date('Y-m-d'),
                 'idasallimbah'      =>   $request->limbahasal,
                 'np_perevisi'                   => $request->np_perevisi,
                 // 'np_pemohon'                => $request->np_pemohon,
@@ -434,7 +434,7 @@ class PemohonController extends Controller
                 'pack'           =>   $jmlh_pack,
                 'idsatuan'          =>  $request->satuan,
                 'created_at'        => date('Y-m-d'),
-                'tgl'               =>  AppHelper::convertDate($request->entridate),
+                'tgl'               =>  date('Y-m-d'),
                 'idasallimbah'      =>   $request->limbahasal,
                 'np_perevisi'       => $request->np_perevisi,
                 // 'np_pemohon'        => $request->np_pemohon,

@@ -450,8 +450,7 @@
                             idstatus: rowData.idstatus,
                             isWiping: rowData.isWiping,
                             bulan: $('#f_date').val()
-                        }
-                        console.log(paramData)
+                        } 
                         var idtblchild=''
                          if (id == '#tbl_keluar') { 
                             idtblchild='childKeluar'
@@ -465,7 +464,7 @@
                             '<th>Jumlah</th>' +
                             // '<th>TPS</th>' +
                             // '<th>Status</th>' +
-                            '<th>Tgl. Proses</th>' +
+                            // '<th>Tgl. Proses</th>' +
                             '</tr></thead><tbody>' +
                             '</tbody></table>').show();
 
@@ -559,12 +558,12 @@
                                 //         }
                                 //     }
                                 // },
-                                {
-                                    "data": "created_at",
-                                    render: function (data, type, row) {
-                                        return moment(data).format('DD/MM/YYYY');
-                                    }
-                                },
+                                // {
+                                //     "data": "created_at",
+                                //     render: function (data, type, row) {
+                                //         return moment(data).format('DD/MM/YYYY');
+                                //     }
+                                // },
                             ],
                             destroy: true,
                             scrollY: '500px'

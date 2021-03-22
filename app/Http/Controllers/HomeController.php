@@ -35,10 +35,7 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {
-        // dd(DB::table('cemori.tbl_status')->get());
-        // dd(Laratrust::hasRole('Pengawas'));
-        // dd(Laratrust::hasRole('operator')); 
+    { 
         if (Laratrust::hasRole('admin') || Laratrust::hasRole('operator')) {
 
             //     // $getYear = DB::table('desain_tahun')->orderBy('tahun','desc')->get();
@@ -85,207 +82,41 @@ class HomeController extends Controller
 
         // return view('home');
     }
-
-    public function getNotifikasi()
+   
+    public function dataDashboard(Request $request)
     {
-        // $countKadaluarsa=DB::table('tr_packing')
-        // ->where()
-    }
-    public function dashboardKuotaLimbah($period){ 
-        // $date=DateTime::createFromFormat("m/Y", $period);
-        // $month= $date->format('m');
-        // $year=$date->format('Y'); 
+       
+        $dataKadaluarsa=$this->dashboardToBeKadaluarsa();
+        $dataNotifikasi=$this->dashboardToBeKadaluarsa(); 
+        $arrNotifikasi=new \stdClass(); 
+        $arrIsi=[];
+        
+        // $dataIsi=$dataNotifikasi->groupBy('kadaluarsa')->keys()->toArray();
+        $dataNotif=$dataNotifikasi->groupBy('tgl_kadaluarsa')->values()->toArray(); 
+        for($i=0;$i<count($dataNotif);$i++){
+            // $arrNotifikasi->isi=count($dataNotif[$i]);
+            array_push($arrIsi,count($dataNotif[$i]));
+            // dd($dataJumlah);
 
-        $dataKuota=DB::table('md_kuota')->where('tahun',$period)->get();  
-
-        return $dataKuota;
+        }
+        $arrNotifikasi->keys=$dataNotifikasi->groupBy('tgl_kadaluarsa')->keys()->toArray();
+        $arrNotifikasi->values=$arrIsi; 
+        $dataKapasitas=$this->dashboardKapasitas($request);
+ 
+        return response()->json([ 
+            'dataKapasitas'=>$dataKapasitas, 
+            'dataKadaluarsa'=>$dataKadaluarsa, 
+            'dataNotifikasi'=>$arrNotifikasi, 
+            ]);
     }
-    public function dashboardKapasitas($request){
+     //dashboard TPS
+     public function dashboardKapasitas($request){
 
         $dataKapasitas=DB::table('md_tps')->get(); 
 
         return $dataKapasitas;
     }
-    public function dashboardPenghasil($request){
-
-        // $date=DateTime::createFromFormat("m/Y", $request->period);
-        // $month= $date->format('m');
-        // $year=$date->format('Y'); 
-        $dataChart=[];
-       
-        for($i=1;$i<=12;$i++){
-            $dataPenghasil[$i]=DB::table('tr_detailmutasi')
-            ->join('md_namalimbah','tr_detailmutasi.idlimbah','md_namalimbah.id')
-            ->join('md_penghasillimbah','tr_detailmutasi.idasallimbah','md_penghasillimbah.id')
-            ->select(DB::raw('sum(tr_detailmutasi.jumlah) as jumlah'))
-            ->whereYear('tr_headermutasi.created_at', $request->period)
-            ->whereMonth('tr_headermutasi.created_at', $i)
-            // ->whereYear('tr_headermutasi.created_at', '2020')
-            // ->whereMonth('tr_headermutasi.created_at', $i)
-            ->where('tr_detailmutasi.idasallimbah', $request->unit_kerja)
-            ->where('tr_detailmutasi.idlimbah', $request->namalimbah) 
-            ->where('tr_detailmutasi.idstatus', '2')
-            ->where('tr_detailmutasi.keterangan', '!=','proses langsung')
-            ->first(); 
-            
-
-            if($dataPenghasil[$i]->jumlah == null){
-                $dataPenghasil[$i]->jumlah=0;
-            }    
-            array_push($dataChart,(int)$dataPenghasil[$i]->jumlah); 
-
-        } 
-        return $dataChart;
-    }
-    public function querySaldoMutasi($year,$month,$status,$namalimbah){
-       
-        // $mutasi=null;
-        // if($modeMutasi == 'masuk'){
-        //     $mutasi='pack_in';
-        // }else{
-        //     $mutasi='pack_out';
-        // }
-        $resultData=DB::table('tr_detailmutasi')
-        ->join('md_namalimbah','tr_detailmutasi.idlimbah','md_namalimbah.id') 
-        ->select(DB::raw('sum(tr_detailmutasi.pack)as pack'))
-        ->whereYear('tr_detailmutasi.created_at', $year)
-        ->whereMonth('tr_detailmutasi.created_at', $month) 
-        ->whereIn('tr_detailmutasi.idstatus', $status)
-        ->whereIn('tr_detailmutasi.idlimbah', [$namalimbah]) 
-        ->where('tr_detailmutasi.keterangan', null)
-        ->first();  
-        // dd($resultData);
-        if($resultData->pack == null){
-            $resultData->pack=0;
-        }     
-        return $resultData->pack;
-    }
-    public function querySaldoMutasiKuotaNeraca($year,$month,$status,$namalimbah){
-         
-        // $mutasi=null;
-        // if($modeMutasi == 'masuk'){
-        //     $mutasi='pack_in';
-        // }else{
-        //     $mutasi='pack_out';
-        // }
-        $resultData=DB::table('tr_detailmutasi')
-        ->join('md_namalimbah','tr_detailmutasi.idlimbah','md_namalimbah.id') 
-        ->select(DB::raw('sum(tr_detailmutasi.pack) as pack')) 
-        ->whereYear('tr_detailmutasi.created_at', $year)
-        ->whereMonth('tr_detailmutasi.created_at', $month) 
-        ->whereIn('tr_detailmutasi.idstatus', $status)
-        ->whereIn('tr_detailmutasi.idlimbah', $namalimbah) 
-        ->where('tr_detailmutasi.keterangan', null)
-        ->first();  
-        
-        if($resultData->pack == null){
-            $resultData->pack=0;
-        }    
-
-        return $resultData->pack;
-    }
-    public function getSisaSaldo($year,$month,$namalimbah){
-
-        $dataMasuk=$this->querySaldoMutasiKuotaNeraca(
-            $year,
-            $month,
-            ['2'],
-            $namalimbah
-        );
-        $dataKeluar=$this->querySaldoMutasiKuotaNeraca(
-            $year,
-            $month,
-            ['5','6','7','8','9'],
-            $namalimbah
-        ); 
-       
-        if((int)$dataKeluar==0){
-            $jumlahSisa=0;
-        }else{
-            $jumlahSisa=(int)$dataMasuk - (int)$dataKeluar;
-        } 
-        return $jumlahSisa;
-    }
-    public function getDataPerTPSKuotaAnggaran($period,$tipe_kuota_limbah){
-        $arrMasuk=[];
-        $arrKeluar=[];
-        $arrSisa=[];
-        $arrData=[];
-        $dataNamaLimbah=DB::table('md_namalimbah')->where('tipe_kuota_limbah',$tipe_kuota_limbah)->pluck('id');
-        // dd($dataNamaLimbah);
-        $dataSatuan=DB::table('md_namalimbah')->where('tipe_kuota_limbah',$tipe_kuota_limbah)->first('konversi_kuota');
-          
-        for($i=1;$i<=12;$i++){   
-            $jumlahMasuk[$i]=$this->querySaldoMutasiKuotaNeraca($period,$i,['2'], $dataNamaLimbah);
-             
-            $jumlahKeluar[$i]=$this->querySaldoMutasiKuotaNeraca($period,$i,['5','6','7','8','9'], $dataNamaLimbah);
-            $jumlahSisa[$i]=null;
-            $jumlahSisaPrev[$i]=0;
-            if($i>0){ 
-                 $jumlahSisa[$i]=$this->getSisaSaldo($period,$i,$dataNamaLimbah); 
-                 $jumlahSisaPrev[$i]=$this->getSisaSaldo((int)$period,$i-1,$dataNamaLimbah);
-            }else{ 
-                $jumlahSisa[$i]=$this->getSisaSaldo((int)$period-1,$i,$dataNamaLimbah);
-            }
-            array_push($arrMasuk,(int)$jumlahMasuk[$i]+ $jumlahSisaPrev[$i]); 
-            array_push($arrKeluar,(int)$jumlahKeluar[$i]); 
-            array_push($arrSisa,(int)$jumlahSisa[$i]); 
-
-        }  
-        $arrData['saldoMasuk']=$arrMasuk;
-        $arrData['saldoKeluar']=$arrKeluar;
-        $arrData['sisaSaldo']=$arrSisa;
-        $arrData['satuan']=$dataSatuan->konversi_kuota;
-        
-        // dd($arrMasuk);
-        return  $arrData;
-    }
-    public function dashboardNeracaKuota(Request $request){
-        $pPeriod=$request->period;
-        $arrTPS=$request->tps; 
-        $arrDataPerBulan=[];
-        for($i=1;$i<=count($arrTPS);$i++){
-            $dataTPSPerBulan=$this->getDataPerTPSKuotaAnggaran($pPeriod,$i);
-            $satuan=DB::table('md_tps')->where('id',$i)->first(); 
-            $arrDataPerBulan['kuota-'.$i]=$dataTPSPerBulan;    
-        }   
-        return response()->json([
-            'dataBar'=>$arrDataPerBulan 
-            ]);
-
-    }
-    
-    public function dashboardNeraca($request){
- 
-        $arrMasuk=[];
-        $arrKeluar=[];
-        $arrSisa=[];
-       
-        for($i=1;$i<=12;$i++){ 
-
-            $jumlahMasuk[$i]=$this->querySaldoMutasi($request->period,$i,['2'], [$request->namalimbah]);
-            $jumlahKeluar[$i]=$this->querySaldoMutasi($request->period,$i,['5','6','7','8','9'], [$request->namalimbah]);
-            $jumlahSisa[$i]=null;
-            $jumlahSisaPrev[$i]=null;
-            if($i>0){ 
-                $jumlahSisa[$i]=$this->getSisaSaldo($request->period,$i,[$request->namalimbah]); 
-                $jumlahSisaPrev[$i]=$this->getSisaSaldo((int)$request->period,$i-1,[$request->namalimbah]);
-           }else{ 
-               $jumlahSisa[$i]=$this->getSisaSaldo((int)$request->period-1,$i,[$request->namalimbah]);
-           }
-            array_push($arrMasuk,(int)$jumlahMasuk[$i]); 
-            array_push($arrKeluar,(int)$jumlahKeluar[$i]); 
-            array_push($arrSisa,(int)$jumlahSisa[$i]); 
-        } 
-        $satuan=DB::table('md_namalimbah')->where('id',$request->namalimbah)
-        ->first('satuan'); 
-        return response()->json([
-            'saldoMasuk'=>$arrMasuk,
-            'saldoKeluar'=>$arrKeluar,
-            'sisaSaldo'=>$arrSisa,
-            'satuan'=>$satuan
-            ]);
-    }
+    //daftar list kadaluarsa
     public function dashboardToBeKadaluarsa(){
 
         $dataKadaluarsa=DB::table('tr_headermutasi')
@@ -329,11 +160,194 @@ class HomeController extends Controller
             'dataKuota'=>$dataKuota
             ]);
     }
+    public function dashboardKuotaLimbah($period){ 
+        // $date=DateTime::createFromFormat("m/Y", $period);
+        // $month= $date->format('m');
+        // $year=$date->format('Y'); 
+
+        $dataKuota=DB::table('md_kuota')->where('tahun',$period)->get();  
+
+        return $dataKuota;
+    }
+
+    public function getNotifikasi()
+    {
+        // $countKadaluarsa=DB::table('tr_packing')
+        // ->where()
+    }
+    //Dashboard Neraca Kuota Anggaran
+    public function dashboardNeracaKuota(Request $request){
+        $pPeriod=$request->period;
+        $arrTPS=$request->tps; 
+        $arrDataPerBulan=[];
+        for($i=1;$i<=count($arrTPS);$i++){
+            $dataTPSPerBulan=$this->getDataPerTPSKuotaAnggaran($pPeriod,$i);
+            $satuan=DB::table('md_tps')->where('id',$i)->first(); 
+            $arrDataPerBulan['kuota-'.$i]=$dataTPSPerBulan;    
+        }   
+        return response()->json([
+            'dataBar'=>$arrDataPerBulan 
+            ]);
+
+    }
+    public function getDataPerTPSKuotaAnggaran($period,$tipe_kuota_limbah){
+        $arrMasuk=[];
+        $arrKeluar=[];
+        $arrSisa=[];
+        $arrData=[];
+        $dataNamaLimbah=DB::table('md_namalimbah')->where('tipe_kuota_limbah',$tipe_kuota_limbah)->pluck('id');
+        // dd($dataNamaLimbah);
+        $dataSatuan=DB::table('md_namalimbah')->where('tipe_kuota_limbah',$tipe_kuota_limbah)->first('konversi_kuota');
+          
+        for($i=1;$i<=12;$i++){   
+            $jumlahMasuk[$i]=$this->querySaldoMutasiKuotaNeraca($period,$i,['2'], $dataNamaLimbah);
+             
+            $jumlahKeluar[$i]=$this->querySaldoMutasiKuotaNeraca($period,$i,['5','6','7','8','9'], $dataNamaLimbah);
+            
+            $jumlahSisa[$i]=null;
+            $jumlahSisaPrev[$i]=0;
+            //jika bulan lebih dari 0
+            if($i>0){ 
+                 $jumlahSisa[$i]=$this->getSisaSaldo($period,$i,$dataNamaLimbah); 
+                 $jumlahSisaPrev[$i]=$this->getSisaSaldo((int)$period,$i-1,$dataNamaLimbah);
+            }else{ 
+                $jumlahSisa[$i]=$this->getSisaSaldo((int)$period-1,$i,$dataNamaLimbah);
+            }
+            array_push($arrMasuk,(int)$jumlahMasuk[$i]+ $jumlahSisaPrev[$i]); 
+            array_push($arrKeluar,(int)$jumlahKeluar[$i]); 
+            array_push($arrSisa,(int)$jumlahSisa[$i]); 
+
+        }  
+        $arrData['saldoMasuk']=$arrMasuk;
+        $arrData['saldoKeluar']=$arrKeluar;
+        $arrData['sisaSaldo']=$arrSisa;
+        $arrData['satuan']=$dataSatuan->konversi_kuota;
+        
+        // dd($arrMasuk);
+        return  $arrData;
+    }
+   
+    public function querySaldoMutasiKuotaNeraca($year,$month,$status,$namalimbah){
+         
+        // $mutasi=null;
+        // if($modeMutasi == 'masuk'){
+        //     $mutasi='pack_in';
+        // }else{
+        //     $mutasi='pack_out';
+        // }
+        $resultData=DB::table('tr_detailmutasi')
+        ->join('md_namalimbah','tr_detailmutasi.idlimbah','md_namalimbah.id') 
+        ->select(DB::raw('sum(tr_detailmutasi.jumlah) as jumlah')) 
+        ->whereYear('tr_detailmutasi.created_at', $year)
+        ->whereMonth('tr_detailmutasi.created_at', $month) 
+        ->whereIn('tr_detailmutasi.idstatus', $status)
+        ->whereIn('tr_detailmutasi.idlimbah', $namalimbah) 
+        ->where('tr_detailmutasi.keterangan', null)
+        ->first(); 
+        
+        $dataMasterLimbah=DB::table('md_namalimbah')->whereIn('id',$namalimbah)->first();
+        // $satuanKecil=$dataMasterLimbah->satuan;
+        $konversSatuan=$dataMasterLimbah->konversi_satuan_kecil;
+        
+        if($resultData->jumlah == null){
+            $resultData->jumlah=0;
+        }    
+ 
+       
+        $valConvert= (float)$resultData->jumlah * (float)$konversSatuan;
+        $finalValue=round($valConvert, 1); 
+
+        // $finalValue=$resultData->jumlah;
+          
+
+
+        return $finalValue;
+    }
+    public function getSisaSaldo($year,$month,$namalimbah){
+
+        $dataMasuk=$this->querySaldoMutasiKuotaNeraca(
+            $year,
+            $month,
+            ['2'],
+            $namalimbah
+        );
+        $dataKeluar=$this->querySaldoMutasiKuotaNeraca(
+            $year,
+            $month,
+            ['5','6','7','8','9'],
+            $namalimbah
+        ); 
+        
+       
+        if((int)$dataKeluar==0){
+            $jumlahSisa=0;
+        }else{
+            $jumlahSisa=(int)$dataMasuk - (int)$dataKeluar;
+        } 
+        return $jumlahSisa;
+    }
+    //dashboard neraca lain-lain
     public function dataNeraca(Request $request)
     {
         $dataNeraca=$this->dashboardNeraca($request);
         return $dataNeraca;
     }
+    public function dashboardNeraca($request){
+ 
+        $arrMasuk=[];
+        $arrKeluar=[];
+        $arrSisa=[];
+       
+        for($i=1;$i<=12;$i++){ 
+
+            $jumlahMasuk[$i]=$this->querySaldoMutasi($request->period,$i,['2'], [$request->namalimbah]);
+            $jumlahKeluar[$i]=$this->querySaldoMutasi($request->period,$i,['5','6','7','8','9'], [$request->namalimbah]);
+            $jumlahSisa[$i]=null;
+            $jumlahSisaPrev[$i]=null;
+            if($i>0){ 
+                $jumlahSisa[$i]=$this->getSisaSaldo($request->period,$i,[$request->namalimbah]); 
+                $jumlahSisaPrev[$i]=$this->getSisaSaldo((int)$request->period,$i-1,[$request->namalimbah]);
+           }else{ 
+               $jumlahSisa[$i]=$this->getSisaSaldo((int)$request->period-1,$i,[$request->namalimbah]);
+           }
+            array_push($arrMasuk,(int)$jumlahMasuk[$i]); 
+            array_push($arrKeluar,(int)$jumlahKeluar[$i]); 
+            array_push($arrSisa,(int)$jumlahSisa[$i]); 
+        } 
+        $satuan=DB::table('md_namalimbah')->where('id',$request->namalimbah)
+        ->first('satuan'); 
+        return response()->json([
+            'saldoMasuk'=>$arrMasuk,
+            'saldoKeluar'=>$arrKeluar,
+            'sisaSaldo'=>$arrSisa,
+            'satuan'=>$satuan
+            ]);
+    }
+    public function querySaldoMutasi($year,$month,$status,$namalimbah){
+       
+        // $mutasi=null;
+        // if($modeMutasi == 'masuk'){
+        //     $mutasi='pack_in';
+        // }else{
+        //     $mutasi='pack_out';
+        // }
+        $resultData=DB::table('tr_detailmutasi')
+        ->join('md_namalimbah','tr_detailmutasi.idlimbah','md_namalimbah.id') 
+        ->select(DB::raw('sum(tr_detailmutasi.pack)as pack'))
+        ->whereYear('tr_detailmutasi.created_at', $year)
+        ->whereMonth('tr_detailmutasi.created_at', $month) 
+        ->whereIn('tr_detailmutasi.idstatus', $status)
+        ->whereIn('tr_detailmutasi.idlimbah', [$namalimbah]) 
+        ->where('tr_detailmutasi.keterangan', null)
+        ->first();  
+        // dd($resultData);
+        if($resultData->pack == null){
+            $resultData->pack=0;
+        }     
+        return $resultData->pack;
+    }
+    
+
     public function dataPenghasil(Request $request)
     {
         $dataPenghasil=$this->dashboardPenghasil($request);
@@ -344,33 +358,36 @@ class HomeController extends Controller
             'satuan'=>$satuan
             ]); 
     }
-    
-    public function dataDashboard(Request $request)
-    {
-       
-        $dataKadaluarsa=$this->dashboardToBeKadaluarsa();
-        $dataNotifikasi=$this->dashboardToBeKadaluarsa(); 
-        $arrNotifikasi=new \stdClass(); 
-        $arrIsi=[];
-        
-        // $dataIsi=$dataNotifikasi->groupBy('kadaluarsa')->keys()->toArray();
-        $dataNotif=$dataNotifikasi->groupBy('kadaluarsa')->values()->toArray();
-        // $datavalues=$dataPenghasil->keyBy('jumlah')->keys();
-        for($i=0;$i<count($dataNotif);$i++){
-            // $arrNotifikasi->isi=count($dataNotif[$i]);
-            array_push($arrIsi,count($dataNotif[$i]));
-            // dd($dataJumlah);
+    public function dashboardPenghasil($request){
 
-        }
-        $arrNotifikasi->keys=$dataNotifikasi->groupBy('kadaluarsa')->keys()->toArray();
-        $arrNotifikasi->values=$arrIsi; 
-        $dataKapasitas=$this->dashboardKapasitas($request);
- 
-        return response()->json([ 
-            'dataKapasitas'=>$dataKapasitas, 
-            'dataKadaluarsa'=>$dataKadaluarsa, 
-            'dataNotifikasi'=>$arrNotifikasi, 
-            ]);
+        // $date=DateTime::createFromFormat("m/Y", $request->period);
+        // $month= $date->format('m');
+        // $year=$date->format('Y'); 
+        $dataChart=[];
+       
+        for($i=1;$i<=12;$i++){
+            $dataPenghasil[$i]=DB::table('tr_detailmutasi')
+            ->join('md_namalimbah','tr_detailmutasi.idlimbah','md_namalimbah.id')
+            ->join('md_penghasillimbah','tr_detailmutasi.idasallimbah','md_penghasillimbah.id')
+            ->select(DB::raw('sum(tr_detailmutasi.jumlah) as jumlah'))
+            ->whereYear('tr_headermutasi.created_at', $request->period)
+            ->whereMonth('tr_headermutasi.created_at', $i)
+            // ->whereYear('tr_headermutasi.created_at', '2020')
+            // ->whereMonth('tr_headermutasi.created_at', $i)
+            ->where('tr_detailmutasi.idasallimbah', $request->unit_kerja)
+            ->where('tr_detailmutasi.idlimbah', $request->namalimbah) 
+            ->where('tr_detailmutasi.idstatus', '2')
+            ->where('tr_detailmutasi.keterangan', '!=','proses langsung')
+            ->first(); 
+            
+
+            if($dataPenghasil[$i]->jumlah == null){
+                $dataPenghasil[$i]->jumlah=0;
+            }    
+            array_push($dataChart,(int)$dataPenghasil[$i]->jumlah); 
+
+        } 
+        return $dataChart;
     }
     public function persentage($kapasitasjumlah,$presentage){
 
@@ -391,11 +408,10 @@ class HomeController extends Controller
         $arrKapasitas=[]; 
 
         $dataNotifikasi=$this->dashboardToBeKadaluarsa(); 
+        // dd($dataNotifikasi);
 
         $dataKapasitas=DB::table('md_tps')
-        ->get();
-        // dd($dataKapasitas);
-
+        ->get(); 
         for($i=0;$i<count($dataKapasitas);$i++){
 
             $saldo=(int)$dataKapasitas[$i]->saldo;
@@ -408,13 +424,8 @@ class HomeController extends Controller
                     'tps'=>$dataKapasitas[$i]->namatps,
                     'status'=>'Waspada',
                     'kapasitas'=>$dataKapasitas[$i]->kapasitasjumlah,
-                );
-                // $notifKapasitas->saldo=$saldo;
-                // $notifKapasitas->tps=$dataKapasitas[$i]->namatps;
-                // $notifKapasitas->status='Waspada';
-             
-                array_push($arrKapasitas,$notifKapasitas);
-                // dd($arrKapasitas);
+                ); 
+                array_push($arrKapasitas,$notifKapasitas); 
 
             }else if($saldo >= $this->persentage($kapasitasjumlah,90)){
                 $notifKapasitas=array(
@@ -422,65 +433,49 @@ class HomeController extends Controller
                     'tps'=>$dataKapasitas[$i]->namatps,
                     'status'=>'Bahaya',
                     'kapasitas'=>$dataKapasitas[$i]->kapasitasjumlah,
-                );
-                // $notifKapasitas->saldo=$saldo;
-                // $notifKapasitas->tps=$dataKapasitas[$i]->namatps;
-                // $notifKapasitas->status='Bahaya';
+                ); 
 
-                array_push($arrKapasitas,$notifKapasitas); 
-                // dd($notifKapasitas);
+                array_push($arrKapasitas,$notifKapasitas);  
             }else{
-                $notifKapasitas=null;
-                // array_push($arrKapasitas,$notifKapasitas);
+                $notifKapasitas=null; 
             }
-
-            
 
         } 
-
+        $jumlahKadaluarsa3hari=0;
+        $jumlahKadaluarsa7hari=0;
         if(count($dataNotifikasi) == 0){
             $arrNotifikasi=null;
-        }else{
-           
-            
-            // $dataIsi=$dataNotifikasi->groupBy('kadaluarsa')->keys()->toArray();
-            // $dataNotif=$dataNotifikasi->groupBy('kadaluarsa')->values();
-          
-            // $datavalues=$dataPenghasil->keyBy('jumlah')->keys();
-        //    dd($dataNotif);
+        }else{ 
             for($i=0;$i<count($dataNotifikasi);$i++){ 
                 // dd($dataNotif);
-                $date3=date('Y-m-d', strtotime("+ 3 day",strtotime($dataNotifikasi[$i]->kadaluarsa)));
-                $date7=date('Y-m-d', strtotime("+ 7 day",strtotime($dataNotifikasi[$i]->kadaluarsa)));
+                $date3=date('Y-m-d', strtotime("+ 3 day",strtotime("now"))); 
+                $date7=date('Y-m-d', strtotime("+ 7 day",strtotime("now")));
                 
-               if($dataNotifikasi[$i]->kadaluarsa == $date3){
+               if($dataNotifikasi[$i]->tgl_kadaluarsa == $date3){
+                $jumlahKadaluarsa3hari++;
                 $arrKadaluarsa3=array(
-                    'tanggal'=>$dataNotifikasi[$i]->kadaluarsa,
-                    'jumlah'=>0,
+                    'tanggal'=>$dataNotifikasi[$i]->tgl_kadaluarsa,
+                    'jumlah'=>$jumlahKadaluarsa3hari,
                     'status'=>'Waspada'
                 );
-               }else if($dataNotifikasi[$i]->kadaluarsa == $date7){
+                array_push($arrIsi,$arrKadaluarsa3);
+
+               }else if($dataNotifikasi[$i]->tgl_kadaluarsa == $date7){
+                $jumlahKadaluarsa7hari++;
                 $arrKadaluarsa7=array(
-                    'tanggal'=>$dataNotifikasi[$i]->kadaluarsa,
-                    'jumlah'=>0,
+                    'tanggal'=>$dataNotifikasi[$i]->tgl_kadaluarsa,
+                    'jumlah'=> $jumlahKadaluarsa7hari,
                     'status'=>'Bahaya'
                 );
-               }
-                
-
-                
-
-                array_push($arrIsi,$arrKadaluarsa3);
                 array_push($arrIsi,$arrKadaluarsa7);
-                // dd($dataJumlah);
+               } 
     
             }
-            $arrNotifikasi->keys=$dataNotifikasi->groupBy('kadaluarsa')->keys()->toArray();
+            $arrNotifikasi->keys=$dataNotifikasi->groupBy('tgl_kadaluarsa')->keys()->toArray();
             $arrNotifikasi->values=$arrIsi;
+            // dd($arrIsi);
         }
         
-        
-         
         return response()->json([ 
             'dataNotifikasi'=>$arrNotifikasi, 
             'notifikasiKapasitas'=>$arrKapasitas, 

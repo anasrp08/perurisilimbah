@@ -199,8 +199,8 @@
                     searchable: false
                 },
                 {
-                    data: 'created_at',
-                    name: 'created_at',
+                    data: 'tgl',
+                    name: 'tgl',
                     render: function (data, type, row) {
                         if (data == null || data == "-" || data == "0000-00-00 00:00:00" ||
                             data == "NULL") {

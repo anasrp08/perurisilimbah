@@ -364,7 +364,7 @@ class PenyimpananLimbahController extends Controller
                     'idstatus'            => $row['idstatus'],
                     'idasallimbah'            => $row['idasallimbah'],
                     'idtps'                 => $row['tps'],
-                    'tgl'                => $row['tgl'],
+                    'tgl'                => date('Y-m-d'),
                     'jumlah'            => $row['jumlah'],
                     'pack'            => $row['pack'],
                     'limbah3r'            => $row['limbah3r'],

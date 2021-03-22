@@ -295,9 +295,31 @@
                     text: 'Terima',
                     className: 'terima btn btn-success',
                     action: function (e, dt, node, config) {
-                        $('#title_konfirmasi').text('Diterima Oleh: ')
+                        var dataSelected = table.rows({
+                            selected: true
+                        }).data()
+                        var isProsesLgsg = true 
+
+                        for (i = 0; i < dataSelected.count(); i++) {
+                            if (dataSelected[i].is_lgsg_proses == '' || dataSelected[i].is_lgsg_proses == null || dataSelected[i].is_lgsg_proses == 'NULL' || dataSelected[i].is_lgsg_proses == '1') {
+
+                                toastr.warning(
+                                    'Ada limbah yang tidak diijinkan untuk proses langsung',
+                                    'Perhatian', {
+                                        timeOut: 5000
+                                    });
+                                return false
+                                break;
+                            }
+                        }
+                        if (!isProsesLgsg) {
+                            $('#title_konfirmasi').text('Diterima Oleh: ')
                         $('#hidden_transaksi').val('terima')
                         $('#modalconfirm').modal('show')
+                        } else {
+
+                        }
+                       
 
                     }
                 },
@@ -360,8 +382,7 @@
                             selected: true
                         }).data()
 
-                        var isProsesLgsg = true
-                        console.log(dataSelected)
+                        var isProsesLgsg = true 
                         for (i = 0; i < dataSelected.count(); i++) {
                             if (dataSelected[i].is_lgsg_proses == '' || dataSelected[i].is_lgsg_proses == null || dataSelected[i].is_lgsg_proses == 'NULL') {
 

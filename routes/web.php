@@ -128,6 +128,22 @@ Route::post('vendor/update', 'MDVendorController@update') -> name('vendor.update
 //export
 Route::get('/neraca/export/{month}/{year}', 'ExportDataController@downloadNeraca')-> name('export.neraca');
 
+Route::resource('ba_pemusnahan', 'BAPemusnahanController');
+Route::get('ba_pemusnahan/destroy/{id}', 'BAPemusnahanController@destroy');
+Route::post('ba_pemusnahan/list_ba', 'BAPemusnahanController@index') -> name('ba.list');
+Route::post('ba_pemusnahan/update', 'BAPemusnahanController@update') -> name('ba.update');
 
+ // Profile
+ Route::get('settings/profile', 'SettingsController@profile');
+
+ // Edit Profile
+ Route::get('settings/profile/edit', 'SettingsController@editProfile');
+
+ // Update Profile
+ Route::post('settings/profile', 'SettingsController@updateProfile');
+
+ // Ubah password
+ Route::get('settings/password', 'SettingsController@editPassword');
+ Route::post('settings/password', 'SettingsController@updatePassword');
 
 });

@@ -25,8 +25,8 @@
                     <tfoot>
                         <tr> 
                             <th colspan="4" style="text-align:center">Total</th>
-                            <th></th>
-                            <th></th>
+                            <th></th> 
+                            <th id="sumrow">0</th>
                             {{-- <th></th>
                             <th></th> --}}
                         </tr>

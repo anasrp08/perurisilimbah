@@ -194,6 +194,52 @@
         </li> 
     </ul>
 </li> 
+<li class="nav-item has-treeview {!! Request::is('settings/*') ? 'active' : '' !!}">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-database"></i>
+        <p>
+           Pengaturan
+            <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
+  
+    <ul class="nav nav-treeview">
+        <li class="nav-item {!! Request::is('settings/profil*') ? 'active' : '' !!}">
+            <a href="{{ url('/settings/profile/') }}" class="nav-link">
+                <i class="far fa-list-alt nav-icon"></i>
+                <span>Profile</span>
+            </a>
+        </li>
+        <li class="nav-item {!! Request::is('settings/password') ? 'active' : '' !!}">
+            <a href="{{ url('/settings/password') }}" class="nav-link">
+                <i class="far fa-list-alt nav-icon"></i>
+                <span>Ubah Password</span>
+            </a>
+        </li>
+       
+    </ul>
+</li> 
+{{-- 
+<li class="treeview {!! Request::is('settings/*') ? 'active' : '' !!}">
+    <a href="#">
+        <i class="fa fa-gear"></i> <span>Pengaturan</span>
+        <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+        </span>
+    </a>
+    <ul class="treeview-menu">
+        <li class="{!! Request::is('settings/profil*') ? 'active' : '' !!}">
+            <a href="{{ url('/settings/profile/') }}">
+                <i class="fa fa-user-o"></i> Profil
+            </a>
+        </li>
+        <li class="{!! Request::is('settings/password') ? 'active' : '' !!}">
+            <a href="{{ url('/settings/password') }}">
+                <i class="fa fa-lock"></i> Ubah Password
+            </a>
+        </li>
+    </ul>
+</li> --}}
 
 @endrole
 @role(['unit kerja'])
@@ -241,6 +287,7 @@
 
     </ul>
 </li>
+
 @endrole
 @role(['pengawas'])
 <li class="nav-item has-treeview">

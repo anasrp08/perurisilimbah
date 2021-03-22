@@ -66,7 +66,7 @@
         }
 
         td.titlecenter {
-            font-size: 40pt;
+            font-size: 15pt;
             text-align: center;
             font-weight: bold;
 
@@ -306,7 +306,7 @@
                         style="opacity: .8">
                 </td>
                 <td class="titlecenter" colspan="4">
-                    FORMULIR
+                    FORMULIR PENYERAHAN LIMBAH INTERN
                 </td>
                 <td class='logokanan' colspan="4">
                     <img src="{{ public_path('/img/SGS.png') }}" alt="AdminLTE Logo" width="120px" height="75px"

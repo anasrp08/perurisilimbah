@@ -59,6 +59,8 @@
                             <h3 class="card-title">Limbah Akan Kadaluarsa</h3>
                         </div>
                         <div class="card-body">
+                            <button type="button" name="refresh_kadaluarsa" id="refresh_kadaluarsa" class="btn btn-success "><i class="fa  fa-refresh"></i>
+                                Refresh</button>
                             <table id="datakadaluarsa" class="table table-bordered table-striped" style="width:100%;">
                                 <thead>
                                     <tr>
@@ -98,25 +100,7 @@
                 <div class="tab-pane fade" id="kadaluarsa" role="tabpanel" aria-labelledby="kadaluarsa-tab"
                     style="position: relative;">
                     
-                </div>
-                
-                
-               
- 
-                {{-- <div class="tab-pane fade" id="kadaluarsa" role="tabpanel"
-                    aria-labelledby="kadaluarsa-tab" style="position: relative;">
-
-                    @include('dashboard.kadaluarsa')
-
-                </div> --}}
-
-
-
-
-
-
-
-
+                </div> 
             </div>
         </div>
 
@@ -128,6 +112,8 @@
 <script src="{{ asset('/adminlte3/chartjs/Chart.bundle.min.js') }}"></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/highcharts-more.js"></script>
+{{-- <script src="https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js"></script> --}}
+{{-- <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script> --}}
 
 <script>
     $(document).ready(function () {
@@ -144,6 +130,11 @@
             // url = url.replace(':tahun', $('#tahun_neraca').val());
             document.location.href = url;
         })
+        $('#refresh_kadaluarsa').click(function () {
+
+$('#datakadaluarsa').DataTable().ajax.reload();
+
+})
         dashboardNeracaKuota()
 
         function dashboardNeracaKuota() {
@@ -168,17 +159,17 @@
         var lamputl = createPieChart(document.getElementById('lamputl'),
             "Sampah Lampu TL, Catridge Printer, PCB", 2)
 
-        var neracaKuotaCair = grafNeracaMutasi(document.getElementById('graf_kuota_cair'), 'Limbah Cair')
+        var neracaKuotaCair = grafNeracaMutasi(document.getElementById('graf_kuota_cair'), 'Limbah Cair - Ton')
 
-        var neracaKuotaSludge = grafNeracaMutasi(document.getElementById('graf_kuota_sludge'), 'Limbah Sludge')
+        var neracaKuotaSludge = grafNeracaMutasi(document.getElementById('graf_kuota_sludge'), 'Limbah Sludge - M3')
 
         var neracaKuotaSK = grafNeracaMutasi(document.getElementById('graf_kuota_sk'),
-            'Limbah Sampah Kontaminasi')
+            'Limbah Sampah Kontaminasi - Ton')
 
-        var neracaKuotaAbu = grafNeracaMutasi(document.getElementById('graf_kuota_abu'), 'Limbah Abu')
+        var neracaKuotaAbu = grafNeracaMutasi(document.getElementById('graf_kuota_abu'), 'Limbah Abu - Ton')
 
         var neracaKuotalamputl = grafNeracaMutasi(document.getElementById('graf_kuota_TL'),
-            'Limbah Lampu TL')
+            'Limbah Lampu TL - Kg')
 
         var neracaLimbahLainLain = grafNeracaMutasiLain(document.getElementById('graf_mutasi'), '')
 
@@ -212,6 +203,7 @@
             getDataNeraca(paramData)
         })
 
+        // Chart.plugins.register(ChartDataLabels);
 
         function createPieChart(ctx, title, meta) {
 
@@ -264,15 +256,20 @@
                         titleFontSize: 16,
                         bodyFontSize: 14,
                         displayColors: true
-                    }
+                    },
+                    // plugins: [ChartDataLabels],
+        //             plugins: {
+        //     // Change options for ALL labels of THIS CHART
+        //     datalabels: {
+        //         color: '#36A2EB'
+        //     }
+        // }
 
                 }
             });
         }
         var satuanNeraca = '-'
-
         function grafNeracaMutasi(ctx, title) {
-            // var satuanNeraca='-'
             return new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -316,11 +313,9 @@
                                 beginAtZero: true,
                                 tickWidth: 5,
                                 stepSize: 10,
-                                callback: function (value, index, values) {
-
-
-
-                                    return value + ' ' + satuanNeraca;
+                                callback: function (value, index, values,data) {
+                                    // console.log(values)
+                                    return value ;
                                 }
                             }
                         }]
@@ -664,18 +659,18 @@
 
                     var resultdata = data.dataBar
                     console.log(resultdata)
-                    updateDataNeraca(neracaKuotaCair, resultdata['kuota-1'].saldoMasuk, resultdata[
-                        'kuota-1'].saldoKeluar, resultdata['kuota-1'].sisaSaldo, resultdata[
-                        'kuota-1'].satuan)
-                    updateDataNeraca(neracaKuotaSK, resultdata['kuota-2'].saldoMasuk, resultdata[
-                        'kuota-2'].saldoKeluar, resultdata['kuota-2'].sisaSaldo, resultdata[
-                        'kuota-2'].satuan)
+                    updateDataNeraca(neracaKuotaCair, resultdata['kuota-1'].saldoMasuk, 
+                    resultdata['kuota-1'].saldoKeluar, resultdata['kuota-1'].sisaSaldo, 
+                    resultdata['kuota-1'].satuan)
+                    updateDataNeraca(neracaKuotaSK, resultdata['kuota-2'].saldoMasuk, 
+                    resultdata['kuota-2'].saldoKeluar, resultdata['kuota-2'].sisaSaldo, 
+                        resultdata['kuota-2'].satuan)
                     updateDataNeraca(neracaKuotaSludge, resultdata['kuota-3'].saldoMasuk,
                         resultdata['kuota-3'].saldoKeluar, resultdata['kuota-3'].sisaSaldo,
                         resultdata['kuota-3'].satuan)
-                    updateDataNeraca(neracaKuotaAbu, resultdata['kuota-4'].saldoMasuk, resultdata[
-                        'kuota-4'].saldoKeluar, resultdata['kuota-4'].sisaSaldo, resultdata[
-                        'kuota-4'].satuan)
+                    updateDataNeraca(neracaKuotaAbu, resultdata['kuota-4'].saldoMasuk, 
+                    resultdata['kuota-4'].saldoKeluar, resultdata['kuota-4'].sisaSaldo, 
+                        resultdata['kuota-4'].satuan)
                     updateDataNeraca(neracaKuotalamputl, resultdata['kuota-5'].saldoMasuk,
                         resultdata['kuota-5'].saldoKeluar, resultdata['kuota-5'].sisaSaldo,
                         resultdata['kuota-5'].satuan)
