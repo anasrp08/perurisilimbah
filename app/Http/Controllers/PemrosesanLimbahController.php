@@ -166,6 +166,8 @@ class PemrosesanLimbahController extends Controller
                     'limbah3r'            => $row['limbah3r'],
                     'created_at'            => date('Y-m-d'),
                     'np_pemroses'           => $row['np_pemroses'],
+                    'no_ba_pemusnahan'           => $this->getNoBAPemusnahan(),
+                    
                     'created_by'            => $username,
 
                 );
@@ -187,27 +189,18 @@ class PemrosesanLimbahController extends Controller
                     'np_pemroses'           =>  $row['np_pemroses'],
                     'changed_by'            =>  $username,
                 );
-                // $dataPacking = array(
-                //     'id_transaksi'          =>  $row['id_transaksi'],
-                //     'no_packing'            =>  $row['no_packing'],
-                //     // 'kode_pack'            => $row['kode_pack'],
-                //     'idmutasi'              => $row['idmutasi'],
-                //     'idlimbah'              => $row['idlimbah'],
-                //     'idtps'                 => $row['idtps'],
-                //     // 'tipelimbah'            => $row['tipelimbah'],
-                //     'idstatus'              => $status,
-                //     'kadaluarsa'            => date('Y-m-d', strtotime("+ 90 day")),
-                //     'created_at'            => date('Y-m-d'),
-                //     // 'np'                   =>$row['np'],
-                //     'created_by'            =>$username,
-                // );
-                // $dataTPS = array('idtps' => $row['idtps'],
-                // 'idvendor' => $row['idvendor'],
-                // 'no_manifest' => $row['nomanifest'],
-                // 'no_spbe' => $row['nospbe'],
-                // 'no_kendaraan' => $row['nokendaraan'],
-                // ); 
-                $insertDetail = DB::table('tr_detailmutasi')->insert($dataDetail);
+                
+                $insertDetail = DB::table('tr_detailmutasi')->insertGetId($dataDetail);
+                $dataValidasi = array(
+                    'id_detail'             =>  $insertDetail,
+                    'id_mutasi'             => $row['idmutasi'], 
+                    'keterangan_proses'     => $row['keterangan_proses'],   
+                    // 'np_penerima'     => $row['keterangan_proses'],                    
+                    'created_at'            => date('Y-m-d'), 
+                     
+                );
+
+                $insertValidasi = DB::table('tr_validasi_ba')->insert($dataValidasi);
                 $insertHeader = DB::table('tr_headermutasi')->where('id', $row['idmutasi'])->update($dataHeader);
                 // $insertPacking = DB::table('tr_packing')->where('idmutasi', $row['idmutasi'])->update($dataPacking);
 
@@ -493,5 +486,47 @@ class PemrosesanLimbahController extends Controller
        
         $updateDelete = DB::table('tbl_pemroses_lain')->where('id',$id)->update($dataUpdate);
         return response()->json(['success' => 'Data Berhasil Di Di Hapus']);
+    }
+    public function getNoBAPemusnahan(){
+
+        $noBA = DB::table('md_ba_pemusnahan')->where('tahun',date('Y'))->first(); 
+        if ($noBA === null) {
+            $dataNomor = array(
+                'no'         => 1,
+                'tahun'        =>date('Y')
+                
+    
+            );
+            $insertNewNomor=DB::table('md_ba_pemusnahan')->insert($dataNomor); 
+            $noBA =DB::table('md_ba_pemusnahan')->where('tahun',date('Y'))->first(); 
+            // user doesn't exist
+         }
+         
+         
+        $currMonth = date("m");
+        $currYear = date("Y");
+        $nomor = (int)$noBA->no;
+        function numberToRomanRepresentation($number)
+        {
+            $map = array('M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1);
+            $returnValue = '';
+            while ($number > 0) {
+                foreach ($map as $roman => $int) {
+                    if ($number >= $int) {
+                        $number -= $int;
+                        $returnValue .= $roman;
+                        break;
+                    }
+                }
+            }
+            return $returnValue;
+        }
+        $no = sprintf('%03d', $nomor);
+
+        $concatFormat = 'BA-'.$no . "/" . 'BAPI' . "/" . numberToRomanRepresentation($currMonth) . "/" . $currYear;
+        $nomor++;
+        DB::table('md_ba_pemusnahan')->update(['no' => $nomor]);
+        return  $concatFormat;
+
     }
 }

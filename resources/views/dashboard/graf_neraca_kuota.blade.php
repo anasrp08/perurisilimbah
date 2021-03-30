@@ -152,12 +152,12 @@
                   </div>
                 </div>
                 <a class="carousel-control-prev" href="#carouselKuotaAnggaran" role="button" data-slide="prev" 
-                style="margin-left: -6rem;">
+                style="margin-left: -8rem;">
                   <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                   <span class="sr-only">Previous</span>
                 </a>
                 <a class="carousel-control-next" href="#carouselKuotaAnggaran" role="button" data-slide="next"
-                style="margin-right: -6rem;">
+                style="margin-right: -8rem;">
                   <span class="carousel-control-next-icon" aria-hidden="true"></span>
                   <span class="sr-only">Next</span>
                 </a>

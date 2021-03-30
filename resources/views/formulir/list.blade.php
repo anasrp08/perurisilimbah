@@ -29,7 +29,7 @@
 <script>
     $(document).ready(function () {
         var seksi = '<?php echo $username->seksi ?>'
-        // console.log(username)
+      
         var table = $('#tbl_formulir').DataTable({
 
             columnDefs: [{
@@ -59,7 +59,9 @@
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                data: function (d) {}
+                data: function (d) {
+                    d.idasallimbah=seksi
+                }
             },
             // dom: 'Bfrti',
             language: {

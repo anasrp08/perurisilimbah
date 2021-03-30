@@ -98,7 +98,7 @@ class BAPemusnahanController extends Controller
                     //     } 
                     // })
                     ->addIndexColumn()
-                    ->addColumn('action', 'action_butt_download')
+                    ->addColumn('action', 'action_butt_ba_download')
                     ->rawColumns(['action'])
                     
                     ->make(true);
@@ -112,9 +112,11 @@ class BAPemusnahanController extends Controller
 
     public function viewIndex()
     { 
-         
+        $np=DB::table('tbl_np')->get();
         return view('formulir.list',[
-            'username'=>AuthHelper::getAuthUser()[0]
+            'username'=>AuthHelper::getAuthUser()[0],
+            'np'=>$np
+            
             ]);
     }
 
@@ -173,7 +175,33 @@ class BAPemusnahanController extends Controller
      */
     public function update(Request $request)
     {
-     
+        setlocale(LC_TIME, 'id');
+        date_default_timezone_set('asia/jakarta');
+        $username = AuthHelper::getAuthUser()[0]->email;
+        $getRequest = json_decode($request->getContent(), true);
+        $dataRequest = $getRequest['Order'];
+        $countDataReq = count($dataRequest);
+      
+        $dataStatus = null;
+        $time=date('H:i:s'); 
+        $jmlh_pack=null;
+        try {
+            foreach ($dataRequest as $row) { 
+               
+                    $dataStatus = array(
+                        'validated'        => date('Y-m-d'),
+                        'validated_by'        => $row['np'],
+                    );
+                    // $updateStatus = DB::table('tr_statusmutasi')->where('idmutasi', $row['idmutasi'])->update($dataStatus, true);
+                    $updateHeaderValidasi = DB::table('tr_headermutasi')->where('id', $row['idheader'])->update($dataStatus, true);
+              
+                }
+            
+            return response()->json(['success' => 'Data Berhasil Di Simpan']);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Data Gagal Disimpan']);
+        }
+      
     }
 
     /**
@@ -193,11 +221,12 @@ class BAPemusnahanController extends Controller
       
         setlocale(LC_TIME, 'id');
        
-        $dataFormulirLimbah=DB::table('tr_headermutasi')
-            ->join('tr_detailmutasi', 'tr_headermutasi.id', '=', 'tr_detailmutasi.idmutasi')
+        $dataFormulirLimbah=DB::table('tr_detailmutasi')
+            ->join('tr_headermutasi', 'tr_headermutasi.id', '=', 'tr_detailmutasi.idmutasi')
             ->join('md_namalimbah', 'tr_headermutasi.idlimbah', '=', 'md_namalimbah.id')
             ->join('md_penghasillimbah', 'tr_headermutasi.idasallimbah', '=', 'md_penghasillimbah.id')
             ->join('md_jenislimbah', 'tr_headermutasi.idjenislimbah', '=', 'md_jenislimbah.id')
+            ->join('tr_validasi_ba','tr_detailmutasi.id','tr_validasi_ba.id_detail')
             ->select('tr_headermutasi.no_surat',
             'tr_headermutasi.created_at as tgldibuat',
             'tr_headermutasi.jumlah_in',
@@ -213,7 +242,7 @@ class BAPemusnahanController extends Controller
            ) 
            ->where('tr_detailmutasi.idstatus','=','2')
            ->where('tr_headermutasi.id_transaksi','=',$id)->get(); 
-        //    dd($id);
+           dd($dataFormulirLimbah);
            $penerima=DB::table('tr_detailmutasi')
            ->where('id_transaksi','=',$id)
            ->where('idstatus','2')->first(); 

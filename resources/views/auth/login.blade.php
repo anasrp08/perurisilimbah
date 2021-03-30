@@ -32,6 +32,11 @@
                 <img src="{{ asset('/img/logo.png') }}">
                 <h2 class="title">SIMBAH</h2>
                 <h3 class="kepanjangan">Sistem Informasi Limbah</h3><br>
+                @error('username')
+                <span class="invalid-feedback" role="alert">
+                    <strong style="color: red">{{ $message }}</strong>
+                </span>
+                @enderror
                 <div class="input-div one">
                     <div class="i">
                         <i class="fas fa-user"></i>
@@ -39,13 +44,10 @@
                     <div class="div">
                         <h5>Username</h5>
                         <input type="text" class="input" name="username" id="username" value="{{ old('username') }}" required
-                            autocomplete="off">
-                        @error('username')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
+                            autocomplete="off" >
+                        
                     </div>
+                   
                 </div>
                 <div class="input-div pass">
                     <div class="i">

@@ -273,7 +273,12 @@
                                         moment(
                                             data)
                                         .format('DD/MM/YYYY') + '</span></h5>'
-                                } else {
+                                } else if (currDate == currDate) {
+                                    return '<h5><span class="badge badge-danger">' +
+                                        moment(
+                                            data)
+                                        .format('DD/MM/YYYY') + '</span></h5>'
+                                } {
                                     return '<h5><span class="badge badge-success">' +
                                         moment(
                                             data)
@@ -522,6 +527,7 @@
                         obj.status_lama = data[i].idstatus;
 
                         obj.np_pemroses = $('#np_pemroses').val();
+                        obj.keterangan_proses = $('#keterangan_proses').val();
                         output.push(obj);
                         jsonData["detail"] = output
                     }

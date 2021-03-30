@@ -36,8 +36,7 @@ class NeracaTahunanController extends Controller
     }
     public function viewIndexNeracaTahunan()
     {
-
-        // $namalimbah=DB::table('tr_detailmutasi')->where('konversi_kuota')
+ 
         return view('neraca_tahunan.list', [
             'tahun' => AppHelper::dataTahun()]
         );
@@ -54,8 +53,6 @@ class NeracaTahunanController extends Controller
         //hanya untuk membuat array tanggal per hari 
         $period = new DatePeriod(new DateTime('2021-03-01'), new DateInterval('P1D'), new DateTime('2021-03-01 +31 day'));
         $arrData = [];
-
-
         $periodIn = [];
         $periodOut = [];
         $idlimbah=[];
@@ -65,17 +62,41 @@ class NeracaTahunanController extends Controller
             // $periodOut[$date->format("d")] = 0; 
             $columnPeriod[] = $date->format("d");
         } 
-        for ($i = 1; $i < 4; $i++) {
-            $dataLimbahIn[$i] = $this->getDataPerLimbah('2021', $i, $idlimbah, ['2'], $periodIn, 'In');
 
-            $dataLimbahOut[$i] = $this->getDataPerLimbah('2021', $i,$idlimbah, ['5', '6', '7', '8', '9'], $periodIn, 'Out');
+        for ($i = 1; $i <= 12; $i++) {
+            $dataLimbahIn[$i] = $this->getDataPerLimbah( $request->tahun, $i, $idlimbah, ['1'], $periodIn, 'In');
+            $dataLimbahOut[$i] = $this->getDataPerLimbah($request->tahun, $i,$idlimbah, ['5', '6', '7', '8', '9'], $periodIn, 'Out');
             array_push($arrData, $dataLimbahIn[$i]);
             array_push($arrData, $dataLimbahOut[$i]); 
         } 
 
         array_unshift($columnPeriod, 'No.', 'Bulan', 'Awal', 'Nama Limbah', 'Kategori');
-        array_push($columnPeriod, 'Jumlah', 'Total');
- 
+        array_push($columnPeriod, 'Jumlah', 'Total'); 
+        //untuk ambil jumlah awal di tambah sisa bulan sebelumnya
+        for($i=0;$i<count($arrData);$i++){
+            if($i > 1){ 
+            if($i % 2 == 0 ){   
+                //nilai awal saldo sisa bulan lalu  + masuk bulan ini   
+                // dd($arrData[6][2]);
+                $arrData[$i][2]= (int)$arrData[$i][2] + (int)$arrData[$i-1][37];
+                }else{
+                    $arrData[$i][2]= $arrData[$i-1][2];
+                     //untuk nilai akhir saldo sisa bulan lalu  + masuk bulan ini   - keluar bulan ini
+                    $arrData[$i][37]= $arrData[$i][2] + $arrData[$i-1][36] - $arrData[$i][36];
+                    //samakan row sebelumnya dengan hasil nilai akhir
+                    $arrData[$i-1][37]=$arrData[$i][37];
+                }
+
+            }
+
+            //jika iterasi bulan lebih besar dari bulan skrg dianggap 0
+            if($arrData[$i][0] > ltrim( date('m'), '0')){
+                $arrData[$i][2]=0;
+                $arrData[$i][36]=0;
+                $arrData[$i][37]=0;
+            }
+        }
+             
         return response()->json([
             'column' => $columnPeriod,
             'dataRow' => $arrData
@@ -87,26 +108,26 @@ class NeracaTahunanController extends Controller
         if($category=='In'){
             $data = DB::table('tr_detailmutasi')
             ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', 'md_namalimbah.id')
-            ->select(DB::raw('DATE_FORMAT(tr_detailmutasi.created_at, "%d") as created_at'), DB::raw('sum(tr_detailmutasi.jumlah) as jumlah'))
-            ->whereYear('tr_detailmutasi.created_at', $year)
-            ->whereMonth('tr_detailmutasi.created_at', $month)
+            ->select(DB::raw('DATE_FORMAT(tr_detailmutasi.tgl, "%d") as created_at'), DB::raw('sum(tr_detailmutasi.jumlah) as jumlah'))
+            ->whereYear('tr_detailmutasi.tgl', $year)
+            ->whereMonth('tr_detailmutasi.tgl', $month)
             ->whereIn('tr_detailmutasi.idstatus', $status)
-            ->whereIn('tr_detailmutasi.idlimbah', $limbah)
-            ->where('tr_detailmutasi.keterangan', null)
-            ->groupBy('tr_detailmutasi.created_at')
-            ->orderBy('tr_detailmutasi.created_at', 'asc')
+            ->whereIn('tr_detailmutasi.idlimbah', $limbah) 
+            ->groupBy('tr_detailmutasi.tgl')
+            ->orderBy('tr_detailmutasi.tgl', 'asc')
             ->get();
+            // dd();
         }else{
             $data = DB::table('tr_detailmutasi')
             ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', 'md_namalimbah.id')
-            ->select(DB::raw('DATE_FORMAT(tr_detailmutasi.created_at, "%d") as created_at'), DB::raw('sum(tr_detailmutasi.jumlah) as jumlah'))
+            ->select(DB::raw('DATE_FORMAT(tr_detailmutasi.tgl, "%d") as created_at'), DB::raw('sum(tr_detailmutasi.jumlah) as jumlah'))
             ->whereYear('tr_detailmutasi.tgl', $year)
             ->whereMonth('tr_detailmutasi.tgl', $month)
             ->whereIn('tr_detailmutasi.idstatus', $status)
             ->whereIn('tr_detailmutasi.idlimbah', $limbah)
-            ->where('tr_detailmutasi.keterangan', null)
-            ->groupBy('tr_detailmutasi.created_at')
-            ->orderBy('tr_detailmutasi.created_at', 'asc')
+            // ->where('tr_detailmutasi.keterangan', null)
+            ->groupBy('tr_detailmutasi.tgl')
+            ->orderBy('tr_detailmutasi.tgl', 'asc')
             ->get();
         }
         
@@ -172,18 +193,17 @@ class NeracaTahunanController extends Controller
         
     
         $namalimbah=null; 
-        if(in_array(1,$limbah) ||in_array(2,$limbah)||in_array(3,$limbah) ){ 
-            $namalimbah='Wiping Solution';
-        }else{
+        // if(in_array(1,$limbah) ||in_array(2,$limbah)||in_array(3,$limbah) ){ 
+        //     $namalimbah='Wiping Solution';
+        // }else{
             $namalimbah = DB::table('md_namalimbah')->where('id',$limbah)->first('namalimbah');
             $namalimbah=$namalimbah->namalimbah;
-        }
+        // }
         $dataFrontColumn =null;
         $jumlahPerKategori=null;
         $jumlahAwal=null;
         $jumlahAkhir=null;
-
-         //tinggal front column & last column di pisahkan in OUT
+ 
         if($category=='In'){
             $jumlahAwal=$this->getJumlahAwalAkhir($year, $month, $limbah, $status,'awal','In',$dataSatuan);
             $jumlahAkhir=$this->getJumlahAwalAkhir($year, $month, $limbah, $status,'akhir','In',$dataSatuan);
@@ -197,8 +217,14 @@ class NeracaTahunanController extends Controller
             $jumlahPerKategori=round($totalKategoriMutasi, 1);
             // $this->queryJumlahAwalAkhir($year, $month, $limbah, $status,$dataSatuan);
         }
+        //jika iterasi bulan lebih besar dari bulan skrg bulan selanjutnya dianggap 0
+        if( $month > ltrim( date('m'), '0')){
+            $jumlahAwal=0;
+            $jumlahAkhir=0;
+        }
         $dataFrontColumn = array($month, $namaBulan, $jumlahAwal, $namalimbah, $category);
         //assign data for last column
+       
         $dataLastColumn = array($jumlahPerKategori, $jumlahAkhir);
 
         $dataRow = [];
@@ -211,19 +237,135 @@ class NeracaTahunanController extends Controller
         foreach ($dataLastColumn as $data) {
             array_push($dataRow, $data);
         }
+
+        
  
         return $dataRow;
+    }
+    
+    public function assignDatatoDate($dataQuery, $arrPeriode,$dataSatuan)
+    {
+        $arrPerDate = [];
+        //assign data query to each date
+        foreach ($dataQuery as $data) {     
+            $resultConvert=$this->convertSatuan($data->jumlah,$dataSatuan); 
+            $arrPeriode[$data->created_at] =  $resultConvert;
+        }
+        //convert dataQuery to only value in array
+        foreach ($arrPeriode as $data) {
+            array_push($arrPerDate, $data);
+        } 
+        return $arrPerDate;
+    }
+    public function getJumlahAwalAkhir($currYear, $currMonth, $limbah, $status,$mode,$mutasi,$dataSatuan)
+    {
+        $prevYear=$currYear - 1;
+        $prevMonth=null;
+        $filterMonth=$currMonth;
+        $data =null;
+        $dataIn=0;
+        $dataOut=0;
+        $total=0;
+        
+        //nilai saldo awal
+        if($mode=='awal'){
+            //ambil data di tahun sebelumnya jika bulan januari 
+            if($currMonth < '2'){
+                $prevMonth='12';
+                $dataIn=$this->queryJumlahAwalAkhir($prevYear, $prevMonth, $limbah, ['1'],$dataSatuan);
+                $dataOut=$this->queryJumlahAwalAkhir($prevYear, $prevMonth, $limbah, ['5','6','7','8','9'],$dataSatuan);
+                if($dataIn == 0){
+                    $total=0;
+                }else{ 
+                    $total=(int) $dataIn - (int) $dataOut; 
+                }
+                 
+                return $total;
+                //ambil data bulan sebelumnya di tahun yang sama
+            }else { 
+                // dd($currMonth);
+                $prevMonth=$currMonth-1;
+
+                $dataPrevIn=$this->queryJumlahAwalAkhir($currYear, $prevMonth, $limbah, ['1'],$dataSatuan);
+                $dataPrevOut=$this->queryJumlahAwalAkhir($currYear, $prevMonth, $limbah, ['5','6','7','8','9'],$dataSatuan);
+                if( $dataPrevIn==0){
+                    $total=0;
+                }else{ 
+                    $total=(int) $dataPrevIn - (int) $dataPrevOut; 
+                } 
+                // dd($total);
+            }
+          
+             
+            return $total;
+        }else if($mode=='akhir'){
+            if($currMonth < '2'){
+                $prevMonth='12';
+                $dataIn=$this->queryJumlahAwalAkhir($prevYear, $prevMonth, $limbah, ['1'],$dataSatuan);
+                $dataOut=$this->queryJumlahAwalAkhir($prevYear, $prevMonth, $limbah, ['5','6','7','8','9'],$dataSatuan);
+                if($dataIn == 0){
+                    $totalPrev=0;
+                }else{ 
+                    $totalPrev=(int) $dataIn - (int) $dataOut; 
+                }
+                
+                //ambil data bulan sebelumnya di tahun yang sama
+            }else { 
+                $prevMonth=$currMonth-1;
+
+                $dataPrevIn=$this->queryJumlahAwalAkhir($currYear, $prevMonth, $limbah, ['1'],$dataSatuan);
+                $dataPrevOut=$this->queryJumlahAwalAkhir($currYear, $prevMonth, $limbah, ['5','6','7','8','9'],$dataSatuan);
+                if( $dataPrevIn==0){
+                    $totalPrev=0;
+                }else{ 
+                    $totalPrev=(int) $dataPrevIn - (int) $dataPrevOut; 
+                }
+                
+            } 
+            //jumlah awal akhir di tahun berjalan
+            $dataCurrIn=$this->queryJumlahAwalAkhir($currYear, $currMonth, $limbah, ['1'],$dataSatuan);
+            $dataCurrOut=$this->queryJumlahAwalAkhir($currYear, $currMonth, $limbah, ['5','6','7','8','9'],$dataSatuan);
+         
+            $total=$dataCurrIn+$totalPrev-$dataCurrOut; 
+        
+            return $total;
+        }
+       
+
+        
+    }
+    public function queryJumlahAwalAkhir($year, $month, $limbah, $status,$dataSatuan)
+    {
+        $jumlah=0;
+        $data= DB::table('tr_detailmutasi')
+            ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', 'md_namalimbah.id')
+            ->select(DB::raw('sum(tr_detailmutasi.jumlah) as jumlah'))
+            ->whereYear('tr_detailmutasi.tgl', $year)
+            ->whereMonth('tr_detailmutasi.tgl', $month)
+            ->whereIn('tr_detailmutasi.idstatus', $status)
+            ->whereIn('tr_detailmutasi.idlimbah', $limbah)
+            // ->where('tr_detailmutasi.keterangan', null)  
+            ->first();
+            if($data->jumlah == null){
+                $jumlah=0;
+            }else{
+                $jumlah=$data->jumlah;
+            }
+            
+            // return $jumlah;
+            return $this->convertSatuan($jumlah, $dataSatuan);
+
     }
     public function querySaldoMutasiKuotaNeraca($year, $month, $status, $namalimbah)
     { 
         $resultData = DB::table('tr_detailmutasi')
             ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', 'md_namalimbah.id')
             ->select(DB::raw('sum(tr_detailmutasi.pack) as pack'))
-            ->whereYear('tr_detailmutasi.created_at', $year)
-            ->whereMonth('tr_detailmutasi.created_at', $month)
+            ->whereYear('tr_detailmutasi.tgl', $year)
+            ->whereMonth('tr_detailmutasi.tgl', $month)
             ->whereIn('tr_detailmutasi.idstatus', $status)
             ->whereIn('tr_detailmutasi.idlimbah', $namalimbah)
-            ->where('tr_detailmutasi.keterangan', null)
+            // ->where('tr_detailmutasi.keterangan', null)
             ->first();
 
         if ($resultData->pack == null) {
@@ -238,7 +380,7 @@ class NeracaTahunanController extends Controller
         $dataMasuk = $this->querySaldoMutasiKuotaNeraca(
             $year,
             $month,
-            ['2'],
+            ['1'],
             $namalimbah
         );
         $dataKeluar = $this->querySaldoMutasiKuotaNeraca(
@@ -266,8 +408,7 @@ class NeracaTahunanController extends Controller
         $dataSatuan = DB::table('md_namalimbah')->where('tipe_kuota_limbah', $tipe_kuota_limbah)->first('konversi_kuota');
 
         for ($i = 1; $i <= 12; $i++) {
-            $jumlahMasuk[$i] = $this->querySaldoMutasiKuotaNeraca($period, $i, ['2'], $dataNamaLimbah);
-
+            $jumlahMasuk[$i] = $this->querySaldoMutasiKuotaNeraca($period, $i, ['1'], $dataNamaLimbah);
             $jumlahKeluar[$i] = $this->querySaldoMutasiKuotaNeraca($period, $i, ['5', '6', '7', '8', '9'], $dataNamaLimbah);
             $jumlahSisa[$i] = null;
             $jumlahSisaPrev[$i] = 0;
@@ -305,122 +446,14 @@ class NeracaTahunanController extends Controller
     }
    
     
-    public function queryJumlahAwalAkhir($year, $month, $limbah, $status,$dataSatuan)
-    {
-        $jumlah=0;
-        $data= DB::table('tr_detailmutasi')
-            ->join('md_namalimbah', 'tr_detailmutasi.idlimbah', 'md_namalimbah.id')
-            ->select(DB::raw('sum(tr_detailmutasi.jumlah) as jumlah'))
-            ->whereYear('tr_detailmutasi.created_at', $year)
-            ->whereMonth('tr_detailmutasi.created_at', $month)
-            ->whereIn('tr_detailmutasi.idstatus', $status)
-            ->whereIn('tr_detailmutasi.idlimbah', $limbah)
-            ->where('tr_detailmutasi.keterangan', null)  
-            ->first();
-            if($data->jumlah == null){
-
-            }else{
-                $jumlah=$data->jumlah;
-            }
-            
-            // return $jumlah;
-            return $this->convertSatuan($jumlah, $dataSatuan);
-
-    }
-    public function getJumlahAwalAkhir($currYear, $currMonth, $limbah, $status,$mode,$mutasi,$dataSatuan)
-    {
-        $prevYear=$currYear - 1;
-        $prevMonth=null;
-        $filterMonth=$currMonth;
-        $data =null;
-        $dataIn=0;
-        $dataOut=0;
-        $total=0;
-        
-        //nilai saldo awal
-        if($mode=='awal'){
-            //ambil data di tahun sebelumnya jika bulan januari 
-            if($currMonth < '2'){
-                $prevMonth='12';
-                $dataIn=$this->queryJumlahAwalAkhir($prevYear, $prevMonth, $limbah, ['2'],$dataSatuan);
-                $dataOut=$this->queryJumlahAwalAkhir($prevYear, $prevMonth, $limbah, ['5','6','7','8','9'],$dataSatuan);
-                if($dataIn == 0){
-                    $total=0;
-                }else{ 
-                    $total=(int) $dataIn - (int) $dataOut; 
-                }
-                //ambil data bulan sebelumnya di tahun yang sama
-            }else { 
-                $prevMonth=$currMonth-1;
-
-                $dataPrevIn=$this->queryJumlahAwalAkhir($currYear, $prevMonth, $limbah, ['2'],$dataSatuan);
-                $dataPrevOut=$this->queryJumlahAwalAkhir($currYear, $prevMonth, $limbah, ['5','6','7','8','9'],$dataSatuan);
-                if( $dataIn==0){
-                    $total=0;
-                }else{ 
-                    $total=(int) $dataPrevIn - (int) $dataPrevOut; 
-                }
-                
-            }
-
-            
-            return $total;
-        }else if($mode=='akhir'){
-            if($currMonth < '2'){
-                $prevMonth='12';
-                $dataIn=$this->queryJumlahAwalAkhir($prevYear, $prevMonth, $limbah, ['2'],$dataSatuan);
-                $dataOut=$this->queryJumlahAwalAkhir($prevYear, $prevMonth, $limbah, ['5','6','7','8','9'],$dataSatuan);
-                if($dataIn == 0){
-                    $totalPrev=0;
-                }else{ 
-                    $totalPrev=(int) $dataIn - (int) $dataOut; 
-                }
-                //ambil data bulan sebelumnya di tahun yang sama
-            }else { 
-                $prevMonth=$currMonth-1;
-
-                $dataPrevIn=$this->queryJumlahAwalAkhir($currYear, $prevMonth, $limbah, ['2'],$dataSatuan);
-                $dataPrevOut=$this->queryJumlahAwalAkhir($currYear, $prevMonth, $limbah, ['5','6','7','8','9'],$dataSatuan);
-                if( $dataIn==0){
-                    $totalPrev=0;
-                }else{ 
-                    $totalPrev=(int) $dataPrevIn - (int) $dataPrevOut; 
-                }
-                
-            } 
-
-
-            $dataCurrIn=$this->queryJumlahAwalAkhir($currYear, $currMonth, $limbah, ['2'],$dataSatuan);
-            $dataCurrOut=$this->queryJumlahAwalAkhir($currYear, $currMonth, $limbah, ['5','6','7','8','9'],$dataSatuan);
-            // dd($totalPrev);
-            $total=$dataCurrIn+$totalPrev-$dataCurrOut; 
-        
-            return $total;
-        }
-       
-
-        
-    }
-    public function assignDatatoDate($dataQuery, $arrPeriode,$dataSatuan)
-    {
-        $arrPerDate = [];
-        //assign data query to each date
-        foreach ($dataQuery as $data) {     
-            $resultConvert=$this->convertSatuan($data->jumlah,$dataSatuan);
-            // $arrPeriode[$data->created_at] = $data->jumlah;
-            $arrPeriode[$data->created_at] =  $resultConvert;
-        }
-        //convert dataQuery to only value in array
-        foreach ($arrPeriode as $data) {
-            array_push($arrPerDate, $data);
-        } 
-        return $arrPerDate;
-    }
+    
+    
+   
     public function convertSatuan($data, $dataSatuan)
     {
-        $valPembagi=$dataSatuan->konversi_satuan_kecil;
-        // dd($data);
-        $resulConvert= (float)$data * (float)$valPembagi;
+        // $valPembagi=$dataSatuan->konversi_satuan_kecil;         
+        // $resulConvert= (float)$data * (float)$valPembagi;
+        $resulConvert= $data;
         $jmlhFinal=round($resulConvert, 1); 
         // dd($jmlhFinal);
         return $jmlhFinal;

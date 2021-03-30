@@ -71,7 +71,9 @@
                     <label>Nama Limbah</label>
                     <select name="namalimbah" id="namalimbah" class="form-control select2bs4" style="width: 100%;">
                         <option value="" disabled selected>-</option>
-                        <option value="1,2,3">Limbah Wiping Solution - Ton</option>
+                        <option value="1">Limbah Cair B3 Aqua Save - Ton</option>
+                        <option value="2">Limbah Cair B3 WTG - Ton</option>
+                        <option value="3">Limbah Cair B3 (Tasganu, Lab, Cemor,Persiapan, Tandiesdll) - Ton</option>
                         <option value="7">Tinta Ex Cetak Dalam Kemesan Drum @ 200 Liter - Ton</option>
                         <option value="8">Limbah Sisiran LKU (Potongan Karung) - Ton</option>
                         <option value="9">Limbah Punch Bintang - Ton</option>
@@ -163,21 +165,23 @@
                         scrollX: true,
                         autoWidth: true,
                         dom: '<"right"B>frtipl<"clear">',
+                        pageLength: 24,
                         // buttons: [  'excel', 'pdf' ],
-                        buttons: [{
-                                // https://codepen.io/RedJokingInn/pen/XMVoXL
-                                extend: 'pdfHtml5',
-                                orientation: 'landscape',
-                                pageSize: 'LEGAL',
-                                title: 'Laporan Neraca Limbah ' + $(
-                                        '#namalimbah option:selected').text() +
-                                    '\n' + ' Periode ' + $('#tahun_neraca').val(),
-                                download: 'open',
-                                // exportOptions: {
-                                // 		columns: ':visible',
+                        buttons: [
+                            // {
+                            //     // https://codepen.io/RedJokingInn/pen/XMVoXL
+                            //     extend: 'pdfHtml5',
+                            //     orientation: 'landscape',
+                            //     pageSize: 'LEGAL',
+                            //     title: 'Laporan Neraca Limbah ' + $(
+                            //             '#namalimbah option:selected').text() +
+                            //         '\n' + ' Periode ' + $('#tahun_neraca').val(),
+                            //     download: 'open',
+                            //     // exportOptions: {
+                            //     // 		columns: ':visible',
 
-                                // 	},
-                            },
+                            //     // 	},
+                            // },
                             {
                                 extend: 'excel',
                                 orientation: 'landscape',
@@ -185,15 +189,18 @@
                                 title: 'Laporan Neraca Limbah ' + $(
                                         '#namalimbah option:selected').text() +
                                     '  Periode ' + $('#tahun_neraca').val(),
-                                download: 'open'
+                                download: 'open',
+                                text: 'Download Excel',
+                                className: 'btn btn-success',
                             },
                             {
-                                text: 'Custom PDF',
+                                text: 'Download PDF',
                                 extend: 'pdfHtml5',
                                 filename: 'dt_custom_pdf',
                                 orientation: 'landscape', //portrait
-                                pageSize: 'A4', //A3 , A5 , A6 , legal , letter
+                                pageSize: 'legal', //A3 , A5 , A6 , legal , letter
                                 download: 'open',
+                                className: 'btn btn-info',
                                 exportOptions: {
                                     columns: ':visible',
                                     search: 'applied',
@@ -222,9 +229,9 @@
                                     // It's important to create enough space at the top for a header !!!
                                     doc.pageMargins = [20, 60, 20, 30];
                                     // Set the font size fot the entire document
-                                    doc.defaultStyle.fontSize = 7;
+                                    doc.defaultStyle.fontSize = 6;
                                     // Set the fontsize for the table header
-                                    doc.styles.tableHeader.fontSize = 7;
+                                    doc.styles.tableHeader.fontSize = 6;
                                     // Create a header object with 3 columns
                                     // Left side: Logo
                                     // Middle: brandname

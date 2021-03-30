@@ -87,6 +87,11 @@
 
                             </div>
                             <div class="col-sm-4">
+                                <div class="form-group nonpihakketiga">
+                                    <label>Keterangan</label>
+                                    <input type="text" id="keterangan_proses" name="keterangan_proses"
+                                    class="formproses form-control" autocomplete="off">
+                                </div>
                                 <div class="form-group pihakketiga">
                                     <label>No. Kendaraan</label>
                                     <input type="text" id="nokendaraan" name="nokendaraan"

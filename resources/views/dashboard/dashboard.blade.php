@@ -67,7 +67,7 @@
                                         <th>Nama Limbah</th>
                                         <th>Jumlah</th>
                                         <th>Tanggal Masuk</th>
-                                        <th>Tanggal Sekarang</th>
+                                        {{-- <th>Tanggal Sekarang</th> --}}
                                         <th>Tanggal Kadaluarsa</th>
                                         <th>TPS</th>
                                         <th>Status</th>
@@ -173,7 +173,7 @@ $('#datakadaluarsa').DataTable().ajax.reload();
 
         var neracaLimbahLainLain = grafNeracaMutasiLain(document.getElementById('graf_mutasi'), '')
 
-        var tps1 = createGauge('tps1', 'TPS B3 I', 'm2', 'Kapasitas', 540, 50, 405, 486)
+        var tps1 = createGauge('tps1', 'TPS B3 I', 'm2', 'Kapasitas', 1150, 50, 705, 1000) //540 50 405 486
 
         var tps2 = createGauge('tps2', 'TPS ABU', 'm3', 'Kapasitas', 72, 30, 54, 65)
 
@@ -311,8 +311,8 @@ $('#datakadaluarsa').DataTable().ajax.reload();
                         yAxes: [{
                             ticks: {
                                 beginAtZero: true,
-                                tickWidth: 5,
-                                stepSize: 10,
+                                // tickWidth: 5,
+                                // stepSize: 10,
                                 callback: function (value, index, values,data) {
                                     // console.log(values)
                                     return value ;
@@ -559,7 +559,7 @@ $('#datakadaluarsa').DataTable().ajax.reload();
 
                 series: [{
                     name: satuan2,
-                    data: [80],
+                    data: [0],
                     tooltip: {
                         valueSuffix: satuan
                     }
@@ -574,10 +574,15 @@ $('#datakadaluarsa').DataTable().ajax.reload();
         getDataKapasitas(paramKapasitas)
 
         function updateChart(chart, value, paramData) {
+            
+
+
             if (!chart.renderer.forExport) {
                 var point = chart.series[0].points[0]
+                console.log(chart.series[0])
                 point.update(value)
             }
+            // chart.series[0].addPoint([0, 1150], true, true);
         }
 
         function getDataNeraca(paramData) {
@@ -658,7 +663,7 @@ $('#datakadaluarsa').DataTable().ajax.reload();
                 success: function (data) {
 
                     var resultdata = data.dataBar
-                    console.log(resultdata)
+                    // console.log(resultdata)
                     updateDataNeraca(neracaKuotaCair, resultdata['kuota-1'].saldoMasuk, 
                     resultdata['kuota-1'].saldoKeluar, resultdata['kuota-1'].sisaSaldo, 
                     resultdata['kuota-1'].satuan)
@@ -693,7 +698,7 @@ $('#datakadaluarsa').DataTable().ajax.reload();
                 dataType: "json",
 
                 success: function (data) {
-                    console.log(data)
+                    // console.log(data)
                     var dataPenghasil = data.dataPenghasil
                     satuanDashboard = data.satuan.satuan
                     updateDataBar(myChart, dataPenghasil)
@@ -715,7 +720,7 @@ $('#datakadaluarsa').DataTable().ajax.reload();
                 dataType: "json",
 
                 success: function (data) {
-                    console.log(data)
+                    // console.log(data)
                     var dataKapasitas = data.dataKapasitas
                     updateChart(tps1, dataKapasitas[0].saldo, dataKapasitas[0].kapasitasjumlah)
                     updateChart(tps2, dataKapasitas[1].saldo, dataKapasitas[1].kapasitasjumlah)
@@ -741,14 +746,20 @@ $('#datakadaluarsa').DataTable().ajax.reload();
                     name: "namalimbah"
                 },
                 {
-                    data: "jumlah",
-                    name: "jumlah",
+                    data: "jumlah_in",
+                    name: "jumlah_in",
+                    // render: function (data, type, row) {
+                    // if(data == 0){
+
+
+                    // }
+                    // }
 
 
                 },
                 {
-                    data: "created_at",
-                    name: "created_at",
+                    data: "tgl",
+                    name: "tgl",
                     render: function (data, type, row) {
 
                         if (data == null || data == "-" || data == "0000-00-00 00:00:00" ||
@@ -764,16 +775,16 @@ $('#datakadaluarsa').DataTable().ajax.reload();
                     }
 
                 },
-                {
-                    data: "created_at",
-                    name: "created_at",
-                    render: function (data, type, row) {
+                // {
+                //     data: "created_at",
+                //     name: "created_at",
+                //     render: function (data, type, row) {
 
 
-                        return moment().format('DD/MM/YYYY'); 
-                    }
+                //         return moment().format('DD/MM/YYYY'); 
+                //     }
 
-                },
+                // },
                 {
                     data: "tgl_kadaluarsa",
                     name: "tgl_kadaluarsa",
@@ -812,12 +823,14 @@ $('#datakadaluarsa').DataTable().ajax.reload();
                         ]);
                         var difference = b.diff(a, 'days') // 1
                         //diff di query berbeda dengan dif di moment js
-
+ 
                         if (difference == 3) {
                             return '<span class="badge badge-danger">Bahaya</span>'
                         } else if (difference == 7) {
                             return '<span class="badge badge-warning">Waspada</span>'
-                        } else {
+                        } else if (difference == 0){
+                            return '<span class="badge badge-danger">Bahaya</span>'
+                        }else{
                             return '-'
                         }
 

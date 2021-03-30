@@ -49,9 +49,9 @@
                     <th>Asal Limbah</th>
                     <th>Jenis Limbah (B3/Non)</th>
                     <th>Status</th>
-                    <th>Terima Oleh</th>
-                    <th>Tervalidasi</th>
-                    <th>Validasi Oleh</th>
+                    <th>Diterima Oleh</th>
+                    <th>Tgl. Validasi</th>
+                    <th>Divalidasi Oleh</th>
                 </tr>
             </thead>
 
@@ -76,7 +76,7 @@
 @section('scripts')
 <script>
     $(document).ready(function () {
-
+        var seksi = '<?php echo $username->seksi ?>'
         $('#entridate').datepicker({
             uiLibrary: 'bootstrap4',
             format: 'dd/mm/yyyy',
@@ -227,6 +227,8 @@
                 obj.nospbe = arrValue[4];
                 obj.status_lama = data[i].idstatus;
                 obj.np_pemroses = $('#np_pemroses').val();
+                obj.idmutasi = data[i].id ;
+                obj.keterangan_proses = $('#keterangan_proses').val();
                 output.push(obj);
                 jsonData["Order"] = output
 
@@ -281,9 +283,17 @@
 
         $('#refresh').click(function () {
 
-            $('#daftar_pemohon').DataTable().ajax.reload();
+
 
         })
+        if (seksi == 'pengawas' || seksi == 'operator') {
+            var handle = setInterval(setNotification, 60000);
+        }
+
+        function setNotification() {
+            $('#daftar_pemohon').DataTable().ajax.reload();
+        }
+
         var table = $('#daftar_pemohon').DataTable({
             processing: true,
             serverSide: true,
@@ -298,28 +308,28 @@
                         var dataSelected = table.rows({
                             selected: true
                         }).data()
-                        var isProsesLgsg = true 
+                        var isProsesLgsg = false
 
                         for (i = 0; i < dataSelected.count(); i++) {
-                            if (dataSelected[i].is_lgsg_proses == '' || dataSelected[i].is_lgsg_proses == null || dataSelected[i].is_lgsg_proses == 'NULL' || dataSelected[i].is_lgsg_proses == '1') {
+                            if (dataSelected[i].is_lgsg_proses == '1') {
 
                                 toastr.warning(
-                                    'Ada limbah yang tidak diijinkan untuk proses langsung',
+                                    'Ada limbah yang harus diproses langsung',
                                     'Perhatian', {
                                         timeOut: 5000
                                     });
-                                return false
+                                isProsesLgsg = true
                                 break;
                             }
                         }
                         if (!isProsesLgsg) {
                             $('#title_konfirmasi').text('Diterima Oleh: ')
-                        $('#hidden_transaksi').val('terima')
-                        $('#modalconfirm').modal('show')
+                            $('#hidden_transaksi').val('terima')
+                            $('#modalconfirm').modal('show')
                         } else {
 
                         }
-                       
+
 
                     }
                 },
@@ -382,20 +392,22 @@
                             selected: true
                         }).data()
 
-                        var isProsesLgsg = true 
+                        var isProsesLgsg1 = true
                         for (i = 0; i < dataSelected.count(); i++) {
-                            if (dataSelected[i].is_lgsg_proses == '' || dataSelected[i].is_lgsg_proses == null || dataSelected[i].is_lgsg_proses == 'NULL') {
+                            if (dataSelected[i].is_lgsg_proses == '' || dataSelected[i]
+                                .is_lgsg_proses == null || dataSelected[i].is_lgsg_proses ==
+                                'NULL') {
 
                                 toastr.warning(
                                     'Ada limbah yang tidak diijinkan untuk proses langsung',
                                     'Perhatian', {
                                         timeOut: 5000
                                     });
-                                return false
+                                isProsesLgsg1 = false
                                 break;
                             }
                         }
-                        if (isProsesLgsg) {
+                        if (isProsesLgsg1) {
                             $('#title_konfirmasi').text('Di Proses Langsung Oleh: ')
                             $('#hidden_transaksi').val('proses')
                             $('#modalproses').modal('show')
@@ -445,7 +457,7 @@
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 data: function (d) {
-
+                    d.idasallimbah = seksi
 
 
 
@@ -552,11 +564,13 @@
         var buttonTerima = table.buttons(['.terima']);
         var buttonValidasi = table.buttons(['.validasi']);
         var buttonRevisi = table.buttons(['.revisi']);
+        var buttonProsesLangsung = table.buttons(['.proses']);
         var buttonDatatable = table.buttons(['.batal', '.semua']);
         var roleUser = '<?php echo Laratrust::hasRole("admin") ?>'
         var roleUnitKerja = '<?php echo Laratrust::hasRole("unit kerja") ?>'
         var rolePengawas = '<?php echo Laratrust::hasRole("pengawas") ?>'
         var roleOperator = '<?php echo Laratrust::hasRole("operator") ?>'
+
         if (roleUnitKerja == 1) {
             buttonTerima.disable();
             buttonValidasi.disable();
@@ -565,6 +579,7 @@
         } else if (rolePengawas == 1) {
             buttonTerima.disable();
             buttonRevisi.disable();
+            buttonProsesLangsung.disable();
         } else if (roleOperator == 1) {
             buttonValidasi.disable();
         }

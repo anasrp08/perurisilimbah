@@ -28,6 +28,7 @@ Route::post('/dashboard/neraca_kuota_anggaran', 'HomeController@dashboardNeracaK
 
 
 Route::post('/dashboard/notifikasi', 'HomeController@dataNotifikasi')->name('notifikasi.data');
+Route::post('/dashboard/notifikasi_masuk', 'HomeController@notifikasiMasuk')->name('notifikasi.masuk');
 
 Route::get('/limbah/entri', 'LimbahController@viewEntri')->name('limbah.entri');
 // Route::get('/limbah/update', 'LimbahController@Update')->name('limbah.update');
@@ -98,9 +99,28 @@ Route::post('/kontrak/kuota_anggaran/update', 'ReportLimbahController@updateAngg
 Route::post('/kontrak/kuota_anggaran/konsumsi', 'ReportLimbahController@updateKonsumsi')->name('kontrak.konsumsi_anggaran');
 Route::resource('report', 'ReportLimbahController');
 
+Route::get('/kontrakb3/view', 'TransaksiKontrakB3Controller@view')->name('kontrakb3.view');
+Route::post('/kontrakb3/data', 'TransaksiKontrakB3Controller@index')->name('kontrakb3.daftar'); 
+Route::post('/neraca_kontrak/data', 'TransaksiKontrakB3Controller@indexNeracaKontrak')->name('neraca_kontrak.daftar'); 
+Route::post('/kontrakb3/store', 'TransaksiKontrakB3Controller@store')->name('kontrakb3.store');
+Route::post('/kontrakb3/getTipeLimbah', 'TransaksiKontrakB3Controller@getDataTipeLimbah')->name('kontrakb3.tipelimbah');
+// Route::post('/kontrakb3/editdata', 'TransaksiKontrakB3Controller@editData')->name('kontrak.editdata'); 
+Route::get('kontrakb3/destroy/{id}', 'TransaksiKontrakB3Controller@destroy');
+// Route::post('/kontrakb3/kuota_anggaran/update', 'TransaksiKontrakB3Controller@updateAnggaran')->name('kontrak.update_anggaran');
+// Route::post('/kontrakb3/kuota_anggaran/konsumsi', 'TransaksiKontrakB3Controller@updateKonsumsi')->name('kontrak.konsumsi_anggaran');
+Route::resource('transaksianggaran', 'TransaksiKontrakB3Controller');
+
+
+
 Route::get('formulir/viewlist', 'FormLimbahController@viewIndex')->name('formulir.listview');
 Route::post('formulir/daftar', 'FormLimbahController@index')->name('formulir.daftar');
-Route::get('formulir/cetak/{id}', 'FormLimbahController@cetakFormulir')->name('formulir.cetak'); 
+Route::get('formulir/cetak/{id}', 'FormLimbahController@cetakFormulir')->name('formulir.cetak');
+Route::get('ba_pemusnahan/viewlist', 'FormLimbahController@viewIndexBAPemusnahan')->name('ba_pemusnahan.listview');
+Route::post('ba_pemusnahan/daftar', 'FormLimbahController@IndexBAPemusnahan')->name('ba_pemusnahan.daftar');
+Route::get('ba_pemusnahan/cetak/{id}', 'FormLimbahController@cetakBAPemusnahan')->name('ba_pemusnahan.cetak');
+Route::post('ba_pemusnahan/update_validasi', 'FormLimbahController@update')->name('ba_pemusnahan.validasi');
+
+
 // Route::get('/footballerdetail/GeneratePDFBA/{id}','JadwalController@GeneratePDFBA');
 Route::resource('formulir', 'FormLimbahController');
 

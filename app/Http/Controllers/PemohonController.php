@@ -55,8 +55,21 @@ class PemohonController extends Controller
                 )
                 ->where('tr_headermutasi.idstatus', 1)
                 ->orderBy('tr_headermutasi.tgl', 'asc'); 
-            if (AuthHelper::getAuthUser()[0]->display_name == 'Pengawas') {
-                $queryData->orWhere('tr_headermutasi.validated_by', null)->where('tr_detailmutasi.idstatus', 9);
+
+            // if (AuthHelper::getAuthUser()[0]->display_name == 'Pengawas') {
+            //     $queryData->orWhere('tr_headermutasi.validated_by', null)->where('tr_detailmutasi.idstatus', 9);
+            // }
+            if($request->idasallimbah == 'admin' || $request->idasallimbah == 'operator'){
+ 
+            }else if($request->idasallimbah == 'pengawas')
+            {
+                $queryData = $queryData
+                ->where('tr_headermutasi.validated_by',null);
+
+            }else{
+                $queryData = $queryData
+                ->where('tr_headermutasi.idasallimbah',$request->idasallimbah);
+                
             }
             $queryData = $queryData->get();
             return datatables()->of($queryData)
@@ -87,7 +100,8 @@ class PemohonController extends Controller
         $status=DB::table('md_statusmutasi')->get();
         return view(
             'pemohon.list',
-            ['np'=>$np,
+            [
+            'np'=>$np,
             'vendor'=> $vendor,
             'jenisLimbah' => $jenisLimbah,
             'namaLimbah' => $namaLimbah,
@@ -95,7 +109,8 @@ class PemohonController extends Controller
             'satuanLimbah' => $satuanLimbah,
             'tpsLimbah' => $tpsLimbah,
             'penghasilLimbah' => $penghasilLimbah,
-            'status'=>$status
+            'status'=>$status,
+            'username' => AuthHelper::getAuthUser()[0]
             ]
 
         );
@@ -118,6 +133,21 @@ class PemohonController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    public function numberToRomanRepresentation($number)
+    {
+        $map = array('M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1);
+        $returnValue = '';
+        while ($number > 0) {
+            foreach ($map as $roman => $int) {
+                if ($number >= $int) {
+                    $number -= $int;
+                    $returnValue .= $roman;
+                    break;
+                }
+            }
+        }
+        return $returnValue;
+    }
     public function noSurat($idAsalLimbah)
     { 
         $noSuratUnitKerja = DB::table('md_nosurat')->first();
@@ -125,25 +155,10 @@ class PemohonController extends Controller
         $currMonth = date("m");
         $currYear = date("Y");
         $nomor = (int)$noSuratUnitKerja->no;
-        function numberToRomanRepresentation($number)
-        {
-
-            $map = array('M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1);
-            $returnValue = '';
-            while ($number > 0) {
-                foreach ($map as $roman => $int) {
-                    if ($number >= $int) {
-                        $number -= $int;
-                        $returnValue .= $roman;
-                        break;
-                    }
-                }
-            }
-            return $returnValue;
-        }
+      
         $no = sprintf('%03d', $nomor);
 
-        $concatFormat = $no . "/" . $idAsalLimbah . "/" . numberToRomanRepresentation($currMonth) . "/" . $currYear;
+        $concatFormat = $no . "/" . $idAsalLimbah . "/" . $this->numberToRomanRepresentation($currMonth) . "/" . $currYear;
         $nomor++;
         DB::table('md_nosurat')->update(['no' => $nomor]);
         return  $concatFormat;
@@ -349,6 +364,7 @@ class PemohonController extends Controller
                         'limbah3r'            =>  $row['limbah3r'],
                         'created_at'        => date('Y-m-d'),
                         'keterangan'          => 'proses langsung',  
+                        'no_ba_pemusnahan'           => $this->getNoBAPemusnahan(),
                         'created_by'            => $username,
 
                     );
@@ -364,8 +380,21 @@ class PemohonController extends Controller
                         'updated_at'        =>  date('Y-m-d'),
                         'changed_by'        =>  $username,
                     );
-                    $insertDetail = DB::table('tr_detailmutasi')->insert($dataDetail1, true);
-                    $insertDetail = DB::table('tr_detailmutasi')->insert($dataDetail2, true);
+                    $insertDetail1 = DB::table('tr_detailmutasi')->insert($dataDetail1, true);
+                    $insertDetail2 = DB::table('tr_detailmutasi')->insertGetId($dataDetail2, true);
+                   
+                    $dataValidasi = array(
+                        'id_detail'             =>  $insertDetail2,
+                        'id_mutasi'             => $row['idmutasi'], 
+                        'keterangan_proses'     => $row['keterangan_proses'],   
+                        // 'np_penerima'     => $row['keterangan_proses'],                    
+                        'created_at'            => date('Y-m-d'), 
+                         
+                    );
+    
+                    $insertValidasi = DB::table('tr_validasi_ba')->insert($dataValidasi);
+                   
+                    
                     $updateHeaderValidasi = DB::table('tr_headermutasi')->where('id', $row['idheader'])->update($dataStatus, true);
                     // $insertStatus = DB::table('tr_statusmutasi')->where('idmutasi', $row['idmutasi'])->update($dataStatus, true);
                     // UpdtSaldoHelper::updateTambahSaldoNamaLimbah($row['idlimbah'], $row['jumlah']);
@@ -376,6 +405,34 @@ class PemohonController extends Controller
         } catch (Exception $e) {
             return response()->json(['error' => 'Data Gagal Disimpan']);
         }
+    }
+    public function getNoBAPemusnahan(){
+
+        $noBA = DB::table('md_ba_pemusnahan')->where('tahun',date('Y'))->first(); 
+        if ($noBA === null) {
+            $dataNomor = array(
+                'no'         => 1,
+                'tahun'        =>date('Y')
+                
+    
+            );
+            $insertNewNomor=DB::table('md_ba_pemusnahan')->insert($dataNomor); 
+            $noBA =DB::table('md_ba_pemusnahan')->where('tahun',date('Y'))->first(); 
+            // user doesn't exist
+         }
+         
+         
+        $currMonth = date("m");
+        $currYear = date("Y");
+        $nomor = (int)$noBA->no;
+         
+        $no = sprintf('%03d', $nomor);
+
+        $concatFormat = 'BA-'.$no . "/" . 'BAPI' . "/" . $this->numberToRomanRepresentation($currMonth) . "/" . $currYear;
+        $nomor++;
+        DB::table('md_ba_pemusnahan')->update(['no' => $nomor]);
+        return  $concatFormat;
+
     }
     public function update(Request $request)
     {

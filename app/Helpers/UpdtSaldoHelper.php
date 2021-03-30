@@ -113,11 +113,11 @@ class UpdtSaldoHelper
             $jmlhFinal=round($jmlh_pack, 1); 
         }else if($dataNamalimbah->packing_besar == 'TPS Abu' ){
             $jmlh_pack=(int)$saldo / (int) 1000;
-            $jmlhFinal=round($jmlh_pack, 1); 
+            $jmlhFinal=round($jmlh_pack, 3); 
         }else{
             //pembulatan ke bawah
             $jmlh_pack=(int)$saldo / (int) $max_packing;
-            $jmlhFinal=round($jmlh_pack, 1); 
+            $jmlhFinal=round($jmlh_pack, 3); 
         }
         
         return $jmlhFinal;

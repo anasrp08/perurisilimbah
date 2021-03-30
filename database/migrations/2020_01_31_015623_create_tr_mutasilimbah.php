@@ -38,8 +38,8 @@ class CreateTrMutasilimbah extends Migration
             $table->integer('jumlah_in');  
             $table->integer('jumlah_out');  
 
-            $table->double('pack_in',8,1);  
-            $table->double('pack_out',8,1);  
+            $table->double('pack_in',8,3);  
+            $table->double('pack_out',8,3);  
             $table->bigInteger('idsatuan')->unsigned()->nullable();
             $table->foreign('idsatuan')->references('id')->on('md_satuan')->onDelete('cascade');
              

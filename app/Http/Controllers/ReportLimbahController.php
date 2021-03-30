@@ -317,8 +317,7 @@ class ReportLimbahController extends Controller
                 'md_kuota.sisa', 'md_kuota.tahun', 
                 // 'md_namalimbah.tipe_kuota_limbah',
                 'md_kuota.np')->get();
-
-                // dd($queryData);
+ 
             return datatables()->of($queryData)
 
                 ->addIndexColumn()

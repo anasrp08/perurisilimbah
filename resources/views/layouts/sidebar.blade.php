@@ -1,5 +1,5 @@
 @if (Auth::check())
-@role(['admin','operator'])
+@role(['admin'])
 <li class="nav-item">
     <a href="{{ url('/') }}" class="nav-link">
         <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -90,13 +90,39 @@
         
     </ul>
 </li>
-<li class="nav-item">
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-copy"></i>
+        <p>
+            Anggaran Kontrak B3
+            <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('kontrakb3.view') }}" class="nav-link">
+                <i class="fas fa-pencil-square nav-icon"></i>
+                <p>Pencatatan Anggaran</p>
+            </a>
+        </li>
+    </ul>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('kontrak.listview') }}" class="nav-link">
+                <i class="fas fa-list nav-icon"></i>
+                <p>Neraca Anggaran</p>
+            </a>
+        </li>
+    </ul>
+</li>
+
+{{-- <li class="nav-item">
     <a href="{{ route('kontrak.listview') }}" class="nav-link">
         <i class="far fa-envelope nav-icon"></i>
         <p>Kuota Anggaran B3</p>
     </a>
      
-</li> 
+</li>  --}}
 <li class="nav-item has-treeview">
     <a href="#" class="nav-link">
         <i class="nav-icon fas fa-copy"></i>
@@ -110,6 +136,14 @@
             <a href="{{ route('formulir.listview') }}" class="nav-link">
                 <i class="far fa-file-text nav-icon"></i>
                 <p>Fomulir Serah Terima</p>
+            </a>
+        </li>
+    </ul>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('ba_pemusnahan.listview') }}" class="nav-link">
+                <i class="far fa-file-text nav-icon"></i>
+                <p>Fomulir BA Pemusnahan</p>
             </a>
         </li>
     </ul>
@@ -142,12 +176,7 @@
                 <p>Report Mutasi Limbah</p>
             </a>
         </li>
-        {{-- <li class="nav-item">
-            <a href="{{ route('kadaluarsa.listview') }}" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Report Limbah Kadaluarsa</p>
-            </a>
-        </li> --}}
+       
         <li class="nav-item">
             <a href="{{ route('kapasitas.listview') }}" class="nav-link">
                 <i class="far fa-list-alt nav-icon"></i>
@@ -192,33 +221,16 @@
                 <span>Vendor Limbah</span>
             </a>
         </li> 
-    </ul>
-</li> 
-<li class="nav-item has-treeview {!! Request::is('settings/*') ? 'active' : '' !!}">
-    <a href="#" class="nav-link">
-        <i class="nav-icon fas fa-database"></i>
-        <p>
-           Pengaturan
-            <i class="right fas fa-angle-left"></i>
-        </p>
-    </a>
-  
-    <ul class="nav nav-treeview">
-        <li class="nav-item {!! Request::is('settings/profil*') ? 'active' : '' !!}">
-            <a href="{{ url('/settings/profile/') }}" class="nav-link">
-                <i class="far fa-list-alt nav-icon"></i>
-                <span>Profile</span>
+        
+         <li class="nav-item">
+            <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <span>Kontrak B3</span>
             </a>
         </li>
-        <li class="nav-item {!! Request::is('settings/password') ? 'active' : '' !!}">
-            <a href="{{ url('/settings/password') }}" class="nav-link">
-                <i class="far fa-list-alt nav-icon"></i>
-                <span>Ubah Password</span>
-            </a>
-        </li>
-       
     </ul>
 </li> 
+
 {{-- 
 <li class="treeview {!! Request::is('settings/*') ? 'active' : '' !!}">
     <a href="#">
@@ -242,6 +254,106 @@
 </li> --}}
 
 @endrole
+@role(['operator'])
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-copy"></i>
+        <p>
+            Fomulir Limbah
+            <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('formulir.listview') }}" class="nav-link">
+                <i class="far fa-file-text nav-icon"></i>
+                <p>Fomulir Serah Terima</p>
+            </a>
+        </li>
+    </ul>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('ba_pemusnahan.listview') }}" class="nav-link">
+                <i class="far fa-file-text nav-icon"></i>
+                <p>Fomulir BA Pemusnahan</p>
+            </a>
+        </li>
+    </ul>
+</li>
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-industry"></i>
+        <p>
+            Pengangkutan
+            <i class="fas fa-angle-left right"></i>
+            {{-- <span class="badge badge-info right">6</span> --}}
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('pemohon.entri') }}" class="nav-link">
+                <i class="fas fa-pencil-square nav-icon"></i>
+                <p>Buat Permohonan</p>
+            </a>
+        </li>
+        
+        <li class="nav-item">
+            <a href="{{ route('pemohon.listview') }}" class="nav-link">
+                <i class="far fa-list-alt nav-icon"></i>
+                <p>Daftar Permohonan</p>
+                {{-- <span class="badge badge-info right"></span> --}}
+            </a>
+        </li>
+
+    </ul>
+</li>
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-archive"></i>
+        <p>
+            Penyimpanan
+            <i class="fas fa-angle-left right"></i>
+            {{-- <span class="badge badge-info right">6</span> --}}
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('penyimpanan.listview') }}" class="nav-link">
+                <i class="far fa-list-alt nav-icon"></i>
+                <p>Packing Limbah</p>
+            </a>
+        </li> 
+    </ul>
+</li>
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-truck"></i>
+        <p>
+            Pemrosesan
+            <i class="fas fa-angle-left right"></i>
+            {{-- <span class="badge badge-info right">6</span> --}}
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('pemrosesan.listview') }}" class="nav-link">
+                <i class="far fa-list-alt nav-icon"></i>
+                <p>Proses Limbah</p>
+            </a>
+        </li>
+        
+    </ul>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('lain.listview') }}" class="nav-link">
+                <i class="fas fa-list nav-icon"></i>
+                <p>Proses Limbah Lain-Lain</p>
+            </a>
+        </li>
+        
+    </ul>
+</li>
+@endrole
 @role(['unit kerja'])
 <li class="nav-item has-treeview">
     <a href="#" class="nav-link">
@@ -256,6 +368,14 @@
             <a href="{{ route('formulir.listview') }}" class="nav-link">
                 <i class="far fa-file-text nav-icon"></i>
                 <p>Fomulir Serah Terima</p>
+            </a>
+        </li>
+    </ul>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('ba_pemusnahan.listview') }}" class="nav-link">
+                <i class="far fa-file-text nav-icon"></i>
+                <p>Fomulir BA Pemusnahan</p>
             </a>
         </li>
     </ul>
@@ -306,6 +426,14 @@
             </a>
         </li>
     </ul>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('ba_pemusnahan.listview') }}" class="nav-link">
+                <i class="far fa-file-text nav-icon"></i>
+                <p>Fomulir BA Pemusnahan</p>
+            </a>
+        </li>
+    </ul>
 </li>
 <li class="nav-item has-treeview">
     <a href="#" class="nav-link">
@@ -331,7 +459,31 @@
 </li>
  
 @endrole
+<li class="nav-item has-treeview {!! Request::is('settings/*') ? 'active' : '' !!}">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-database"></i>
+        <p>
+           Pengaturan
+            <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
   
+    <ul class="nav nav-treeview">
+        <li class="nav-item {!! Request::is('settings/profil*') ? 'active' : '' !!}">
+            <a href="{{ url('/settings/profile/') }}" class="nav-link">
+                <i class="far fa-list-alt nav-icon"></i>
+                <span>Profile</span>
+            </a>
+        </li>
+        <li class="nav-item {!! Request::is('settings/password') ? 'active' : '' !!}">
+            <a href="{{ url('/settings/password') }}" class="nav-link">
+                <i class="far fa-list-alt nav-icon"></i>
+                <span>Ubah Password</span>
+            </a>
+        </li>
+       
+    </ul>
+</li> 
     <li class="nav-item">
       <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="nav-link">
           {{-- <i class="fa fa-sign-out"></i> --}}

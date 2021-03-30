@@ -36,27 +36,8 @@ class HomeController extends Controller
      */
     public function index()
     { 
-        if (Laratrust::hasRole('admin') || Laratrust::hasRole('operator')) {
-
-            //     // $getYear = DB::table('desain_tahun')->orderBy('tahun','desc')->get();
-            //     // $year=[];
-            //     // for($i=0;$i<count($getYear);$i++){
-            //     //     array_push($year,$getYear[$i]->tahun);
-            //     //     if($getYear[$i]->tahun == '2019'){ 
-            //     //     break;
-            //     //     }
-            //     // }
-            //     // dd($year);
-            //     // $book = Book::all();
-
-            //     // $member = Role::where('name', 'member')->first()->users;
-
-            //     // $borrow = BorrowLog::all();
-            //     // return view('dashboard.admin', compact('author', 'book', 'member', 'borrow'));
-
-            //     return view('dashboard.admin',[
-            //         // 'year'=>$year
-            //     ]);
+        if (Laratrust::hasRole('admin')) {
+ 
             $penghasilLimbah=DB::table('md_penghasillimbah')->get();
             $namaLimbah=DB::table('md_namalimbah')->get();
             AppHelper::dataTahun();
@@ -68,19 +49,17 @@ class HomeController extends Controller
                 ] 
             );
             
-        } else if(Laratrust::hasRole('unit kerja') ) {
+        } else if(Laratrust::hasRole('unit kerja')  ) {
             UpdKaryawanHelper::updatePegawai();
             // return view('pemohon.create', QueryHelper::getDropDown());
             return redirect()->route('pemohon.entri', QueryHelper::getDropDown());
-        }else if(Laratrust::hasRole('pengawas')) {
+        }else if(Laratrust::hasRole('pengawas') || Laratrust::hasRole('operator')) {
             
             UpdKaryawanHelper::updatePegawai();
             return redirect()->route('pemohon.listview', QueryHelper::getDropDown());
             // return view('pemohon.list', QueryHelper::getDropDown());
         }
-
-
-        // return view('home');
+ 
     }
    
     public function dataDashboard(Request $request)
@@ -112,7 +91,17 @@ class HomeController extends Controller
      //dashboard TPS
      public function dashboardKapasitas($request){
 
-        $dataKapasitas=DB::table('md_tps')->get(); 
+        $dataKapasitas=DB::table('md_tps')->get();
+        foreach($dataKapasitas as $row){
+            if($row->namatps=='TPS CAIR'){
+                $row->saldo=(int)$row->saldo_satuan_kecil / 1000;
+
+            }else{
+                $row->saldo=round($row->saldo, 2 );
+            }
+            
+        }
+
 
         return $dataKapasitas;
     }
@@ -123,10 +112,14 @@ class HomeController extends Controller
         ->join('md_namalimbah','tr_headermutasi.idlimbah','md_namalimbah.id')
         // ->join('tr_statusmutasi','tr_statusmutasi.id','tr_packing.idmutasi')
         ->join('md_tps','tr_headermutasi.idtps','md_tps.id')
-        ->select('md_namalimbah.namalimbah','tr_headermutasi.created_at','tr_headermutasi.tgl_kadaluarsa','md_tps.namatps',DB::raw('sum(tr_headermutasi.jumlah_in) as jumlah'))
-        ->where('tr_headermutasi.tgl_kadaluarsa',Carbon::today()->addDays(3))
-        ->orWhere('tr_headermutasi.tgl_kadaluarsa',Carbon::today()->addDays(7))
-        ->groupBy('tr_headermutasi.tgl_kadaluarsa')->get();
+        ->select('md_namalimbah.namalimbah','tr_headermutasi.tgl','tr_headermutasi.jumlah_in','tr_headermutasi.tgl_kadaluarsa','md_tps.namatps')
+        
+        ->where('tr_headermutasi.jumlah_in','!=',0)
+        ->where('tr_headermutasi.idjenislimbah','1')
+        ->whereIn('tr_headermutasi.tgl_kadaluarsa',[Carbon::today()->addDays(3),Carbon::today()->addDays(7),Carbon::today()])
+        // ->Where('tr_headermutasi.tgl_kadaluarsa',Carbon::today()->addDays(7))
+        // ->Where('tr_headermutasi.tgl_kadaluarsa',Carbon::today())
+        ->groupBy('tr_headermutasi.tgl_kadaluarsa','tr_headermutasi.idlimbah')->get();
         // ->whereRaw('DATE(tr_packing.kadaluarsa) = DATE(NOW()) + INTERVAL 3 DAY OR DATE(tr_packing.kadaluarsa) = DATE(NOW()) + INTERVAL 7 DAY' )->get(); 
         
         return $dataKadaluarsa;
@@ -138,11 +131,14 @@ class HomeController extends Controller
         ->join('md_namalimbah','tr_headermutasi.idlimbah','md_namalimbah.id')
         // ->join('tr_statusmutasi','tr_statusmutasi.id','tr_packing.idmutasi')
         ->join('md_tps','tr_headermutasi.idtps','md_tps.id')
-        ->select('md_namalimbah.namalimbah','tr_headermutasi.created_at','tr_headermutasi.tgl_kadaluarsa','md_tps.namatps',DB::raw('sum(tr_headermutasi.jumlah_in) as jumlah'))
-        ->where('tr_headermutasi.tgl_kadaluarsa',Carbon::today()->addDays(3))
-        ->where('tr_headermutasi.jumlah_in','!=','0')
-        ->orWhere('tr_headermutasi.tgl_kadaluarsa',Carbon::today()->addDays(7))
-        ->groupBy('tr_headermutasi.tgl_kadaluarsa')->get();
+        ->select('md_namalimbah.namalimbah','tr_headermutasi.tgl','tr_headermutasi.jumlah_in','tr_headermutasi.tgl_kadaluarsa','md_tps.namatps')
+        
+        ->where('tr_headermutasi.jumlah_in','!=',0)
+        ->where('tr_headermutasi.idjenislimbah','1')
+        ->whereIn('tr_headermutasi.tgl_kadaluarsa',[Carbon::today()->addDays(3),Carbon::today()->addDays(7),Carbon::today()])
+        // ->Where('tr_headermutasi.tgl_kadaluarsa',Carbon::today()->addDays(7))
+        // ->Where('tr_headermutasi.tgl_kadaluarsa',Carbon::today())
+        ->groupBy('tr_headermutasi.tgl_kadaluarsa','tr_headermutasi.idlimbah')->get();
         
         return datatables()->of($dataKadaluarsa)
 
@@ -200,7 +196,7 @@ class HomeController extends Controller
         $dataSatuan=DB::table('md_namalimbah')->where('tipe_kuota_limbah',$tipe_kuota_limbah)->first('konversi_kuota');
           
         for($i=1;$i<=12;$i++){   
-            $jumlahMasuk[$i]=$this->querySaldoMutasiKuotaNeraca($period,$i,['2'], $dataNamaLimbah);
+            $jumlahMasuk[$i]=$this->querySaldoMutasiKuotaNeraca($period,$i,['1'], $dataNamaLimbah);
              
             $jumlahKeluar[$i]=$this->querySaldoMutasiKuotaNeraca($period,$i,['5','6','7','8','9'], $dataNamaLimbah);
             
@@ -229,20 +225,14 @@ class HomeController extends Controller
    
     public function querySaldoMutasiKuotaNeraca($year,$month,$status,$namalimbah){
          
-        // $mutasi=null;
-        // if($modeMutasi == 'masuk'){
-        //     $mutasi='pack_in';
-        // }else{
-        //     $mutasi='pack_out';
-        // }
         $resultData=DB::table('tr_detailmutasi')
         ->join('md_namalimbah','tr_detailmutasi.idlimbah','md_namalimbah.id') 
         ->select(DB::raw('sum(tr_detailmutasi.jumlah) as jumlah')) 
-        ->whereYear('tr_detailmutasi.created_at', $year)
-        ->whereMonth('tr_detailmutasi.created_at', $month) 
+        ->whereYear('tr_detailmutasi.tgl', $year)
+        ->whereMonth('tr_detailmutasi.tgl', $month) 
         ->whereIn('tr_detailmutasi.idstatus', $status)
         ->whereIn('tr_detailmutasi.idlimbah', $namalimbah) 
-        ->where('tr_detailmutasi.keterangan', null)
+        // ->where('tr_detailmutasi.keterangan', null)
         ->first(); 
         
         $dataMasterLimbah=DB::table('md_namalimbah')->whereIn('id',$namalimbah)->first();
@@ -268,7 +258,7 @@ class HomeController extends Controller
         $dataMasuk=$this->querySaldoMutasiKuotaNeraca(
             $year,
             $month,
-            ['2'],
+            ['1'],
             $namalimbah
         );
         $dataKeluar=$this->querySaldoMutasiKuotaNeraca(
@@ -284,7 +274,7 @@ class HomeController extends Controller
         }else{
             $jumlahSisa=(int)$dataMasuk - (int)$dataKeluar;
         } 
-        return $jumlahSisa;
+        return abs($jumlahSisa);
     }
     //dashboard neraca lain-lain
     public function dataNeraca(Request $request)
@@ -297,10 +287,8 @@ class HomeController extends Controller
         $arrMasuk=[];
         $arrKeluar=[];
         $arrSisa=[];
-       
         for($i=1;$i<=12;$i++){ 
-
-            $jumlahMasuk[$i]=$this->querySaldoMutasi($request->period,$i,['2'], [$request->namalimbah]);
+            $jumlahMasuk[$i]=$this->querySaldoMutasi($request->period,$i,['1'], [$request->namalimbah]);
             $jumlahKeluar[$i]=$this->querySaldoMutasi($request->period,$i,['5','6','7','8','9'], [$request->namalimbah]);
             $jumlahSisa[$i]=null;
             $jumlahSisaPrev[$i]=null;
@@ -310,7 +298,7 @@ class HomeController extends Controller
            }else{ 
                $jumlahSisa[$i]=$this->getSisaSaldo((int)$request->period-1,$i,[$request->namalimbah]);
            }
-            array_push($arrMasuk,(int)$jumlahMasuk[$i]); 
+            array_push($arrMasuk,(int)$jumlahMasuk[$i]+$jumlahSisaPrev[$i]); 
             array_push($arrKeluar,(int)$jumlahKeluar[$i]); 
             array_push($arrSisa,(int)$jumlahSisa[$i]); 
         } 
@@ -334,11 +322,11 @@ class HomeController extends Controller
         $resultData=DB::table('tr_detailmutasi')
         ->join('md_namalimbah','tr_detailmutasi.idlimbah','md_namalimbah.id') 
         ->select(DB::raw('sum(tr_detailmutasi.pack)as pack'))
-        ->whereYear('tr_detailmutasi.created_at', $year)
-        ->whereMonth('tr_detailmutasi.created_at', $month) 
+        ->whereYear('tr_detailmutasi.tgl', $year)
+        ->whereMonth('tr_detailmutasi.tgl', $month) 
         ->whereIn('tr_detailmutasi.idstatus', $status)
         ->whereIn('tr_detailmutasi.idlimbah', [$namalimbah]) 
-        ->where('tr_detailmutasi.keterangan', null)
+        // ->where('tr_detailmutasi.keterangan', null)
         ->first();  
         // dd($resultData);
         if($resultData->pack == null){
@@ -370,13 +358,13 @@ class HomeController extends Controller
             ->join('md_namalimbah','tr_detailmutasi.idlimbah','md_namalimbah.id')
             ->join('md_penghasillimbah','tr_detailmutasi.idasallimbah','md_penghasillimbah.id')
             ->select(DB::raw('sum(tr_detailmutasi.jumlah) as jumlah'))
-            ->whereYear('tr_headermutasi.created_at', $request->period)
-            ->whereMonth('tr_headermutasi.created_at', $i)
+            ->whereYear('tr_detailmutasi.tgl', $request->period)
+            ->whereMonth('tr_detailmutasi.tgl', $i)
             // ->whereYear('tr_headermutasi.created_at', '2020')
             // ->whereMonth('tr_headermutasi.created_at', $i)
             ->where('tr_detailmutasi.idasallimbah', $request->unit_kerja)
             ->where('tr_detailmutasi.idlimbah', $request->namalimbah) 
-            ->where('tr_detailmutasi.idstatus', '2')
+            ->where('tr_detailmutasi.idstatus', '1')
             ->where('tr_detailmutasi.keterangan', '!=','proses langsung')
             ->first(); 
             
@@ -399,6 +387,9 @@ class HomeController extends Controller
     }
     public function dataNotifikasi(Request $request)
     {
+        $user = Auth::user();
+         
+        $roleuser=$user->roles->first()->name;
          
         $arrNotifikasi=new \stdClass(); 
         $arrKadaluarsa3=new \stdClass(); 
@@ -479,6 +470,45 @@ class HomeController extends Controller
         return response()->json([ 
             'dataNotifikasi'=>$arrNotifikasi, 
             'notifikasiKapasitas'=>$arrKapasitas, 
+            'role'=>$roleuser
+            ]);
+    }
+    public function notifikasiMasuk(Request $request){
+        
+        $user = Auth::user();
+         
+        $roleuser=$user->roles->first()->name;
+
+        $userUnit=AuthHelper::getAuthUser()[0];
+       
+        $resultData=DB::table('tr_headermutasi')  
+        ->whereYear('tr_headermutasi.tgl', date('Y')) 
+        ->where('tr_headermutasi.idstatus', '1');
+        if($roleuser=='pengawas'){
+            $resultData= $resultData->where('tr_headermutasi.validated_by', null);
+        }
+        $resultData=$resultData->get()->count(); 
+        
+        // dd($userUnit->seksi);
+        $dataBAPemusnahan=DB::table('tr_validasi_ba')
+        ->join('tr_detailmutasi','tr_detailmutasi.id','tr_validasi_ba.id_detail');
+        if($roleuser=='pengawas'){
+            $dataBAPemusnahan= $dataBAPemusnahan->where('tr_validasi_ba.np_pengawas',null);
+        }else{
+            $dataBAPemusnahan= $dataBAPemusnahan
+            ->where('tr_detailmutasi.idasallimbah',$userUnit->seksi)
+            ->where('tr_validasi_ba.np_pemohon',null);
+        }
+        
+        $dataBAPemusnahan= $dataBAPemusnahan->get()->count(); 
+        // dd($dataBAPemusnahan);
+
+        
+        return response()->json([ 
+            'notifMasuk'=>$resultData, 
+            'notifValidasiBA'=>$dataBAPemusnahan,
+            'role'=>$roleuser
+            
             ]);
     }
 }
