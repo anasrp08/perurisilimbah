@@ -125,21 +125,31 @@ class HomeController extends Controller
         return $dataKadaluarsa;
 
     }
-    public function dashboardToBeKadaluarsa1(){
-
+    public function dashboardToBeKadaluarsa1(){ 
+      
+        $dateNow3=Carbon::today()->addDays(3)->toDateString();
+        $dateNow7=Carbon::today()->addDays(7)->toDateString();
+         
+        $date = date("Y-m-d");
+        $date3 = strtotime($date."+ 3 days");
+        // dd(date("Y-m-d",$date3));
         $dataKadaluarsa=DB::table('tr_headermutasi')
-        ->join('md_namalimbah','tr_headermutasi.idlimbah','md_namalimbah.id')
-        // ->join('tr_statusmutasi','tr_statusmutasi.id','tr_packing.idmutasi')
+        ->join('md_namalimbah','tr_headermutasi.idlimbah','md_namalimbah.id') 
         ->join('md_tps','tr_headermutasi.idtps','md_tps.id')
-        ->select('md_namalimbah.namalimbah','tr_headermutasi.tgl','tr_headermutasi.jumlah_in','tr_headermutasi.tgl_kadaluarsa','md_tps.namatps')
+        ->select(
+            'md_namalimbah.namalimbah',
+        'tr_headermutasi.tgl',
+        'tr_headermutasi.jumlah_in',
+        'tr_headermutasi.tgl_kadaluarsa',
+        'md_tps.namatps'
+        )
         
         ->where('tr_headermutasi.jumlah_in','!=',0)
         ->where('tr_headermutasi.idjenislimbah','1')
-        ->whereIn('tr_headermutasi.tgl_kadaluarsa',[Carbon::today()->addDays(3),Carbon::today()->addDays(7),Carbon::today()])
-        // ->Where('tr_headermutasi.tgl_kadaluarsa',Carbon::today()->addDays(7))
-        // ->Where('tr_headermutasi.tgl_kadaluarsa',Carbon::today())
-        ->groupBy('tr_headermutasi.tgl_kadaluarsa','tr_headermutasi.idlimbah')->get();
-        
+        ->whereIn('tr_headermutasi.idstatus',['1','2','3']) 
+        ->whereBetween('tr_headermutasi.tgl_kadaluarsa',[$dateNow3, $dateNow7]) 
+        ->orderBy('tr_headermutasi.tgl_kadaluarsa','asc')->get();
+        // dd($dataKadaluarsa);
         return datatables()->of($dataKadaluarsa)
 
         // ->addIndexColumn()

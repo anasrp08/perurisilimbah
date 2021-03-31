@@ -98,6 +98,7 @@ class PemohonController extends Controller
         $tpsLimbah=DB::table('md_tps')->get();
         $np=DB::table('tbl_np')->get();
         $status=DB::table('md_statusmutasi')->get();
+               
         return view(
             'pemohon.list',
             [

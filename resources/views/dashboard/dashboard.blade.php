@@ -1,20 +1,21 @@
 @extends('layouts.app')
 <style type="text/css">
-.carousel-control-prev-icon {
- background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E") !important;
-}
+    .carousel-control-prev-icon {
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E") !important;
+    }
 
-.carousel-control-next-icon {
-  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E") !important;
-}
+    .carousel-control-next-icon {
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E") !important;
+    }
 
-.carousel-indicators .active{
-    background-color: #007bff !important;
-}
+    .carousel-indicators .active {
+        background-color: #007bff !important;
+    }
 
-.carousel-indicators li{
-    background-color: rgb(97, 92, 92) !important;
-}
+    .carousel-indicators li {
+        background-color: rgb(97, 92, 92) !important;
+    }
+
 </style>
 @section('content')
 {{-- <div class="container"> --}}
@@ -26,7 +27,7 @@
                     <a class="nav-link  active" id="home-tab" data-toggle="pill" href="#home" role="tab"
                         aria-controls="home" aria-selected="true">Dashboard Kapasitas TPS</a>
                 </li>
-                
+
                 <li class="nav-item">
                     <a class="nav-link" id="neraca-anggaran-tab" data-toggle="pill" href="#neraca-anggaran" role="tab"
                         aria-controls="neraca-anggaran" aria-selected="false">Dashboard Neraca Kuota Anggaran</a>
@@ -35,14 +36,14 @@
                     <a class="nav-link" id="penghasil-tab" data-toggle="pill" href="#penghasil" role="tab"
                         aria-controls="penghasil" aria-selected="false">Dashboard Penghasil</a>
                 </li>
-               
+
                 <li class="nav-item">
                     <a class="nav-link" id="limbah-lain-tab" data-toggle="pill" href="#limbah-lain" role="tab"
                         aria-controls="limbah-lain" aria-selected="false">Dashboard Neraca Limbah Lain-Lain</a>
                 </li>
 
-               
-                
+
+
 
             </ul>
         </div>
@@ -59,7 +60,8 @@
                             <h3 class="card-title">Limbah Akan Kadaluarsa</h3>
                         </div>
                         <div class="card-body">
-                            <button type="button" name="refresh_kadaluarsa" id="refresh_kadaluarsa" class="btn btn-success "><i class="fa  fa-refresh"></i>
+                            <button type="button" name="refresh_kadaluarsa" id="refresh_kadaluarsa"
+                                class="btn btn-success "><i class="fa  fa-refresh"></i>
                                 Refresh</button>
                             <table id="datakadaluarsa" class="table table-bordered table-striped" style="width:100%;">
                                 <thead>
@@ -74,9 +76,9 @@
                                         {{-- <th>Action</th> --}}
                                     </tr>
                                 </thead>
-                    
+
                             </table>
-                        </div> 
+                        </div>
                     </div>
 
                 </div>
@@ -86,11 +88,11 @@
 
                 </div>
                 <div class="tab-pane fade" id="penghasil" role="tabpanel" aria-labelledby="penghasil-tab"
-                style="position: relative;">
-                @include('dashboard.penghasil')
+                    style="position: relative;">
+                    @include('dashboard.penghasil')
                 </div>
 
-                
+
 
                 <div class="tab-pane fade" id="neraca-anggaran" role="tabpanel" aria-labelledby="neraca-anggaran-tab"
                     style="position: relative;">
@@ -99,8 +101,8 @@
 
                 <div class="tab-pane fade" id="kadaluarsa" role="tabpanel" aria-labelledby="kadaluarsa-tab"
                     style="position: relative;">
-                    
-                </div> 
+
+                </div>
             </div>
         </div>
 
@@ -124,7 +126,7 @@
         $('#tahun').val(moment().format('YYYY')).change()
         $('#tahun_kuota').val(moment().format('YYYY')).change()
         $('#tahun_neraca').val(moment().format('YYYY')).change()
-        $('#lihat_detail').on('click',function(){
+        $('#lihat_detail').on('click', function () {
             // localStorage.setItem('tahun',$('#tahun_neraca').val())
             var url = '{{ route("neraca_tahunan.list")}}';
             // url = url.replace(':tahun', $('#tahun_neraca').val());
@@ -132,9 +134,9 @@
         })
         $('#refresh_kadaluarsa').click(function () {
 
-$('#datakadaluarsa').DataTable().ajax.reload();
+            $('#datakadaluarsa').DataTable().ajax.reload();
 
-})
+        })
         dashboardNeracaKuota()
 
         function dashboardNeracaKuota() {
@@ -161,7 +163,8 @@ $('#datakadaluarsa').DataTable().ajax.reload();
 
         var neracaKuotaCair = grafNeracaMutasi(document.getElementById('graf_kuota_cair'), 'Limbah Cair - Ton')
 
-        var neracaKuotaSludge = grafNeracaMutasi(document.getElementById('graf_kuota_sludge'), 'Limbah Sludge - M3')
+        var neracaKuotaSludge = grafNeracaMutasi(document.getElementById('graf_kuota_sludge'),
+            'Limbah Sludge - M3')
 
         var neracaKuotaSK = grafNeracaMutasi(document.getElementById('graf_kuota_sk'),
             'Limbah Sampah Kontaminasi - Ton')
@@ -173,7 +176,7 @@ $('#datakadaluarsa').DataTable().ajax.reload();
 
         var neracaLimbahLainLain = grafNeracaMutasiLain(document.getElementById('graf_mutasi'), '')
 
-        var tps1 = createGauge('tps1', 'TPS B3 I', 'm2', 'Kapasitas', 1150, 50, 705, 1000) //540 50 405 486
+        var tps1 = createGauge('tps1', 'TPS B3 I', 'm2', 'Kapasitas', 540 ,50 ,405, 486) //540 50 405 486
 
         var tps2 = createGauge('tps2', 'TPS ABU', 'm3', 'Kapasitas', 72, 30, 54, 65)
 
@@ -258,17 +261,18 @@ $('#datakadaluarsa').DataTable().ajax.reload();
                         displayColors: true
                     },
                     // plugins: [ChartDataLabels],
-        //             plugins: {
-        //     // Change options for ALL labels of THIS CHART
-        //     datalabels: {
-        //         color: '#36A2EB'
-        //     }
-        // }
+                    //             plugins: {
+                    //     // Change options for ALL labels of THIS CHART
+                    //     datalabels: {
+                    //         color: '#36A2EB'
+                    //     }
+                    // }
 
                 }
             });
         }
         var satuanNeraca = '-'
+
         function grafNeracaMutasi(ctx, title) {
             return new Chart(ctx, {
                 type: 'bar',
@@ -313,9 +317,9 @@ $('#datakadaluarsa').DataTable().ajax.reload();
                                 beginAtZero: true,
                                 // tickWidth: 5,
                                 // stepSize: 10,
-                                callback: function (value, index, values,data) {
+                                callback: function (value, index, values, data) {
                                     // console.log(values)
-                                    return value ;
+                                    return value;
                                 }
                             }
                         }]
@@ -518,11 +522,23 @@ $('#datakadaluarsa').DataTable().ajax.reload();
                 credits: {
                     enabled: false
                 },
+    //             responsive: {
+    //   rules: [{
+    //     condition: {
+    //       maxWidth: 500
+    //     },
+    //     chartOptions: {
+    //       series: [{
+    //         yAxis: 1
+    //       }]
+    //     }
+    //   }]
+    // },
 
                 // the value axis
                 yAxis: {
                     min: 0,
-                    max: maxkapasitas,
+                    // max: maxkapasitas,
 
                     minorTickInterval: 'auto',
                     minorTickWidth: 2,
@@ -530,7 +546,7 @@ $('#datakadaluarsa').DataTable().ajax.reload();
                     minorTickPosition: 'inside',
                     minorTickColor: '#666',
 
-                    tickPixelInterval: thicklength,
+                    // tickPixelInterval: thicklength,
                     tickWidth: 1,
                     tickPosition: 'inside',
                     tickLength: 15,
@@ -542,19 +558,21 @@ $('#datakadaluarsa').DataTable().ajax.reload();
                     title: {
                         text: satuan2
                     },
-                    plotBands: [{
-                        from: 0,
-                        to: save,
-                        color: '#55BF3B' // green
-                    }, {
-                        from: save,
-                        to: warning,
-                        color: '#DDDF0D' // yellow
-                    }, {
-                        from: warning,
-                        to: maxkapasitas,
-                        color: '#DF5353' // red
-                    }]
+                    // plotBands: [
+                    // // {
+                    // //     from: 0,
+                    // //     to: save,
+                    // //     color: '#55BF3B' // green
+                    // // }, {
+                    // //     from: save,
+                    // //     to: warning,
+                    // //     color: '#DDDF0D' // yellow
+                    // // }, {
+                    // //     from: warning,
+                    // //     to: maxkapasitas,
+                    // //     color: '#DF5353' // red
+                    // // }
+                    // ]
                 },
 
                 series: [{
@@ -573,17 +591,7 @@ $('#datakadaluarsa').DataTable().ajax.reload();
         }
         getDataKapasitas(paramKapasitas)
 
-        function updateChart(chart, value, paramData) {
-            
 
-
-            if (!chart.renderer.forExport) {
-                var point = chart.series[0].points[0]
-                console.log(chart.series[0])
-                point.update(value)
-            }
-            // chart.series[0].addPoint([0, 1150], true, true);
-        }
 
         function getDataNeraca(paramData) {
             $.ajax({
@@ -664,17 +672,17 @@ $('#datakadaluarsa').DataTable().ajax.reload();
 
                     var resultdata = data.dataBar
                     // console.log(resultdata)
-                    updateDataNeraca(neracaKuotaCair, resultdata['kuota-1'].saldoMasuk, 
-                    resultdata['kuota-1'].saldoKeluar, resultdata['kuota-1'].sisaSaldo, 
-                    resultdata['kuota-1'].satuan)
-                    updateDataNeraca(neracaKuotaSK, resultdata['kuota-2'].saldoMasuk, 
-                    resultdata['kuota-2'].saldoKeluar, resultdata['kuota-2'].sisaSaldo, 
+                    updateDataNeraca(neracaKuotaCair, resultdata['kuota-1'].saldoMasuk,
+                        resultdata['kuota-1'].saldoKeluar, resultdata['kuota-1'].sisaSaldo,
+                        resultdata['kuota-1'].satuan)
+                    updateDataNeraca(neracaKuotaSK, resultdata['kuota-2'].saldoMasuk,
+                        resultdata['kuota-2'].saldoKeluar, resultdata['kuota-2'].sisaSaldo,
                         resultdata['kuota-2'].satuan)
                     updateDataNeraca(neracaKuotaSludge, resultdata['kuota-3'].saldoMasuk,
                         resultdata['kuota-3'].saldoKeluar, resultdata['kuota-3'].sisaSaldo,
                         resultdata['kuota-3'].satuan)
-                    updateDataNeraca(neracaKuotaAbu, resultdata['kuota-4'].saldoMasuk, 
-                    resultdata['kuota-4'].saldoKeluar, resultdata['kuota-4'].sisaSaldo, 
+                    updateDataNeraca(neracaKuotaAbu, resultdata['kuota-4'].saldoMasuk,
+                        resultdata['kuota-4'].saldoKeluar, resultdata['kuota-4'].sisaSaldo,
                         resultdata['kuota-4'].satuan)
                     updateDataNeraca(neracaKuotalamputl, resultdata['kuota-5'].saldoMasuk,
                         resultdata['kuota-5'].saldoKeluar, resultdata['kuota-5'].sisaSaldo,
@@ -721,11 +729,11 @@ $('#datakadaluarsa').DataTable().ajax.reload();
 
                 success: function (data) {
                     // console.log(data)
-                    var dataKapasitas = data.dataKapasitas
-                    updateChart(tps1, dataKapasitas[0].saldo, dataKapasitas[0].kapasitasjumlah)
-                    updateChart(tps2, dataKapasitas[1].saldo, dataKapasitas[1].kapasitasjumlah)
-                    updateChart(tps3, dataKapasitas[2].saldo, dataKapasitas[2].kapasitasjumlah)
-                    updateChart(tps4, dataKapasitas[3].saldo, dataKapasitas[3].kapasitasjumlah)
+                    var dataKapasitas = data.dataKapasitas 
+                    updateChart(tps1, dataKapasitas[0].saldo, dataKapasitas[0].kapasitasjumlah,50 ,405, 486)
+                    updateChart(tps2, dataKapasitas[1].saldo, dataKapasitas[1].kapasitasjumlah, 20, 54, 65)
+                    updateChart(tps3, dataKapasitas[2].saldo, dataKapasitas[2].kapasitasjumlah, 20, 150, 207)
+                    updateChart(tps4, dataKapasitas[3].saldo, dataKapasitas[3].kapasitasjumlah, 20, 150, 205)
                     // updateChart(tps5, dataKapasitas[4].saldo, dataKapasitas[4].kapasitasjumlah)
 
                 }
@@ -789,13 +797,13 @@ $('#datakadaluarsa').DataTable().ajax.reload();
                     data: "tgl_kadaluarsa",
                     name: "tgl_kadaluarsa",
                     render: function (data, type, row) {
-                        if (data == null || data == "-" || data ==
-                            "0000-00-00 00:00:00" ||
-                            data == "NULL") {
-                            return '<span>-</span>'
-                        } else {
-                            return moment(data).format('DD/MM/YYYY');
-                        }
+                        // if (data == null || data == "-" || data ==
+                        //     "0000-00-00 00:00:00" ||
+                        //     data == "NULL") {
+                        //     return '<span>-</span>'
+                        // } else {
+                        return moment(data).format('DD/MM/YYYY');
+                        // }
 
                     }
                 },
@@ -823,14 +831,14 @@ $('#datakadaluarsa').DataTable().ajax.reload();
                         ]);
                         var difference = b.diff(a, 'days') // 1
                         //diff di query berbeda dengan dif di moment js
- 
+
                         if (difference == 3) {
                             return '<span class="badge badge-danger">Bahaya</span>'
                         } else if (difference == 7) {
                             return '<span class="badge badge-warning">Waspada</span>'
-                        } else if (difference == 0){
+                        } else if (difference == 0) {
                             return '<span class="badge badge-danger">Bahaya</span>'
-                        }else{
+                        } else {
                             return '-'
                         }
 
@@ -840,6 +848,80 @@ $('#datakadaluarsa').DataTable().ajax.reload();
             ]
         })
 
+        function updateChart(chart, value, maxKapasitas, thicklength,save, warning) {
+            // console.log(parseInt(value) > parseInt(maxKapasitas))
+            // var valuePoint=value
+            // var valMaxKapasitas=maxKapasitas
+            if (parseInt(value) > parseInt(maxKapasitas)) {  
+               
+                var valMaxKapasitas=value
+                // thicklength=100
+                // console.log(valMaxKapasitas)
+                chart.yAxis[0].update({
+                    plotBands: [
+                    {
+                        from: 0,
+                        to: save,
+                        color: '#55BF3B' // green
+                    }, 
+                    {
+                        from: save,
+                        to: warning,
+                        color: '#DDDF0D' // yellow
+                    }, 
+                    {
+                        from: warning,
+                        to: valMaxKapasitas,
+                        color: '#DF5353' // red
+                    } 
+                    ]
+                   
+                }); 
+                chart.yAxis[0].update({tickPixelInterval: thicklength}) 
+                chart.yAxis[0].update({ max: valMaxKapasitas}) 
+                if (!chart.renderer.forExport) {
+                var point = chart.series[0].points[0] 
+                point.update(value)
+            }
+            }else{
+                chart.yAxis[0].update({
+                    plotBands: [
+                    {
+                        from: 0,
+                        to: save,
+                        color: '#55BF3B' // green
+                    }, 
+                    {
+                        from: save,
+                        to: warning,
+                        color: '#DDDF0D' // yellow
+                    }, 
+                    {
+                        from: warning,
+                        to: maxKapasitas,
+                        color: '#DF5353' // red
+                    } 
+                    ]
+                   
+                });
+                chart.yAxis[0].update({tickPixelInterval: thicklength}) 
+                chart.yAxis[0].update({ max: maxKapasitas}) 
+                if (!chart.renderer.forExport) {
+                var point = chart.series[0].points[0] 
+                point.update(value)
+            }
+
+            } 
+               
+            
+
+
+
+            
+
+            // chart.update()
+            // chart.series[0].addPoint([0, 1150], true, true);
+        }
 
         function updateData(chart, labels, data) {
             chart.data.labels = labels
