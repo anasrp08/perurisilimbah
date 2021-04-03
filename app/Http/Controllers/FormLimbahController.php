@@ -30,10 +30,17 @@ class FormLimbahController extends Controller
     {
         $this->middleware('auth');
     }
+    public function searchIdAsalLimbah($userSeksi)
+    { 
+        $data = DB::table('md_penghasillimbah')
+        ->where('seksi','like','%'.$userSeksi.'%')->first();
 
+        return $data->id;
+    }
     public function index(Request $request)
     {
 
+        // $getIdLimbah=$this->searchIdAsalLimbah($request->idasallimbah);
         if (request()->ajax()) {
             $queryData = DB::table('tr_headermutasi')
                 ->join('tr_detailmutasi', 'tr_headermutasi.id', '=', 'tr_detailmutasi.idmutasi')
@@ -58,7 +65,7 @@ class FormLimbahController extends Controller
             if($request->idasallimbah == 'admin' || $request->idasallimbah == 'operator' || $request->idasallimbah == 'pengawas'){
  
             }else{
-                $queryData = $queryData
+                $queryData = $queryData 
                 ->where('tr_detailmutasi.idasallimbah',$request->idasallimbah);
                 
             }
@@ -116,6 +123,7 @@ class FormLimbahController extends Controller
 
     public function viewIndex()
     {
+        
 
         return view('formulir.list', [
             'username' => AuthHelper::getAuthUser()[0]
@@ -143,18 +151,19 @@ class FormLimbahController extends Controller
     public function IndexBAPemusnahan(Request $request)
     {
 
-       
-
+        $getIdLimbah=$this->searchIdAsalLimbah($request->idasallimbah); 
         if (request()->ajax()) {
-            $queryData = DB::table('tr_detailmutasi')
-                ->join('tr_headermutasi', 'tr_headermutasi.id', '=', 'tr_detailmutasi.idmutasi')
+            $queryData = DB::table('tr_validasi_ba')
+                ->join('tr_headermutasi', 'tr_headermutasi.id', '=', 'tr_validasi_ba.id_mutasi')
+                ->join('tr_detailmutasi','tr_detailmutasi.id','tr_validasi_ba.id_detail')
                 ->join('md_namalimbah', 'tr_headermutasi.idlimbah', '=', 'md_namalimbah.id')
                 ->join('md_penghasillimbah', 'tr_headermutasi.idasallimbah', '=', 'md_penghasillimbah.id')
                 ->join('md_jenislimbah', 'tr_headermutasi.idjenislimbah', '=', 'md_jenislimbah.id')
                 ->join('md_statusmutasi', 'md_statusmutasi.id', '=', 'tr_detailmutasi.idstatus')
-                ->join('tr_validasi_ba','tr_detailmutasi.id','tr_validasi_ba.id_detail')
+               
                 ->select(
                     'tr_detailmutasi.*',
+                    'tr_detailmutasi.idasallimbah',
                     'tr_validasi_ba.np_pemohon as pemohon_validasi',
                     'tr_validasi_ba.validated_pemohon',
                     'tr_validasi_ba.np_pengawas as pengawas_validasi',
@@ -173,9 +182,9 @@ class FormLimbahController extends Controller
  
             if($request->idasallimbah == 'admin' || $request->idasallimbah == 'operator' || $request->idasallimbah == 'pengawas'){
  
-            }else{
+            }else{ 
                 $queryData = $queryData
-                ->where('tr_detailmutasi.idasallimbah',$request->idasallimbah)
+                ->where('tr_detailmutasi.idasallimbah',$getIdLimbah)
                 ->whereIn('tr_detailmutasi.idlimbah',$this->getLimbahIsProsesLgsg());
             }
 
@@ -372,12 +381,9 @@ class FormLimbahController extends Controller
             ->where('idstatus', '2')->first();
         //    dd();
 
-        $detailPenerima = DB::table('tbl_np')
-            ->where('np', '=', $penerima->np_penerima)->first();
-        $detailPengawas = DB::table('tbl_np')
-            ->where('np', '=', $dataFormulirLimbah[0]->validated_by)->first();
-        $detailPenyerah = DB::table('tbl_np')
-            ->where('np', '=', $dataFormulirLimbah[0]->np_pemohon)->first();
+        $detailPenerima = $this->getNama($penerima->np_penerima); 
+        $detailPengawas = $this->getNama($dataFormulirLimbah[0]->validated_by);  
+        $detailPenyerah = $this->getNama($dataFormulirLimbah[0]->np_pemohon);  
 
         //    dd($penerima);
 
@@ -387,12 +393,8 @@ class FormLimbahController extends Controller
         $jenislimbah = $dataFormulirLimbah[0]->jenislimbah;
         $penghasillimbah = $dataFormulirLimbah[0]->seksi;
         $dikirimke = 'Seksi Operasional Limbah';
-        $maksud = $dataFormulirLimbah[0]->maksud;
-        // $ttdPenerima=$penerima->np;
-        // $ttdPengawas=$dataFormulirLimbah[0]->validated_by;
-        // $ttdMenyerahkan=$dataFormulirLimbah[0]->np;
-        $listLimbah = $dataFormulirLimbah;
-        // dd($listLimbah);
+        $maksud = $dataFormulirLimbah[0]->maksud; 
+        $listLimbah = $dataFormulirLimbah; 
 
         $pdf = PDF::loadview('formulir.form', [
             'no_surat' => $no_surat,
@@ -405,6 +407,7 @@ class FormLimbahController extends Controller
             'ttdPenerima' => $detailPenerima,
             'ttdPengawas' => $detailPengawas,
             'ttdMenyerahkan' => $detailPenyerah,
+           
 
         ])->setPaper('a4', 'portrait');
         return $pdf->stream($no_surat . ".pdf");
@@ -416,12 +419,22 @@ class FormLimbahController extends Controller
             ->where('np', $np)->first(); 
         return $dataPegawai;
     }
+    public function isEmptyValue($param){
 
+        // $finalValue=null;
+        if($param == null){
+            return '';
+        }else{
+            return $param;
+        }
+        
+    }
     public function cetakBAPemusnahan($id)
     {
  
         setlocale(LC_TIME, 'id');
         date_default_timezone_set('asia/jakarta');
+        
         $dataTransaksi = DB::table('tr_detailmutasi')
             ->join('tr_headermutasi', 'tr_headermutasi.id', '=', 'tr_detailmutasi.idmutasi')
             ->join('md_namalimbah', 'tr_headermutasi.idlimbah', '=', 'md_namalimbah.id')
@@ -432,6 +445,7 @@ class FormLimbahController extends Controller
             ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', 'md_statusmutasi.id')
             
             ->select(
+                'tr_headermutasi.id as idheader',
                 'tr_headermutasi.no_surat',
                 'tr_headermutasi.tgl as tgldibuat',
                 'tr_headermutasi.no_surat',
@@ -453,10 +467,13 @@ class FormLimbahController extends Controller
 
         
 
-
-        $detailPengawasLapangan = $this->getNama($dataTransaksi->np_pengawas_lapangan);
-        $detailPengamanan = $this->getNama($dataTransaksi->np_pengawas);
-        $detailPemohon = $this->getNama($dataTransaksi->np_pemohon);
+        $dataPengawasLapangan=DB::table('tr_detailmutasi')
+        ->whereIn('tr_detailmutasi.idstatus',['5','6','7','8','9'])
+        ->where('tr_detailmutasi.idmutasi',$dataTransaksi->idheader)->first();
+        $detailPengawasLapangan = $this->isEmptyValue($this->getNama($dataPengawasLapangan->np_pemroses));        
+        // dd($detailPengawasLapangan);
+        $detailPengamanan = $this->isEmptyValue($this->getNama($dataTransaksi->np_pengawas));
+        $detailPemohon = $this->isEmptyValue($this->getNama($dataTransaksi->np_pemohon));
         
         $no_ba = $dataTransaksi->no_ba_pemusnahan;
         $tanggal = Carbon::parse($dataTransaksi->tgl)->formatLocalized('%d %B %Y');

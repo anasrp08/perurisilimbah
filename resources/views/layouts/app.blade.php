@@ -94,7 +94,7 @@
                             alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">{{auth()->user()->name}}</a>
+                        <a href="#" class="d-block">{{auth()->user()->email}}</a>
                     </div>
                 </div>
                 @else
@@ -237,8 +237,7 @@
                     data: pProv,
                     dataType: "json",
 
-                    success: function (data) {
-                        console.log(data)
+                    success: function (data) { 
                         var cekdata = data.dataNotifikasi
                         var dataKapasitas = data.notifikasiKapasitas
                         var arrSum = parseInt(0)
@@ -256,7 +255,7 @@
                                     var dataValues = data.dataNotifikasi.values
                                     var dataKapasitas = data.notifikasiKapasitas
                                     var dataTangal = data.dataNotifikasikeys
-                                    console.log(dataValues)
+                                    // console.log(dataValues)
                                     for (i = 0; i < dataValues.length; i++) {
                                         arrSum += parseInt(dataValues[i].jumlah)
                                         arrSumKadaluarsa += parseInt(dataValues[i].jumlah)
@@ -341,7 +340,7 @@
                         dataType: "json",
 
                         success: function (data) {
-                            console.log(data)
+                            // console.log(data)
                             if (data.notifMasuk > 0) {
 
                                 if (data.role == 'operator') {

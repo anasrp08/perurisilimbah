@@ -323,7 +323,9 @@
 
     <img class='background1' src="{{ public_path('/img/validbiru1.png') }}" alt="AdminLTE Logo" width="250px"
         height="75px" style="opacity: .5;margin-top: 100px;margin-left:200px;bottom: 150;transform: rotate(-30deg)">
-</div>
+        {{-- <p style="font-size: 11px;position:absolute;bottom: -20;margin-left:150px;">Surat ini sah walaupun tanpa tanda tangan dan sudah di validasi oleh masing - masing unit kerja
+        </p> --}}
+    </div>
     <div id='content'>
         <table class="table">
             <tr>
@@ -440,8 +442,14 @@
                     {{-- $loop->iteration --}}
                     <td class="no">1</td>
                     <td class="namalimbah" colspan="2">Pengawas Lapangan</td>
+                    @if($detailPengawasLapangan == '')
+                    <td class="no" colspan="3"></td>
+                    <td class="keterangan" colspan="2"></td>
+                    @else
                     <td class="no" colspan="3">{{$detailPengawasLapangan->nama}}</td>
                     <td class="keterangan" colspan="2">{{$detailPengawasLapangan->np}}</td>
+                    @endif
+                
                     {{-- <td class="keterangan" colspan="2">{{$listlimbah->no_surat}}</td> --}}
                 </tr>
                  
@@ -459,36 +467,68 @@
                 </tr>
                 <tr> 
                     <td class="no" rowspan="2">1</td>
+                    @if($detailPemohon == '')
+                    <td class="namalimbah" colspan="2"></td>
+                    <td class="no" colspan="3" rowspan="2"></td>
+                    @else
                     <td class="namalimbah" colspan="2">{{$detailPemohon->nama}}</td>
                     <td class="no" colspan="3" rowspan="2">{{$listlimbah->seksi}}</td>
+                    @endif
+                   
                     <td class="validasi" rowspan="1" colspan="2" ></td> 
                 </tr>
                <tr> 
                     <td class="namalimbah" colspan="2">Unit Penghasil Limbah</td> 
+                    @if($listlimbah->validated_pemohon == null)
+                    <td class="validasi1" colspan="2" style="font-size: 10px;position: absolute;
+                    bottom: 10px;"></td> 
+                    @else
                     <td class="validasi1" colspan="2" style="font-size: 10px;position: absolute;
                     bottom: 10px;">{{$listlimbah->validated_pemohon}}</td> 
+                    @endif
+                   
                 </tr>
                 <tr> 
                     <td class="no" rowspan="2">2</td>
+                    @if($detailPengamanan == '')
+                    <td class="namalimbah" colspan="2"></td>
+                    @else
                     <td class="namalimbah" colspan="2">{{$detailPengamanan->nama}}</td>
+                    @endif
                     <td class="no" colspan="3" rowspan="2">Seksi Pamsiknilmat</td>
                     <td class="validasi" rowspan="1" colspan="2"></td> 
                 </tr>
                <tr> 
                     <td class="namalimbah" colspan="2">Pengamanan</td> 
+                    @if($listlimbah->validated_pengawas == null)
+                    <td class="validasi1" colspan="2" style="font-size: 10px;position: absolute;
+                    bottom: 10px;"></td> 
+                    @else
                     <td class="validasi1" colspan="2" style="font-size: 10px;position: absolute;
                     bottom: 10px;">{{$listlimbah->validated_pengawas}}</td> 
+                    @endif 
                 </tr>
                 <tr> 
                     <td class="no" rowspan="2">3</td>
+                    @if($detailPengawasLapangan == '')
+                    <td class="namalimbah" colspan="2"></td>
+                    @else
                     <td class="namalimbah" colspan="2">{{$detailPengawasLapangan->nama}}</td>
+                    @endif 
                     <td class="no" colspan="3" rowspan="2">Operasional Limbah</td>
                     <td class="validasi" rowspan="1" colspan="2"></td> 
                 </tr>
                <tr> 
+              
                     <td class="namalimbah" colspan="2">Pengawas Lapangan</td> 
+                    @if($listlimbah->validated_np_pengawas_lapangan == null)
+                    <td class="validasi1" colspan="2" style="font-size: 10px;position: absolute;
+                    bottom: 10px;"></td> 
+                    @else
                     <td class="validasi1" colspan="2" style="font-size: 10px;position: absolute;
                     bottom: 10px;">{{$listlimbah->validated_np_pengawas_lapangan}}</td> 
+                    @endif
+                    
                 </tr>
                 
                  
@@ -499,8 +539,8 @@
                 {{-- <img class='background' src="{{ public_path('/img/perurilogo.jpg') }}" alt="AdminLTE Logo" width="700px"
                     height="800px" style="opacity: .10;margin-top: 100px;"> --}}
         
-                <img class='background1' src="{{ public_path('/img/validbiru1.png') }}" alt="AdminLTE Logo" width="250px"
-                    height="75px" style="opacity: .5;margin-top: 100px;margin-left:200px;bottom: 150;transform: rotate(-30deg)">
+                {{-- <img class='background1' src="{{ public_path('/img/validbiru1.png') }}" alt="AdminLTE Logo" width="250px"
+                    height="75px" style="opacity: .5;margin-top: 100px;margin-left:200px;bottom: 150;transform: rotate(-30deg)"> --}}
             </div>
         {{-- </div> --}}
          

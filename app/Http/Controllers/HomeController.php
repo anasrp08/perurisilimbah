@@ -36,6 +36,15 @@ class HomeController extends Controller
      */
     public function index()
     { 
+        // $passwd=[];
+       
+        // $passwd[8]=bcrypt('31a11');
+        $user = Auth::user();
+         
+        $roleuser=$user;
+        // dd(Laratrust::hasRole('unit kerja'));
+        $userUnit=AuthHelper::getAuthUser()[0];
+       
         if (Laratrust::hasRole('admin')) {
  
             $penghasilLimbah=DB::table('md_penghasillimbah')->get();
@@ -49,15 +58,20 @@ class HomeController extends Controller
                 ] 
             );
             
-        } else if(Laratrust::hasRole('unit kerja')  ) {
+        } else if(Laratrust::hasRole('unit kerja')) {
+           
             UpdKaryawanHelper::updatePegawai();
+            $queryHelper=QueryHelper::getDropDown();
+            // array_push($queryHelper,array('namaseksi'=>$penghasilLimbah));
             // return view('pemohon.create', QueryHelper::getDropDown());
-            return redirect()->route('pemohon.entri', QueryHelper::getDropDown());
+            return redirect()->route('pemohon.entri',  $queryHelper);
         }else if(Laratrust::hasRole('pengawas') || Laratrust::hasRole('operator')) {
             
             UpdKaryawanHelper::updatePegawai();
             return redirect()->route('pemohon.listview', QueryHelper::getDropDown());
             // return view('pemohon.list', QueryHelper::getDropDown());
+        }else{
+            return redirect()->route('pemohon.entri', QueryHelper::getDropDown());
         }
  
     }
@@ -505,10 +519,12 @@ class HomeController extends Controller
         if($roleuser=='pengawas'){
             $dataBAPemusnahan= $dataBAPemusnahan->where('tr_validasi_ba.np_pengawas',null);
         }else{
+            // dd($userUnit->seksi);
             $dataBAPemusnahan= $dataBAPemusnahan
             ->where('tr_detailmutasi.idasallimbah',$userUnit->seksi)
             ->where('tr_validasi_ba.np_pemohon',null);
         }
+        
         
         $dataBAPemusnahan= $dataBAPemusnahan->get()->count(); 
         // dd($dataBAPemusnahan);

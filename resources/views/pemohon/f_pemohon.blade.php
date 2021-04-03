@@ -16,11 +16,11 @@
 
                             <label>1. Tanggal Permohonan</label>
                             <input type="text" id="entridate" name="entridate"
-                                class="entridate form-control float-right" autocomplete="off">
+                                class="entridate form-control" autocomplete="off">
                         </div>
                         <div class="row">
                             <div class="col-md-8">
-                                <div id="formnosurat" class="form-group"> 
+                                <div  class="form-group"> 
                                     <label for="nosurat">4. Jumlah Limbah</label>
                                     <div class="input-group input-group mb-3">
                                         <input type="number" name="jmlhlimbah" id="jmlhlimbah" class="form-control">
@@ -29,7 +29,7 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div id="formnosurat" class="form-group">
+                                <div   class="form-group">
                                     <label>Satuan</label>
                                     <select name="satuan" id="satuan" class="form-control select2bs4"
                                         style="width: 100%;">

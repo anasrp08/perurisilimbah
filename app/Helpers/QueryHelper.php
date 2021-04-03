@@ -6,10 +6,24 @@ use DB;
 class QueryHelper
 {
     public static function getDropDown(){
+        $userUnit=AuthHelper::getAuthUser()[0];
+        $idSeksi=$userUnit->seksi;
+        $asallimbah=0;
+        $idUnit=0;
+        if($idSeksi == 'admin' || $idSeksi=='operator' || $idSeksi=='pengawas'){
+
+        }else{
+            $dataAsallimbah=DB::table('md_penghasillimbah')->where('id', $idSeksi)->first();
+            $asallimbah=$dataAsallimbah->seksi;
+            $idUnit=$dataAsallimbah->id;
+        }
+        
+
         $jenisLimbah=DB::table('md_jenislimbah')->get();
         $namaLimbah=DB::table('md_namalimbah')->get();
         $tipeLimbah=DB::table('md_tipelimbah')->get();
-        $penghasilLimbah=DB::table('md_penghasillimbah')->get();
+        $penghasilLimbah=DB::table('md_penghasillimbah')
+        ->where('md_penghasillimbah.seksi','not like',"%Departemen%")->get();
         $satuanLimbah=DB::table('md_satuan')->orderBy('id','desc')->get();
         $tpsLimbah=DB::table('md_tps')->get();
         $np=DB::table('tbl_np')->get();
@@ -25,7 +39,9 @@ class QueryHelper
             'tpsLimbah' => $tpsLimbah,
             'penghasilLimbah' => $penghasilLimbah,
             'np' => $np,
-            'status'=>$status
+            'status'=>$status,
+            'nama_unit'=> $asallimbah,
+            'id_unit'=> $idUnit
 
         ];
         

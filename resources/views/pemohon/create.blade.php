@@ -28,6 +28,7 @@
 @section('scripts')
 <script>
     $(document).ready(function () { 
+        var idAsalLimbah='<?php echo $id_unit ?>'
         $('#nonb3').hide() 
         var counter = 1;
         // if (lastNumber != 0) {
@@ -40,7 +41,8 @@
                 $("#nonb3").show();
 
             }
-        });
+        }); 
+        $("#limbahasal").val(idAsalLimbah).change()
 
         $('#entridate').datepicker({
             uiLibrary: 'bootstrap4',
@@ -70,10 +72,10 @@
 
         });
      
-        // $("#namalimbah").change(function () {
-        //     getDropdown('{{ route("limbah.getsatuan")}}', "", $(this).val(), "satuan")
+        $("#namalimbah").change(function () {
+            getDropdown('{{ route("limbah.getsatuan")}}', "", $(this).val(), "satuan")
 
-        // });
+        });
  
         function getDropdown(paramUrl, param1, param2, idkomponen) {
 
@@ -111,7 +113,8 @@
                     },
                     data: paramData,
                     success: function (data) {
-                        $("#" + idkomponen).text(data.satuan);
+                        console.log(data)
+                        $("#" + idkomponen).val(data.satuan).change();
                     }
                 });
             } 

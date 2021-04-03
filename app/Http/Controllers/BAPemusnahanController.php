@@ -227,6 +227,7 @@ class BAPemusnahanController extends Controller
             ->join('md_penghasillimbah', 'tr_headermutasi.idasallimbah', '=', 'md_penghasillimbah.id')
             ->join('md_jenislimbah', 'tr_headermutasi.idjenislimbah', '=', 'md_jenislimbah.id')
             ->join('tr_validasi_ba','tr_detailmutasi.id','tr_validasi_ba.id_detail')
+            ->join('md_satuan','tr_detailmutasi.idsatuan','md_satuan.id')
             ->select('tr_headermutasi.no_surat',
             'tr_headermutasi.created_at as tgldibuat',
             'tr_headermutasi.jumlah_in',
@@ -239,6 +240,7 @@ class BAPemusnahanController extends Controller
             'tr_headermutasi.np_pemohon',
             'tr_headermutasi.validated',
             'tr_headermutasi.validated_by',
+            'md_satuan.satuan as nama_satuan'
            ) 
            ->where('tr_detailmutasi.idstatus','=','2')
            ->where('tr_headermutasi.id_transaksi','=',$id)->get(); 

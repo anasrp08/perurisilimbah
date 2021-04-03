@@ -297,7 +297,9 @@
 
     <img class='background1' src="{{ public_path('/img/validbiru1.png') }}" alt="AdminLTE Logo" width="250px"
         height="75px" style="opacity: .5;margin-top: 100px;margin-left:200px;bottom: 150;transform: rotate(-30deg)">
-</div>
+        <p style="font-size: 11px; position: absolute;bottom:-30;margin-left:100px;">Surat ini sah walaupun tanpa tanda tangan dan sudah di validasi oleh masing - masing unit kerja
+        </p>
+    </div>
     <div id='content'>
         <table class="table">
             <tr>
@@ -425,7 +427,9 @@
         
                 <img class='background1' src="{{ public_path('/img/validbiru1.png') }}" alt="AdminLTE Logo" width="250px"
                     height="75px" style="opacity: .5;margin-top: 100px;margin-left:200px;bottom: 150;transform: rotate(-30deg)">
-            </div>
+                    {{-- <p style="font-size: 11px;">Surat ini sah walaupun tanpa tanda tangan dan sudah di validasi oleh masing - masing unit kerja
+                         </p> --}}
+                </div>
         </div>
         <table class="table1" style="width: 100%;">
             <tr>
@@ -447,7 +451,7 @@
     </table>
 
         <div style="bottom:100;">
-            <table class="table1" style="width: 95,9%;position: absolute;bottom:150;">
+            <table class="table1" style="width: 95,9%;position: absolute;bottom:170;">
 
                 <tr>
                     <th class="ttd" colspan="4">Yang Menerima,</th>
@@ -462,7 +466,7 @@
                     <td class="ttdbottom" style=width:0.5rem;">
                         :
                     </td>
-                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
                         {{$ttdPenerima->nama}}
                     </td>
                     <td class="ttdbottom" style=width:1rem;">
@@ -476,7 +480,7 @@
 
                     </td>
                     @else
-                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
                         {{$ttdPengawas->nama}}
                     </td>
                     @endif
@@ -488,7 +492,7 @@
                     <td class="ttdbottom" style=width:0.5rem;">
                         :
                     </td>
-                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
                         {{$ttdMenyerahkan->nama}}
                     </td>
 
@@ -500,7 +504,7 @@
                     <td class="ttdbottom" style=width:0.5rem;">
                         :
                     </td>
-                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
                         {{$ttdPenerima->np}}
                     </td>
                     {{-- </td> --}}
@@ -516,7 +520,7 @@
 
                     </td>
                     @else
-                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
                         {{$ttdPengawas->np}}
                     </td>
                     @endif
@@ -528,7 +532,7 @@
                     <td class="ttdbottom" style=width:0.5rem;">
                         :
                     </td>
-                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
                         {{$ttdMenyerahkan->np}}
                     </td>
                     {{-- </td> --}}
@@ -542,7 +546,7 @@
                     <td class="ttdbottom" style=width:0.5rem;">
                         :
                     </td>
-                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
                         {{$ttdPenerima->unitkerja}}
                     </td>
                     {{-- </td> --}}
@@ -554,11 +558,11 @@
                         :
                     </td>
                     @if($ttdPengawas == null)
-                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
 
                     </td>
                     @else
-                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
                         {{$ttdPengawas->unitkerja}}
                     </td>
                     @endif
@@ -571,7 +575,7 @@
                     <td class="ttdbottom" style=width:0.5rem;">
                         :
                     </td>
-                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
                         {{$ttdMenyerahkan->unitkerja}}
                     </td>
                     {{-- </td> --}}

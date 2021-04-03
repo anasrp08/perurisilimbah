@@ -283,7 +283,7 @@
 
         $('#refresh').click(function () {
 
-
+            $('#daftar_pemohon').DataTable().ajax.reload();
 
         })
         if (seksi == 'pengawas' || seksi == 'operator') {
@@ -572,16 +572,17 @@
         var roleOperator = '<?php echo Laratrust::hasRole("operator") ?>'
 
         if (roleUnitKerja == 1) {
-            buttonTerima.disable();
-            buttonValidasi.disable();
-            buttonDatatable.disable();
-            buttonRevisi.disable();
+            buttonTerima.nodes().css("display", "none");
+            buttonValidasi.nodes().css("display", "none");
+            buttonDatatable.nodes().css("display", "none");
+            buttonRevisi.nodes().css("display", "none");
+            buttonProsesLangsung.nodes().css("display", "none");
         } else if (rolePengawas == 1) {
-            buttonTerima.disable();
-            buttonRevisi.disable();
-            buttonProsesLangsung.disable();
+            buttonTerima.nodes().css("display", "none");
+            buttonRevisi.nodes().css("display", "none");
+            buttonProsesLangsung.nodes().css("display", "none");
         } else if (roleOperator == 1) {
-            buttonValidasi.disable();
+            buttonValidasi.nodes().css("display", "none");
         }
 
 

@@ -63,14 +63,17 @@ class PemohonController extends Controller
  
             }else if($request->idasallimbah == 'pengawas')
             {
+               
                 $queryData = $queryData
                 ->where('tr_headermutasi.validated_by',null);
 
             }else{
+               
                 $queryData = $queryData
                 ->where('tr_headermutasi.idasallimbah',$request->idasallimbah);
                 
             }
+
             $queryData = $queryData->get();
             return datatables()->of($queryData)
 
@@ -343,6 +346,7 @@ class PemohonController extends Controller
                         'jumlah'            =>  (int)$row['jumlah'], 
                         'pack'            =>  (int)$row['pack'], 
                         'np_penerima'           =>$row['np_pemroses'],
+                        'np_pemroses'           =>$row['np_pemroses'],
                         'idsatuan'            =>  $row['idsatuan'],
                         'limbah3r'            =>  $row['limbah3r'],
                         'created_at'        => date('Y-m-d'),

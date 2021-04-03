@@ -81,5 +81,7 @@ class UsersSeeder extends Seeder
         $pengawas->save();
         $pengawas->attachRole($satpamRole);
 
+        
+
     }
 }
