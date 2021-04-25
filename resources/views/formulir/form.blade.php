@@ -297,7 +297,7 @@
 
     <img class='background1' src="{{ public_path('/img/validbiru1.png') }}" alt="AdminLTE Logo" width="250px"
         height="75px" style="opacity: .5;margin-top: 100px;margin-left:200px;bottom: 150;transform: rotate(-30deg)">
-        <p style="font-size: 11px; position: absolute;bottom:-30;margin-left:100px;">Surat ini sah walaupun tanpa tanda tangan dan sudah di validasi oleh masing - masing unit kerja
+        <p style="font-size: 11px; position: absolute;bottom:-30;margin-left:150px;">Surat ini sah walaupun tanpa tanda tangan dan sudah di validasi oleh masing - masing unit kerja
         </p>
     </div>
     <div id='content'>
@@ -412,7 +412,7 @@
                     {{-- $loop->iteration --}}
                     <td class="no">{{$loop->iteration}}</td>
                     <td class="namalimbah" colspan="5">{{$data->namalimbah}}</td>
-                    <td class="no" colspan="2">{{$data->jumlah_in}}</td>
+                    <td class="no" colspan="2">{{$data->jumlah}}</td>
                     <td class="keterangan" colspan="2">{{$data->keterangan}}</td>
                 </tr>
                 
@@ -442,7 +442,7 @@
                 {{-- $loop->iteration --}}
                 <td class="no">{{$loop->iteration}}</td>
                 <td class="namalimbah" colspan="5">{{$data->namalimbah}}</td>
-                <td class="no" colspan="2">{{$data->jumlah_in}}</td>
+                <td class="no" colspan="2">{{$data->jumlah}}</td>
                 <td class="keterangan" colspan="2">{{$data->keterangan}}</td>
             </tr>
         @endif
@@ -466,16 +466,23 @@
                     <td class="ttdbottom" style=width:0.5rem;">
                         :
                     </td>
+                    @if($ttdPenerima == '')
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
+                         
+                    </td>
+                    @else
                     <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
                         {{$ttdPenerima->nama}}
                     </td>
+                    @endif
+                    
                     <td class="ttdbottom" style=width:1rem;">
                         Nama
                     </td>
                     <td class="ttdbottom" style=width:0.5rem;">
                         :
                     </td>
-                    @if($ttdPengawas == null)
+                    @if($ttdPengawas == null || $ttdPengawas=='')
                     <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;">
 
                     </td>
@@ -492,9 +499,16 @@
                     <td class="ttdbottom" style=width:0.5rem;">
                         :
                     </td>
+                    @if($ttdMenyerahkan == null || $ttdMenyerahkan=='')
+                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
+                        
+                    </td>
+                    @else
                     <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
                         {{$ttdMenyerahkan->nama}}
                     </td>
+                    @endif
+                  
 
                 </tr>
                 <tr>
@@ -504,9 +518,16 @@
                     <td class="ttdbottom" style=width:0.5rem;">
                         :
                     </td>
-                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
+					 @if($ttdPenerima == '')
+					  <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
+                        
+                    </td>
+					 @else
+					  <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
                         {{$ttdPenerima->np}}
                     </td>
+					 @endif
+                   
                     {{-- </td> --}}
                     {{-- <td class="itemuji"> --}}
                     <td class="ttdbottom" style=width:1rem;">
@@ -532,9 +553,16 @@
                     <td class="ttdbottom" style=width:0.5rem;">
                         :
                     </td>
-                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
+					 @if($ttdMenyerahkan == '')
+					 <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
+                      
+                    </td>
+					 @else
+					 <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
                         {{$ttdMenyerahkan->np}}
                     </td>
+					 @endif
+                    
                     {{-- </td> --}}
 
                 </tr>
@@ -546,9 +574,16 @@
                     <td class="ttdbottom" style=width:0.5rem;">
                         :
                     </td>
-                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
+					 @if($ttdPenerima == '')
+					  <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
+                       
+                    </td>
+					 @else
+					  <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
                         {{$ttdPenerima->unitkerja}}
                     </td>
+					 @endif
+                   
                     {{-- </td> --}}
                     {{-- <td class="itemuji"> --}}
                     <td class="ttdbottom" style=width:1rem;">
@@ -575,9 +610,16 @@
                     <td class="ttdbottom" style=width:0.5rem;">
                         :
                     </td>
-                    <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
+						 @if($ttdMenyerahkan == '')
+						  <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
+                        
+                    </td>
+					 @else
+					  <td class="ttdbottom" colspan="2" style=" border-collapse: collapse; border: 1px solid black;text-align:center;">
                         {{$ttdMenyerahkan->unitkerja}}
                     </td>
+					 @endif
+                   
                     {{-- </td> --}}
 
                 </tr>

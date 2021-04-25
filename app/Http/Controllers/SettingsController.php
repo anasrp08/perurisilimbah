@@ -26,8 +26,7 @@ class SettingsController extends Controller
     }
 
     public function editProfile()
-    {
-        dd(base_path());
+    { 
         return view('settings.edit-profile');
     }
 
@@ -97,7 +96,7 @@ class SettingsController extends Controller
     {
         $request->validate([
             'password' => ['required', new MatchOldPassword],
-            'new_password' => 'required|confirmed|min:6|different:password',
+            'new_password' => 'required|confirmed|min:5|different:password',
             'new_confirm_password' => ['same:new_password']], ['password.old_password' => 'Password lama tidak sesuai']);
  
         User::find(auth()->user()->id)->update(['password'=> Hash::make($request->new_password)]);
@@ -106,6 +105,7 @@ class SettingsController extends Controller
                     "icon" => "fa fa-check",
                     "message" => "Password berhasil dirubah"
                 ]);
+                
                 return redirect('settings/password');
         
     }

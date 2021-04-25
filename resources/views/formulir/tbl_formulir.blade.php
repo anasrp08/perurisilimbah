@@ -9,11 +9,13 @@
                 <thead>
                     <tr>
                         <th>No. </th>
+						<th>ID</th>
                         <th>Nomor</th>
+						 <th>Nama Limbah</th>
                         <th>Tanggal Penyerahan</th> 
                         <th>Unit Penghasil</th>   
-                        <th>Jenis Limbah (B3/Non)</th>  
-                        <th>Limbah 3R</th>
+                        {{-- <th>Jenis Limbah (B3/Non)</th>   
+                        <th>Limbah 3R</th>--}}
                         <th>Keterangan</th>
                         <th>Action</th>
                     </tr>

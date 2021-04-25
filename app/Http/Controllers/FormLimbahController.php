@@ -38,79 +38,49 @@ class FormLimbahController extends Controller
         return $data->id;
     }
     public function index(Request $request)
-    {
-
-        // $getIdLimbah=$this->searchIdAsalLimbah($request->idasallimbah);
+    { 
         if (request()->ajax()) {
-            $queryData = DB::table('tr_headermutasi')
-                ->join('tr_detailmutasi', 'tr_headermutasi.id', '=', 'tr_detailmutasi.idmutasi')
+            $queryData = DB::table('tr_detailmutasi')
+                ->join('tr_headermutasi', 'tr_headermutasi.id', '=', 'tr_detailmutasi.idmutasi')
                 ->join('md_namalimbah', 'tr_headermutasi.idlimbah', '=', 'md_namalimbah.id')
                 ->join('md_penghasillimbah', 'tr_headermutasi.idasallimbah', '=', 'md_penghasillimbah.id')
                 ->join('md_jenislimbah', 'tr_headermutasi.idjenislimbah', '=', 'md_jenislimbah.id')
                 ->select(
                     'tr_headermutasi.*',
+                    'tr_detailmutasi.idmutasi',
+					'tr_detailmutasi.tgl as tgl_proses',
                     'md_penghasillimbah.seksi',
                     'md_jenislimbah.jenislimbah',
+					'md_namalimbah.namalimbah'
                 )
-                ->where('tr_detailmutasi.idstatus', '!=', '1')
-                ->groupBy('tr_headermutasi.id_transaksi')
-                ->orderBy('tr_headermutasi.no_surat', 'asc');
-
-            // if(!empty($request->tglinput)){
-
-            //     $splitDate2=explode(" - ",$request->tglinput);
-            //     $queryData->whereBetween('tr_mutasilimbah.tgl',array(  AppHelper::convertDateYmd($splitDate2[0]),  AppHelper::convertDateYmd($splitDate2[1])));
-
-            // } 
+                ->where('tr_detailmutasi.idstatus','1')
+                // ->groupBy('tr_headermutasi.id_transaksi')
+                ->orderBy('tr_headermutasi.tgl', 'desc');
+				// ->orderBy('tr_headermutasi.idasallimbah', 'desc');
+ 
             if($request->idasallimbah == 'admin' || $request->idasallimbah == 'operator' || $request->idasallimbah == 'pengawas'){
  
             }else{
                 $queryData = $queryData 
-                ->where('tr_detailmutasi.idasallimbah',$request->idasallimbah);
-                
+                ->where('tr_detailmutasi.idasallimbah',$request->idasallimbah);   
             }
+            if (!empty($request->f_date)) {
 
-            $queryData = $queryData->get();
-            //  dd( $queryData);   
+                $splitDate2 = explode(" - ", $request->f_date);
+                $queryData->whereBetween('tr_headermutasi.tgl', array(AppHelper::convertDateYmd($splitDate2[0]),  AppHelper::convertDateYmd($splitDate2[1])));
+            } 
+            if (!empty($request->namalimbah)) {
+                
+                $queryData->where('tr_headermutasi.idlimbah',$request->namalimbah );
+            } 
+            if (!empty($request->limbahasal)) {
+ 
+                $queryData->where('tr_headermutasi.idasallimbah',$request->limbahasal);
+            }  
+
+            $queryData = $queryData->get(); 
             return datatables()->of($queryData)
-                // ->filter(function ($instance) use ($request) {
-                //     if (!empty($request->get('jenislimbah'))) {
-                //         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                //             return Str::contains(Str::lower($row['jenislimbah']),Str::lower($request->get('jenislimbah'))) ? true : false;
-                //         });
-                //     }
-                //     if(!empty($request->get('namalimbah'))){
-                //         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                //             return Str::contains(Str::lower($row['namalimbah']), Str::lower($request->get('namalimbah'))) ? true : false;
-                //         });
-                //     }
-
-                //     if(!empty($request->get('mutasi'))){
-                //         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                //             return Str::contains($row['mutasi'], $request->get('mutasi')) ? true : false;
-                //         });
-                //     } 
-                //     if(!empty($request->get('fisik'))){
-                //         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                //             return Str::contains($row['fisik'], $request->get('fisik')) ? true : false;
-                //         });
-                //     }
-                //     if(!empty($request->get('asallimbah'))){
-                //         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                //             return Str::contains($row['asallimbah'], $request->get('asallimbah')) ? true : false;
-                //         });
-                //     }
-                //     if(!empty($request->get('tpslimbah'))){
-                //         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                //             return Str::contains($row['tps'], $request->get('tpslimbah')) ? true : false;
-                //         });
-                //     } 
-                //     if(!empty($request->get('limbah3r'))){
-                //         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                //             return Str::contains($row['limbah3r'], $request->get('limbah3r')) ? true : false;
-                //         });
-                //     } 
-                // })
+                
                 ->addIndexColumn()
                 ->addColumn('action', 'action_butt_download')
                 ->rawColumns(['action'])
@@ -124,9 +94,16 @@ class FormLimbahController extends Controller
     public function viewIndex()
     {
         
-
+        $jenisLimbah=DB::table('md_jenislimbah')->get();
+        $namaLimbah=DB::table('md_namalimbah')->get(); 
+        $penghasilLimbah=DB::table('md_penghasillimbah')->get();
+       
         return view('formulir.list', [
-            'username' => AuthHelper::getAuthUser()[0]
+            'username' => AuthHelper::getAuthUser()[0],
+            'jenisLimbah' => $jenisLimbah,
+            'namaLimbah' => $namaLimbah,
+            'penghasilLimbah' => $penghasilLimbah,
+            
         ]);
     }
 
@@ -134,10 +111,16 @@ class FormLimbahController extends Controller
     public function viewIndexBAPemusnahan()
     {
         $np = DB::table('tbl_np')->get();
+        $jenisLimbah=DB::table('md_jenislimbah')->get();
+        $namaLimbah=DB::table('md_namalimbah')->get(); 
+        $penghasilLimbah=DB::table('md_penghasillimbah')->get();
 
         return view('formulir_pemusnahan.list', [
             'username' => AuthHelper::getAuthUser()[0],
-            'np' => $np
+            'np' => $np,
+            'jenisLimbah' => $jenisLimbah,
+            'namaLimbah' => $namaLimbah,
+            'penghasilLimbah' => $penghasilLimbah,
         ]);
     }
     public function getLimbahIsProsesLgsg()
@@ -151,7 +134,7 @@ class FormLimbahController extends Controller
     public function IndexBAPemusnahan(Request $request)
     {
 
-        $getIdLimbah=$this->searchIdAsalLimbah($request->idasallimbah); 
+        // $getIdLimbah=$this->searchIdAsalLimbah($request->idasallimbah); 
         if (request()->ajax()) {
             $queryData = DB::table('tr_validasi_ba')
                 ->join('tr_headermutasi', 'tr_headermutasi.id', '=', 'tr_validasi_ba.id_mutasi')
@@ -184,50 +167,26 @@ class FormLimbahController extends Controller
  
             }else{ 
                 $queryData = $queryData
-                ->where('tr_detailmutasi.idasallimbah',$getIdLimbah)
+                ->where('tr_detailmutasi.idasallimbah',$request->idasallimbah)
                 ->whereIn('tr_detailmutasi.idlimbah',$this->getLimbahIsProsesLgsg());
             }
+            if (!empty($request->f_date)) {
+
+                $splitDate2 = explode(" - ", $request->f_date);
+                $queryData->whereBetween('tr_detailmutasi.tgl', array(AppHelper::convertDateYmd($splitDate2[0]),  AppHelper::convertDateYmd($splitDate2[1])));
+            } 
+            if (!empty($request->namalimbah)) {
+                
+                $queryData->where('tr_detailmutasi.idlimbah',$request->namalimbah );
+            } 
+            if (!empty($request->limbahasal)) {
+ 
+                $queryData->where('tr_detailmutasi.idasallimbah',$request->limbahasal);
+            }  
 
             $queryData = $queryData->get(); 
             return datatables()->of($queryData)
-                // ->filter(function ($instance) use ($request) {
-                //     if (!empty($request->get('jenislimbah'))) {
-                //         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                //             return Str::contains(Str::lower($row['jenislimbah']),Str::lower($request->get('jenislimbah'))) ? true : false;
-                //         });
-                //     }
-                //     if(!empty($request->get('namalimbah'))){
-                //         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                //             return Str::contains(Str::lower($row['namalimbah']), Str::lower($request->get('namalimbah'))) ? true : false;
-                //         });
-                //     }
-
-                //     if(!empty($request->get('mutasi'))){
-                //         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                //             return Str::contains($row['mutasi'], $request->get('mutasi')) ? true : false;
-                //         });
-                //     } 
-                //     if(!empty($request->get('fisik'))){
-                //         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                //             return Str::contains($row['fisik'], $request->get('fisik')) ? true : false;
-                //         });
-                //     }
-                //     if(!empty($request->get('asallimbah'))){
-                //         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                //             return Str::contains($row['asallimbah'], $request->get('asallimbah')) ? true : false;
-                //         });
-                //     }
-                //     if(!empty($request->get('tpslimbah'))){
-                //         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                //             return Str::contains($row['tps'], $request->get('tpslimbah')) ? true : false;
-                //         });
-                //     } 
-                //     if(!empty($request->get('limbah3r'))){
-                //         $instance->collection = $instance->collection->filter(function ($row) use ($request) {
-                //             return Str::contains($row['limbah3r'], $request->get('limbah3r')) ? true : false;
-                //         });
-                //     } 
-                // })
+                
                 ->addIndexColumn()
                 ->addColumn('action', 'action_butt_download')
                 ->rawColumns(['action'])
@@ -349,41 +308,43 @@ class FormLimbahController extends Controller
     }
 
 
-    public function cetakFormulir($id)
+    public function cetakFormulir($id,$asal)
     {
 
         setlocale(LC_TIME, 'id');
-
+        $currSeksi = AuthHelper::getAuthUser()[0]->seksi;
         $dataFormulirLimbah = DB::table('tr_headermutasi')
             ->join('tr_detailmutasi', 'tr_headermutasi.id', '=', 'tr_detailmutasi.idmutasi')
             ->join('md_namalimbah', 'tr_headermutasi.idlimbah', '=', 'md_namalimbah.id')
             ->join('md_penghasillimbah', 'tr_headermutasi.idasallimbah', '=', 'md_penghasillimbah.id')
             ->join('md_jenislimbah', 'tr_headermutasi.idjenislimbah', '=', 'md_jenislimbah.id')
             ->select(
-                'tr_headermutasi.no_surat',
-                'tr_headermutasi.created_at as tgldibuat',
-                'tr_headermutasi.jumlah_in',
-                'tr_headermutasi.keterangan',
-                'tr_headermutasi.maksud',
+                'tr_headermutasi.*',
+                'tr_headermutasi.tgl as tgldibuat',
+                DB::raw('SUM(tr_headermutasi.jumlah_in+tr_headermutasi.jumlah_out) as jumlah'),
                 'md_jenislimbah.jenislimbah',
                 'md_namalimbah.namalimbah',
                 'md_penghasillimbah.seksi',
-                'tr_headermutasi.maksud',
-                'tr_headermutasi.np_pemohon',
-                'tr_headermutasi.validated',
-                'tr_headermutasi.validated_by',
+                
             )
-            ->where('tr_detailmutasi.idstatus', '=', '2')
-            ->where('tr_headermutasi.id_transaksi', '=', $id)->get();
-        //    dd($id);
-        $penerima = DB::table('tr_detailmutasi')
-            ->where('id_transaksi', '=', $id)
-            ->where('idstatus', '2')->first();
-        //    dd();
+            ->where('tr_detailmutasi.idstatus', '=', '1') 
+            ->where('tr_headermutasi.id', '=', $id);
 
-        $detailPenerima = $this->getNama($penerima->np_penerima); 
-        $detailPengawas = $this->getNama($dataFormulirLimbah[0]->validated_by);  
-        $detailPenyerah = $this->getNama($dataFormulirLimbah[0]->np_pemohon);  
+            if($asal == $currSeksi){
+                $dataFormulirLimbah = $dataFormulirLimbah 
+                ->where('tr_detailmutasi.idasallimbah',$asal);
+            }else{ 
+            }
+            $dataFormulirLimbah=$dataFormulirLimbah->get(); 
+            // dd($dataFormulirLimbah);
+         
+        $detailPenerima = $this->isEmptyValue($this->getNama($dataFormulirLimbah[0]->np_penerima));   
+        $detailPengawas = $this->isEmptyValue($this->getNama($dataFormulirLimbah[0]->validated_by));  
+        $detailPenyerah = $this->isEmptyValue($this->getNama($dataFormulirLimbah[0]->np_pemohon));  
+
+        // $detailPenerima = $this->getNama($penerima->np_penerima); 
+        // $detailPengawas = $this->getNama($dataFormulirLimbah[0]->validated_by);  
+        // $detailPenyerah = $this->getNama($dataFormulirLimbah[0]->np_pemohon);  
 
         //    dd($penerima);
 

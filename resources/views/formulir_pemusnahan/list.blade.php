@@ -2,7 +2,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <title>Formulir Pemusnahan Limbah</title>
 @section('title')
-<h1>Daftar Formulir Pemusnahan Limbah</h1>
+<h1>Daftar Formulir Pemusnahan Limbah Security</h1>
 
 @endsection
 
@@ -16,12 +16,11 @@
 
 
 
-<div class="row">
-    {{-- @include('pemohon.f_pemohon') --}}
+<div class="row"> 
+    @include('formulir_pemusnahan.f_filter')
     @include('formulir_pemusnahan.tbl_formulir')
 </div>
-
-{{-- @include('formulir_pemusnahan.tbl_formulir') --}}
+ 
 @include('formulir_pemusnahan.f_confirmnp')
 
 
@@ -32,6 +31,20 @@
     $(document).ready(function () {
         var seksi = '<?php echo $username->seksi ?>'
        
+        $('input[name="f_date"]').daterangepicker({
+            format: 'DD/MM/YYYY',
+            autoUpdateInput: false,
+            autoclose: true,
+            todayHighlight: true,
+            locale: {
+                cancelLabel: 'Clear'
+            }
+
+        })
+        $('input[name="f_date"]').on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format(
+                'DD/MM/YYYY'));
+        });
         $('.select2bs4').select2({
             theme: 'bootstrap4'
         })
@@ -39,6 +52,10 @@
 
             $('#tbl_formulir').DataTable().ajax.reload();
 
+        })
+        $('#filter').click(function () {
+            // console.log('tes')
+            $('#tbl_formulir').DataTable().ajax.reload();
         })
         var table = $('#tbl_formulir').DataTable({
             scrollCollapse: true,
@@ -73,6 +90,9 @@
                 },
                 data: function (d) {
                     d.idasallimbah=seksi
+                    d.namalimbah = $('#f_namalimbah').val()
+                    d.limbahasal = $('#f_limbahasal').val()
+                    d.f_date = $('#f_date').val()
                 }
             },
             // dom: 'Bfrti',
@@ -81,7 +101,7 @@
             },
 
             language: {
-                emptyTable: "Tidak Ada Data"
+                emptyTable: "Tidak Ada Data Formulir Pemusnahan Limbah"
             },
             order: [
                 [0, 'asc']
@@ -129,7 +149,8 @@
                     name: 'pemohon_validasi',
                     render: function (data, type, row) {
                         if(data == null || row.validated_pemohon == null){
-                            return 'Belum Divalidasi'
+                            return '<span class="badge badge-warning">Belum Divalidasi</span>'
+                            
                         }else{
                             return 'Oleh: '+data +'\n'+'Pada: '+moment(row.validated_pemohon).format('DD/MM/YYYY HH:mm:ss')
                         }
@@ -140,8 +161,10 @@
                     data: 'pengawas_validasi',
                     name: 'pengawas_validasi',
                     render: function (data, type, row) {
+                       
                         if(data == null || row.validated_pengawas == null){
-                            return 'Belum Divalidasi'
+                            return '<span class="badge badge-warning">Belum Divalidasi</span>'
+                            
                         }else{
                             return 'Oleh: '+data +'\n'+ 'Pada: '+moment(row.validated_pengawas).format('DD/MM/YYYY HH:mm:ss')
                         }

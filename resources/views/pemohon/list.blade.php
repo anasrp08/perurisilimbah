@@ -30,6 +30,9 @@
 
 
 @section('content')
+@role(['admin','operator','pengawas'])
+@include('pemohon.f_filter')
+@endrole
 
 <div class="card card-info">
     <div class="card-header">
@@ -41,14 +44,16 @@
             <thead>
                 <tr>
                     <th>No. </th>
+                    <th>ID</th>
+					<th>Status</th>
                     <th>No. Surat</th>
                     <th>Tanggal</th>
                     <th>Nama Limbah</th>
                     <th>Jumlah</th>
-                    <th>Satuan</th>
+                    {{-- <th>Satuan</th> --}}
                     <th>Asal Limbah</th>
                     <th>Jenis Limbah (B3/Non)</th>
-                    <th>Status</th>
+                    
                     <th>Diterima Oleh</th>
                     <th>Tgl. Validasi</th>
                     <th>Divalidasi Oleh</th>
@@ -62,6 +67,7 @@
 <!-- modal -->
 @include('pemohon.f_revisi')
 @include('pemohon.f_proses_lgsg')
+@include('pemohon.f_tolak')
 @include('pemohon.f_confirmnp')
 
 
@@ -82,9 +88,27 @@
             format: 'dd/mm/yyyy',
             todayHighlight: true
         });
+        $('input[name="f_date"]').daterangepicker({
+            format: 'DD/MM/YYYY',
+            autoUpdateInput: false,
+            autoclose: true,
+            todayHighlight: true,
+            locale: {
+                cancelLabel: 'Clear'
+            }
 
-        $('#nonb3').hide()
-        // $('.select2').select2()
+        })
+        $('input[name="f_date"]').on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+        });
+        $('.select2bs4').select2({
+            theme: 'bootstrap4'
+        })
+        $('#filter').click(function () { 
+            $('#daftar_pemohon').DataTable().draw(true);
+        })
+
+        $('#nonb3').hide() 
         $('#jenislimbah').change(function () {
             if ($(this).val() == "Limbah B3") {
                 $("#nonb3").hide();
@@ -101,9 +125,7 @@
             format: 'dd/mm/yyyy',
             todayHighlight: true
         });
-        $('.select2bs4').select2({
-            theme: 'bootstrap4'
-        })
+      
 
         $('#nonb3').hide()
         $('#jenislimbah').change(function () {
@@ -149,7 +171,8 @@
             var radio
 
             var arrValue = []
-            arrValue.push($('#prosesdate').val())
+            var date = $('#prosesdate').val() 
+            arrValue.push(moment(date, 'DD-MM-YYYY').format('YYYY-MM-DD'))
             arrValue.push($('#vendor').val())
             arrValue.push($('#nomanifest').val())
             arrValue.push($('#nokendaraan').val())
@@ -198,7 +221,7 @@
             var dataNonInput = []
             var output1 = []
             var isEmptyCounter = 0
-            console.log(data.toArray())
+            console.log(arrValue)
             var countData = data.count()
 
             for (i = 0; i < data.count(); i++) {
@@ -287,7 +310,7 @@
 
         })
         if (seksi == 'pengawas' || seksi == 'operator') {
-            var handle = setInterval(setNotification, 60000);
+            var handle = setInterval(setNotification, 180000);
         }
 
         function setNotification() {
@@ -386,7 +409,7 @@
                 },
                 {
                     text: 'Proses Langsung',
-                    className: 'proses btn btn-danger',
+                    className: 'proses btn btn-warning',
                     action: function (e, dt, node, config) {
                         var dataSelected = table.rows({
                             selected: true
@@ -413,13 +436,36 @@
                             $('#modalproses').modal('show')
                         } else {
 
-                        }
-
-
-
+                        } 
+                    } 
+                },
+                {
+                    text: 'Tolak Permohonan',
+                    className: 'tolak btn btn-danger',
+                    action: function (e, dt, node, config) {
+                        var dataSelected = table.rows({
+                            selected: true
+                        }).data() 
+                        if(dataSelected.count() > 1){
+                            toastr.error(
+                                    'Hanya Boleh Pilih 1 Permohonan',
+                                    'Perhatian', {
+                                        timeOut: 3000
+                                    });
+                        }else  if(dataSelected.idstatus == 11 || dataSelected.idstatus == 10){
+                            toastr.error(
+                                    'Tidak Diizinkan',
+                                    'Perhatian', {
+                                        timeOut: 3000
+                                    });
+                        }else{
+                            console.log(dataSelected)
+                            $('#title_tolak').text('Permohonan Ditolak')
+                            $('#hidden_transaksi').val('tolak')
+                            $('#hidden_id_tolak').val(dataSelected[0].idheader)
+                            $('#modaltolak').modal('show')
+                        } 
                     }
-
-
                 },
                 {
                     extend: "selectAll",
@@ -458,6 +504,11 @@
                 },
                 data: function (d) {
                     d.idasallimbah = seksi
+                    // d.status=$('#status').val()
+                    d.namalimbah=$('#f_namalimbah').val() 
+                    d.jenislimbah=$('#f_jenislimbah').val()
+                    d.limbahasal=$('#f_limbahasal').val() 
+                    d.f_date=$('#f_date').val() 
 
 
 
@@ -471,7 +522,53 @@
                     orderable: false,
                     searchable: false
                 },
+                {
+                    data: 'id',
+                    name: 'id',
+                },
+{
+                    data: 'status',
+                    name: 'status',
+                    render: function (data, type, row) {
 
+                        switch (row.idstatus) {
+                        case 1:
+                                return '<span class="badge badge-warning">' + data + '</span>'
+                                break;
+                            case 2:
+                                return '<span class="badge badge-success">' + data + '</span>'
+                                break;
+                            case 3:
+                                return '<span class="badge badge-info">' + data + '</span>'
+                                break;
+                            case 4:
+                                return '<span class="badge badge-secondary">' + data + '</span>'
+                                break;
+                            case 5:
+                                return '<span class="badge badge-info">' + data + '</span>'
+                                break;
+                            case 6:
+                                return '<span class="badge badge-primary">' + data + '</span>'
+                                break;
+                            case 7:
+                                return '<span class="badge bg-gray">' + data + '</span>'
+                                break;
+                                case 8:
+                                return '<span class="badge bg-indigo">' + data + '</span>'
+                                break;
+                                case 9:
+                                return '<span class="badge bg-teal">' + data + '</span>'
+                                break;
+                                case 10:
+                                return '<span class="badge bg-fuchsia">' + data + '</span>'
+                                case 11:
+                                return '<span class="badge badge-danger">' + data +'<br>'+'Oleh: '+row.np_penolak+'</span><br>Alasan: '+row.alasan_tolak
+                                break; 
+                            default:
+                                break;
+                        }
+                    }
+                },
                 {
                     data: 'no_surat',
                     name: 'no_surat',
@@ -495,12 +592,16 @@
                 },
                 {
                     data: 'jumlah_in',
-                    name: 'jumlah_in'
+                    name: 'jumlah_in',
+                    render: function (data, type, row) {
+                        return data + ' ('+row.satuan+')'
+                    }
+
                 },
-                {
-                    data: 'satuan',
-                    name: 'satuan'
-                },
+                // {
+                //     data: 'satuan',
+                //     name: 'satuan'
+                // },
                 {
                     data: 'seksi',
                     name: 'seksi'
@@ -511,18 +612,7 @@
 
                 },
 
-                {
-                    data: 'status',
-                    name: 'status',
-                    render: function (data, type, row) {
-
-                        if (data == 'Input') {
-                            return '<span class="badge badge-info">' + data + '</span>'
-                        } else {
-                            return '<span class="badge badge-success">' + data + '</span>'
-                        }
-                    }
-                },
+                
                 {
                     data: 'changed_by',
                     name: 'changed_by',
@@ -565,6 +655,7 @@
         var buttonValidasi = table.buttons(['.validasi']);
         var buttonRevisi = table.buttons(['.revisi']);
         var buttonProsesLangsung = table.buttons(['.proses']);
+        var buttonTolak = table.buttons(['.tolak']);
         var buttonDatatable = table.buttons(['.batal', '.semua']);
         var roleUser = '<?php echo Laratrust::hasRole("admin") ?>'
         var roleUnitKerja = '<?php echo Laratrust::hasRole("unit kerja") ?>'
@@ -577,21 +668,16 @@
             buttonDatatable.nodes().css("display", "none");
             buttonRevisi.nodes().css("display", "none");
             buttonProsesLangsung.nodes().css("display", "none");
+            buttonTolak.nodes().css("display", "none");
         } else if (rolePengawas == 1) {
             buttonTerima.nodes().css("display", "none");
             buttonRevisi.nodes().css("display", "none");
             buttonProsesLangsung.nodes().css("display", "none");
+			   buttonTolak.nodes().css("display", "none");
         } else if (roleOperator == 1) {
             buttonValidasi.nodes().css("display", "none");
-        }
-
-
-        // new $.fn.dataTable.FixedColumns(table, {
-        //     leftColumns: 3,
-        //     heightMatch: 'auto'
-        // });
-
-
+			  buttonTolak.nodes().css("display", "none");
+        } 
         $('#form_revisi').on('submit', function (event) {
             event.preventDefault();
             url = "{{ route('history.update') }}"
@@ -622,7 +708,44 @@
                             timeOut: 5000
                         });
                         // $('#np').val('').change()
+                        $('#simpan').text('Submit');
                         $('#modalrevisi').modal('toggle')
+                        $('#daftar_pemohon').DataTable().ajax.reload();
+
+                    }
+                }
+            }) 
+        })
+
+        $('#form_tolak').on('submit', function (event) {
+            event.preventDefault();
+            url = "{{ route('history.update_tolak') }}"
+            $.ajax({
+                url: url,
+                method: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: new FormData(this),
+                contentType: false, 
+                processData: false, 
+                beforeSend: function () {
+                    $('#simpan').text('proses menyimpan...');
+                },
+                success: function (data) { 
+                    if (data.errors) { 
+                        toastr.success(data.errors, 'Gagal Update', {
+                            timeOut: 5000
+                        });
+                    }
+                    if (data.success) {
+                        toastr.success(data.success, 'Success', {
+                            timeOut: 5000
+                        }); 
+                        $('#form_tolak')[0].reset();
+                        $('#simpan').text('Submit'); 
+                        $('#modaltolak').modal('toggle')
+                        $('#daftar_pemohon').DataTable().ajax.reload();
 
                     }
                 }
@@ -641,22 +764,24 @@
 
             var data1 = table.rows({
                 selected: true
-            }).data()
-            console.log(data1.toArray())
+            }).data()  
+            if($('#np').val()=='' ||  $('#massa').val()==''){
+                toastr.warning('Semua Field Harus Diisi', 'Warning', {
+                    timeOut: 5000
+                });
+            }else{
             if (data1.count() == 0) {
                 toastr.warning('Ada Order Yang Belum Dipilih', 'Warning', {
                     timeOut: 5000
                 });
-            } else {
+            } else if(data1.count() > 1) {
+                toastr.warning('Pilih Salah Satu Item', 'Warning', {
+                    timeOut: 5000
+                });
 
+            }else{
                 for (i = 0; i < data1.count(); i++) {
-                    // if (data1[i].is_lgsg_proses != '') {
-
-                    //     toastr.warning('Sudah Ada Data Yang Tervalidasi', 'Warning', {
-                    //         timeOut: 5000
-                    //     });
-                    //     break;
-                    // } else {
+                    
                     var obj = {};
                     obj.idheader = data1[i].id;
                     obj.limbah3r = data1[i].limbah3r;
@@ -671,20 +796,13 @@
                     obj.jumlah = data1[i].jumlah_in;
                     obj.satuan = data1[i].idsatuan;
                     obj.np = $('#np').val();
-                    obj.hiddenTransaksi = $('#hidden_transaksi').val();
-
+                    obj.massa = $('#massa').val(); 
+                    obj.hiddenTransaksi = $('#hidden_transaksi').val(); 
                     output.push(obj);
                     jsonData["Order"] = output
-                    // }
-
-
+                   
                 }
-                var url = ''
-                // if(tipeTransaksi=='terima'){
-                //     url="{{ route('pemohon.updatevalid') }}"
-                // }else{
-                //     url="{{ route('satpam.valid') }}"
-                // }
+                var url = '' 
 
 
                 console.log(jsonData)
@@ -717,12 +835,10 @@
                                 timeOut: 5000
                             });
                             $('#daftar_pemohon').DataTable().ajax.reload();
-                            // $('#counterentries').text(data.count);
-
+                           
                             $('#submit').text('Submit');
                             $('#submit').prop('disabled', false);
-                            // $('#tblorder').DataTable().ajax.reload();
-                            // renderTgl()
+                         
 
                         }
 
@@ -731,8 +847,8 @@
                 $('#np').val('').change()
                 $('#modalconfirm').modal('toggle')
 
+            } 
             }
-            // var tipeTransaksi=('#hidden_transaksi').val()
 
         })
         $('#daftar_pemohon tbody').on('click', 'tr', function () {
@@ -750,56 +866,7 @@
             // updateValid(paramData)
 
         });
-        // $(document).on('click', '.proses', function () {
-        //     var dataSelected = table.rows({
-        //         selected: true
-        //     }).data()
-
-        //     for (i = 0; i < dataSelected.count(); i++) {
-        //         if (data1[i].is_lgsg_proses != '') {
-
-        //                toastr.warning('Sudah Ada Data Yang Tervalidasi', 'Warning', {
-        //                    timeOut: 5000
-        //                });
-        //                break;
-        //            }
-        //     }
-
-
-
-        // });
-
-
-        // var user_id;
-        // $('body').on('click', '.edit', function () {
-
-        //     var id = $(this).data('id');
-        //     var data = table.row($(this).closest('tr')).data();
-        //     var tglCatat
-        //     // var tglCatat = moment(data.tgl).format('DD/MM/YYYY');
-        //     if (data.tgl == "-" || data.tgl == "0000-00-00 00:00:00" || data.tgl === null) {
-        //         tglCatat = ""
-        //     } else {
-        //         tglCatat = moment(data.tgl).format('DD/MM/YYYY');
-        //     }
-        //     $('#jenislimbah').val(data.jenislimbah).change()
-        //     $('#entridate').val(tglCatat)
-        //     $('#satuan').val(data.satuan).change()
-        //     $('#namalimbah').val(data.namalimbah).change()
-        //     $('#fisiklimbah').val(data.fisik).change()
-        //     $('#tps').val(data.tps).change()
-        //     $('#limbahasal').val(data.asallimbah).change()
-        //     $('#jmlhlimbah').val(data.jumlah)
-        //     $('#limbah3r').val(data.limbah3r).change()
-        //     $('#hidden_id').val(data.id)
-        //     $('#jumlahlama').val(data.jumlah)
-        //     $('#idnamalimbah').val(data.idnama)
-
-
-
-        //     $('#formEdit').modal();
-
-
+       
 
 
         // });

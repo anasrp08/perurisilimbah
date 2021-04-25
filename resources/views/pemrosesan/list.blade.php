@@ -158,7 +158,7 @@
                     data: 'total_saldo',
                     name: 'total_saldo',
                     render: function (data, type, row) {
-                        return data + ' ' + row.satuan;
+                        return data + ' ' + row.satuanlimbah;
                         //tambah menu, dashboard, proses pengurangan saldo TPS (by query)
 
                     }
@@ -204,12 +204,15 @@
             }
         });
         var tableDetail = null
+        var isNeracaHorizontal=false;
         $('#daftar_pack').on('click', 'tbody tr', function () {
             var data = table.row(this).data()
+            
             tableDetail = $('#detail_pack').DataTable({
                 processing: true,
                 serverSide: true,
                 destroy: true,
+                dom: 'rtipl',
                 language: {
                     emptyTable: "Tidak Ada Detail Data"
                 },
@@ -220,7 +223,11 @@
                     {
                         className: 'dt-body-nowrap',
                         targets: -1
-                    }
+                    },
+                    // {
+                    //     targets: [6],
+                    //     visible: false
+                    // }
                 ],
                 ajax: {
                     url: '{{ route("pemrosesan.detaillist")}}',
@@ -240,6 +247,10 @@
                         searchable: false
                     },
                     {
+                        data: 'idmutasi',
+                        name: 'idmutasi'
+                    },
+                    {
                         data: 'tgl_permohonan',
                         name: 'tgl_permohonan',
                         orderable: false,
@@ -256,14 +267,13 @@
                         searchable: false,
                         render: function (data, type, row) {
                             if (row.jenislimbah == "Limbah B3") {
-
-
                                 var currDate = moment().format('DD/MM/YYYY');
                                 var day7 = moment(data).subtract(7, 'd').format(
                                     'DD/MM/YYYY');
 
                                 var day3 = moment(data).subtract(3, 'd').format(
                                     'DD/MM/YYYY');
+
                                 if (currDate == day7) {
                                     return '<h5><span class="badge badge-warning">' +
                                         moment(data)
@@ -278,7 +288,7 @@
                                         moment(
                                             data)
                                         .format('DD/MM/YYYY') + '</span></h5>'
-                                } {
+                                } else {
                                     return '<h5><span class="badge badge-success">' +
                                         moment(
                                             data)
@@ -303,7 +313,17 @@
                         orderable: false,
                         searchable: false,
                         render: function (data, type, row) {
-                            return data + ' (' + row.satuan + ')'
+                            return data + ' (' + row.nama_satuan + ')'
+                        }
+
+                    },
+                    {
+                        data: 'jmlh_massa_in',
+                        name: 'jmlh_massa_in',
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row) {
+                            return data
                         }
 
                     },
@@ -325,7 +345,13 @@
                         var idComp = $(":input[name=jmlh_proses]", this).attr('id')
                         $('#' + idComp).prop('disabled', false)
                     }
-
+                    if (data.tipe_kuota_limbah == '-') {
+                      
+                        tableDetail.column(6).visible(false);
+                        isNeracaHorizontal=false
+                    }else{
+                        isNeracaHorizontal=true
+                    }
                 },
                 footerCallback: function (row, data, start, end, display) {
                     var api = this.api(),
@@ -341,7 +367,7 @@
 
                     // Total over all pages
                     total = api
-                        .column(4)
+                        .column(5)
                         .data()
                         .reduce(function (a, b) {
                             return intVal(a) + intVal(b);
@@ -350,45 +376,61 @@
 
 
                     // Update footer
-                    $(api.column(4).footer()).html(
+                    $(api.column(5).footer()).html(
                         total
                     );
                 }
 
             })
+
             $('#modaldetail').modal('show')
 
         })
+        function checkJmlhProses(nextField,currJumlahProses,pembanding){
+
+             //jika jumlah input sama dengan jumlah tersedia
+             if (currJumlahProses.val() == pembanding) {
+                    nextField.prop('disabled', false)
+                    nextField.val('0')
+                } else if (currJumlahProses.val() < pembanding) {
+                    nextField.prop('disabled', true)
+                    nextField.val('')
+                } else if (currJumlahProses.val() > pembanding) {
+                    currJumlahProses.val('0')
+                }
+
+        }
         $(document).on('change', 'tr', '.jmlh_proses', function () {
             var currIndex = tableDetail.row(this).index();
             var currData = tableDetail.row(currIndex).data();
-           
+
             var idCompDetail = $(":input[name=jmlh_proses]", this).attr('id')
             var arrJumlahProses = []
             var currJumlahProses = $('#' + idCompDetail)
-            console.log(currIndex != tableDetail.rows().count() - 1)
+            // console.log(currIndex != tableDetail.rows().count() - 1)
             if (currIndex != tableDetail.rows().count() - 1) {
-                console.log('beda')
+
                 var nextData = tableDetail.row(currIndex + 1).data();
                 var nextIDField = $(nextData.action).attr('id')
-                var nextField = $('#' + nextIDField) 
+                var nextField = $('#' + nextIDField)
                 
-                //jika jumlah input sama dengan jumlah tersedia
-                if (currJumlahProses.val() == currData.jumlah_in) {
-                    nextField.prop('disabled', false)
-                    nextField.val('0')
-                } else if (currJumlahProses.val() < currData.jumlah_in) {
-                    nextField.prop('disabled', true)
-                    nextField.val('')
-                } else if (currJumlahProses.val() > currData.jumlah_in) {
-                    
-                    currJumlahProses.val('0')
+                if(isNeracaHorizontal){ 
+                    checkJmlhProses(nextField,currJumlahProses,currData.jmlh_massa_in)
+                }else{
+                    checkJmlhProses(nextField,currJumlahProses,currData.jumlah_in)
                 }
-            } else { 
-                console.log('sama')
-                if (currJumlahProses.val() > currData.jumlah_in) { 
-                    currJumlahProses.val('0')
+
+               
+            } else {
+                if(isNeracaHorizontal){
+                    checkJmlhProses(nextField,currJumlahProses,currData.jmlh_massa_in)
+                }else{
+                    checkJmlhProses(nextField,currJumlahProses,currData.jumlah_in)
                 }
+
+                // if (currJumlahProses.val() > currData.jumlah_in) {
+                //     currJumlahProses.val('0')
+                // }
 
             }
 
@@ -405,15 +447,17 @@
             console.log(data1)
             $.each(data1, function (index, value) {
 
-                total += parseInt(value.value)
+                total += parseFloat(value.value)
             });
-            var column = tableDetail.column(5);
+            
+                var column = tableDetail.column(7);
+            
             $(column.footer()).html(
                 column.data().reduce(function (a, b) {
                     // if (total > $('#maxkertas').val()) {
                     //     isMax = true
                     // }
-                    return total;
+                    return parseFloat(total);
                 })
             )
         }
@@ -424,8 +468,6 @@
 
             var arrValue = []
             var date = $('#prosesdate').val()
-            // console.log(date)
-            // console.log(moment(date, 'DD-MM-YYYY').format('YYYY-MM-DD'))
             arrValue.push(moment(date, 'DD-MM-YYYY').format('YYYY-MM-DD'))
             arrValue.push($('#vendor').val())
             arrValue.push($('#nomanifest').val())
@@ -517,6 +559,7 @@
                         obj.tipelimbah = data[i].tipelimbah;
                         obj.idjenislimbah = data[i].idjenislimbah;
                         obj.jumlah_in = data[i].jumlah_in;
+                        obj.jmlh_massa_in = data[i].jmlh_massa_in;
                         obj.jmlh_proses = output1[i].jmlh_proses;
                         obj.limbah3r = data[i].limbah3r;
                         obj.tglproses = arrValue[0];
@@ -525,6 +568,7 @@
                         obj.nokendaraan = arrValue[3];
                         obj.nospbe = arrValue[4];
                         obj.status_lama = data[i].idstatus;
+                        obj.pembagi = data[i].pembagi;
 
                         obj.np_pemroses = $('#np_pemroses').val();
                         obj.keterangan_proses = $('#keterangan_proses').val();
@@ -582,8 +626,8 @@
         }
         $('#modaldetail').on('hidden.bs.modal', function () {
             $('#sumrow').html('0')
-  // do something…
-})
+            // do something…
+        })
 
         var user_id
 

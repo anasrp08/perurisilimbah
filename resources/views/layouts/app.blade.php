@@ -24,17 +24,14 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('/adminlte3/plugins/toastr/toastr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/adminlte3/plugins/daterangepicker/daterangepicker.css') }}">
     <link rel="stylesheet" href="{{ asset('/adminlte3/plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
-    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.1/css/select.bootstrap4.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.bootstrap4.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/rowgroup/1.1.2/css/rowGroup.bootstrap4.min.css">
-    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css"> --}}
-
-
-
+    <link rel="stylesheet" href="{{ asset('/adminlte3/plugins/otherplugin/select/select1.bootstrap4.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('/adminlte3/plugins/otherplugin/button/buttons.bootstrap4.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('/adminlte3/plugins/otherplugin/twitter/bootstrap1.css')}}">
+    <link rel="stylesheet" href="{{ asset('/adminlte3/plugins/otherplugin/datatable/dataTables.bootstrap4.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('/adminlte3/plugins/otherplugin/rowgroup/rowGroup.bootstrap4.min.css')}}">
+    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css"> --}} 
     <!-- Google Font: Source Sans Pro -->
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <link href="{{ asset('/adminlte3/plugins/otherplugin/fontgooglecss.css')}}" rel="stylesheet">
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -181,9 +178,7 @@
         <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
         <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.bootstrap4.min.js"></script>
         <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script> --}}
-
-
-        {{-- <link rel="stylesheet" href="../../plugins/"> --}}
+ 
         <script src="{{ asset('/adminlte3/plugins/jquery/jquery.min.js') }}"></script>
 
         <script type="text/javascript" src="{{ asset('/adminlte3/plugins/moment/moment.min.js') }}"></script>
@@ -199,25 +194,20 @@
         <script src="{{ asset('/adminlte3/dist/js/adminlte.min.js') }}"></script>
         <!-- AdminLTE for demo purposes -->
         <script src="{{ asset('/adminlte3/dist/js/demo.js') }}"></script>
-        <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
-        <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+        <script src="{{ asset('/adminlte3/plugins/gijgo/gijgo.min.js')}}" type="text/javascript"></script>
+        <link href="{{ asset('/adminlte3/plugins/gijgo/gijgo.min.css')}}" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="{{ asset('/adminlte3/plugins/toastr/toastr.min.js') }}"></script>
         <script src="{{ asset('/adminlte3/plugins/datatables/jquery.dataTables.js') }}"></script>
         <script src="{{ asset('/adminlte3/plugins/datatables-bs4/js/dataTables.bootstrap4.js') }}"></script>
 
 
-
-
-
-
         {{-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script> --}}
-        <script src=" https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
-        <script src="https://cdn.datatables.net/rowgroup/1.1.2/js/dataTables.rowGroup.min.js"></script>
-        <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
-        {{-- <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.bootstrap4.min.js"></script> --}}
-        <script src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/1.8.2/autoNumeric.js"></script>
+        <script src="{{ asset('/adminlte3/plugins/otherplugin/datatable/jquery.dataTables.min.js') }}"></script>
+        <script src="{{ asset('/adminlte3/plugins/otherplugin/datatable/dataTables.bootstrap4.min.js') }}"></script>
+        <script src="{{ asset('/adminlte3/plugins/otherplugin/rowgroup/dataTables.rowGroup.min.js') }}"></script>
+        <script src="{{ asset('/adminlte3/plugins/otherplugin/select/dataTables.select1.min.js') }}"></script> 
+        <script src="{{ asset('/adminlte3/plugins/otherplugin/button/dataTables.buttons.min.js') }}"></script>
+        <script src="{{ asset('/adminlte3/plugins/otherplugin/autoNumeric.js') }}"></script>
 
         <script>
             $(document).ready(function () {
@@ -255,13 +245,12 @@
                                     var dataValues = data.dataNotifikasi.values
                                     var dataKapasitas = data.notifikasiKapasitas
                                     var dataTangal = data.dataNotifikasikeys
-                                    // console.log(dataValues)
+                                    
                                     for (i = 0; i < dataValues.length; i++) {
                                         arrSum += parseInt(dataValues[i].jumlah)
                                         arrSumKadaluarsa += parseInt(dataValues[i].jumlah)
 
-                                        // $('#divkapasitas').append('<a href="#" class="dropdown-item">'+
-                                        //     '<i class="far fa-bell"></i> '+dataValues[i].jumlah+" Limbah <br>Kadaluarsa Tanggal "+moment(dataValues[i].tanggal).format('DD/MM/YYYY')+'</a>');
+                                        
                                         $('#divkapasitas').append(
                                             '<a href="#" class="dropdown-item">' +
                                             '<i class="far fa-bell"></i> ' + dataValues[i]

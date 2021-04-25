@@ -64,11 +64,21 @@
                         @enderror
                     </div>
                 </div>
-                <!-- <a href="#">Forgot Password?</a> -->
-                {{-- <input type="submit" class="btn" value="Login"> --}}
+              
                 <button type="submit" class="btn">
                     {{ __('Login') }}
                 </button>
+                {{-- <div>  --}}
+                    <div class="row">
+                        <div class="col-md-4">
+                            <a href="/downloadUserManual">Download User Manual</a>
+                            <a href="/downloadUID">Download UID & Password </a>
+                            <a href="/downloadDaftarNama">Download Daftar Nama Limbah </a>
+                            <a href="/downloadLabel">Download Petunjuk Label</a>
+                        </div>
+                    </div>
+                    
+                 {{-- </div>  --}}
             </form>
         </div>
     </div>

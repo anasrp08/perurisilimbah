@@ -53,7 +53,7 @@ class PenyimpananLimbahController extends Controller
                     'md_satuan.satuan'
                 )
                 ->where('tr_headermutasi.idstatus', 2)
-                ->orderBy('tr_headermutasi.tgl', 'asc');
+                ->orderBy('tr_headermutasi.tgl', 'desc');
  
 
             $queryData = $queryData->get();

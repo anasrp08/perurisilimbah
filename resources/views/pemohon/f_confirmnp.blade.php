@@ -19,6 +19,11 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="form-group">
+                    <label>Update Massa (Kg)</label>
+                    <input type="text" name="massa" id="massa" class="form-control"
+                                placeholder="Nilai Massa">
+                </div>
                 <input type="hidden" id="np_pemohon" name="np_pemohon" >
                 
                 <input type="hidden" id="hidden_transaksi" name="hidden_transaksi" >

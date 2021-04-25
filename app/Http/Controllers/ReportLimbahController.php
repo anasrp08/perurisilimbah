@@ -865,6 +865,8 @@ class ReportLimbahController extends Controller
                 ->join('md_jenislimbah', 'tr_detailmutasi.idjenislimbah', '=', 'md_jenislimbah.id')
                 ->join('md_penghasillimbah', 'tr_detailmutasi.idasallimbah', '=', 'md_penghasillimbah.id')
                 ->join('md_statusmutasi', 'tr_detailmutasi.idstatus', '=', 'md_statusmutasi.id') 
+                ->join('md_satuan', 'tr_detailmutasi.idsatuan', '=', 'md_satuan.id') 
+               
                 ->select('tr_detailmutasi.*',  
                 'tr_detailmutasi.idlimbah',
                 'tr_detailmutasi.idstatus',
@@ -872,7 +874,7 @@ class ReportLimbahController extends Controller
                 'tr_detailmutasi.idasallimbah', 
                 'md_namalimbah.id as idnama',
                 'md_namalimbah.namalimbah', 
-                'md_namalimbah.satuan',  
+                'md_satuan.satuan',  
                 'md_namalimbah.jenislimbah', 
                 'md_namalimbah.treatmen_limbah', 
                 'md_penghasillimbah.seksi',  

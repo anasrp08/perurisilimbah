@@ -46,6 +46,7 @@ Route::post('pemohon/list', 'PemohonController@index')->name('pemohon.list');
 Route::post('pemohon/terima', 'PemohonController@updatevalid') -> name('pemohon.updatevalid');
 Route::post('pemohon/validasi', 'PemohonController@updatedValidSatpam') -> name('satpam.valid');
 Route::post('histori/update', 'PemohonController@updateRevisi')->name('history.update');
+Route::post('histori/update_tolak', 'PemohonController@updateTolak')->name('history.update_tolak');
 Route::resource('pemohon', 'PemohonController');
 
 Route::post('penyimpanan/list', 'PenyimpananLimbahController@index')->name('penyimpanan.list');
@@ -114,7 +115,7 @@ Route::resource('transaksianggaran', 'TransaksiKontrakB3Controller');
 
 Route::get('formulir/viewlist', 'FormLimbahController@viewIndex')->name('formulir.listview');
 Route::post('formulir/daftar', 'FormLimbahController@index')->name('formulir.daftar');
-Route::get('formulir/cetak/{id}', 'FormLimbahController@cetakFormulir')->name('formulir.cetak');
+Route::get('formulir/cetak/{id_transaksi}/{asal}', 'FormLimbahController@cetakFormulir')->name('formulir.cetak');
 Route::get('ba_pemusnahan/viewlist', 'FormLimbahController@viewIndexBAPemusnahan')->name('ba_pemusnahan.listview');
 Route::post('ba_pemusnahan/daftar', 'FormLimbahController@IndexBAPemusnahan')->name('ba_pemusnahan.daftar');
 Route::get('ba_pemusnahan/cetak/{id}', 'FormLimbahController@cetakBAPemusnahan')->name('ba_pemusnahan.cetak');
@@ -165,5 +166,13 @@ Route::post('ba_pemusnahan/update', 'BAPemusnahanController@update') -> name('ba
  // Ubah password
  Route::get('settings/password', 'SettingsController@editPassword');
  Route::post('settings/password', 'SettingsController@updatePassword');
+
+
+//  Route::get('view', 'FileController@view');
+// Route::get('get/{filename}', 'FileController@getFile')->name('getfile');
+Route::get('/downloadUserManual', 'FileController@getDownloadUserManual');
+Route::get('/downloadUID', 'FileController@getDownloadUID');
+Route::get('/downloadDaftarNama', 'FileController@getDownloadNamaLimbah');
+Route::get('/downloadLabel', 'FileController@getDownloadLabel');
 
 });

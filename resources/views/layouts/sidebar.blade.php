@@ -353,6 +353,25 @@
         
     </ul>
 </li>
+<li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="nav-icon fas fa-th-list"></i>
+        <p>
+            Report Monitoring
+            <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+         
+        <li class="nav-item">
+            <a href="{{ route('history.listview') }}" class="nav-link">
+                <i class="far fa-list-alt  nav-icon"></i>
+                <p>Histori Transaksi</p>
+            </a>
+        </li>
+         
+    </ul>
+</li>  
 @endrole
 @role(['unit kerja'])
 <li class="nav-item has-treeview">
@@ -469,12 +488,12 @@
     </a>
   
     <ul class="nav nav-treeview">
-        <li class="nav-item {!! Request::is('settings/profil*') ? 'active' : '' !!}">
+        {{-- <li class="nav-item {!! Request::is('settings/profil*') ? 'active' : '' !!}">
             <a href="{{ url('/settings/profile/') }}" class="nav-link">
                 <i class="far fa-list-alt nav-icon"></i>
                 <span>Profile</span>
             </a>
-        </li>
+        </li> --}}
         <li class="nav-item {!! Request::is('settings/password') ? 'active' : '' !!}">
             <a href="{{ url('/settings/password') }}" class="nav-link">
                 <i class="far fa-list-alt nav-icon"></i>

@@ -12,12 +12,12 @@
                     <thead>
                         <tr>
                             <th>No. </th>
+                            <th>ID</th>
                             <th>Tgl. Permohonan</th>
                             <th>Tgl. Kadaluarsa</th>
-                            <th>Nama Limbah</th>
-                            {{-- <th>Jumlah Pack</th> --}}
+                            <th>Nama Limbah</th> 
                             <th>Jumlah Saldo</th>
-                            {{-- <th>Satuan</th> --}}
+                            <th>Jumlah Massa</th>
                             <th>Jumlah Proses</th>
                             
                         </tr>
@@ -26,9 +26,10 @@
                         <tr> 
                             <th colspan="4" style="text-align:center">Total</th>
                             <th></th> 
+                            <th></th>
+                            <th></th>
                             <th id="sumrow">0</th>
-                            {{-- <th></th>
-                            <th></th> --}}
+                           
                         </tr>
                     </tfoot>
 

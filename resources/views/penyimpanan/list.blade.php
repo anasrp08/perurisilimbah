@@ -37,6 +37,7 @@
             <thead>
                 <tr>
                     <th>No. </th>
+                    <th>ID</th>
                     <th>Tgl. Permohonan Angkut</th>
                     <th>Nama Limbah</th>
                     <th>Jumlah</th>
@@ -154,11 +155,16 @@
                 }
             },
             // bFilter: false,
-            columns: [{
+            columns: [
+                {
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex',
                     orderable: false,
                     searchable: false
+                },
+                {
+                    data:'id',
+                    name:'id'
                 },
                 {
                     data: 'tgl',

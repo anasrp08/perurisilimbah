@@ -50,6 +50,7 @@
             <thead>
                 <tr>
                     <th>No. </th>
+                    <th>ID. </th>
                     <th>Tanggal</th>
                     <th>Nama Limbah</th>
                     <th>Jumlah</th>  
@@ -197,6 +198,11 @@
                     name: 'DT_RowIndex',
                     orderable: false,
                     searchable: false
+                },
+                {
+                    data: 'idmutasi',
+                    name: 'idmutasi',
+
                 },
                 {
                     data: 'tgl',
