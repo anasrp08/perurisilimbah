@@ -583,27 +583,35 @@ class PemrosesanLimbahController extends Controller
         $updateDelete = DB::table('tbl_pemroses_lain')->where('id', $id)->update($dataUpdate);
         return response()->json(['success' => 'Data Berhasil Di Di Hapus']);
     }
-    public function getNoBAPemusnahan()
-    {
+    public function getNoBAPemusnahan(){
 
-        $noBA = DB::table('md_ba_pemusnahan')->where('tahun', date('Y'))->first();
+        $noBA = DB::table('md_ba_pemusnahan')->where('tahun',date('Y'))->first(); 
         if ($noBA === null) {
             $dataNomor = array(
                 'no'         => 1,
-                'tahun'        => date('Y')
-
-
+                'tahun'        =>date('Y')
+                
+    
             );
-            $insertNewNomor = DB::table('md_ba_pemusnahan')->insert($dataNomor);
-            $noBA = DB::table('md_ba_pemusnahan')->where('tahun', date('Y'))->first();
+            $insertNewNomor=DB::table('md_ba_pemusnahan')->insert($dataNomor); 
+            $noBA =DB::table('md_ba_pemusnahan')->where('tahun',date('Y'))->first(); 
             // user doesn't exist
-        }
-
-
+         }
+         
+         
         $currMonth = date("m");
         $currYear = date("Y");
         $nomor = (int)$noBA->no;
-        function numberToRomanRepresentation($number)
+        
+        $no = sprintf('%03d', $nomor);
+
+        $concatFormat = 'BA-'.$no . "/" . 'BAPI' . "/" . $this->numberToRomanRepresentation($currMonth) . "/" . $currYear;
+        $nomor++;
+        DB::table('md_ba_pemusnahan')->update(['no' => $nomor]);
+        return  $concatFormat;
+
+    }
+	function numberToRomanRepresentation($number)
         {
             $map = array('M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1);
             $returnValue = '';
@@ -618,11 +626,4 @@ class PemrosesanLimbahController extends Controller
             }
             return $returnValue;
         }
-        $no = sprintf('%03d', $nomor);
-
-        $concatFormat = 'BA-' . $no . "/" . 'BAPI' . "/" . numberToRomanRepresentation($currMonth) . "/" . $currYear;
-        $nomor++;
-        DB::table('md_ba_pemusnahan')->update(['no' => $nomor]);
-        return  $concatFormat;
-    }
 }

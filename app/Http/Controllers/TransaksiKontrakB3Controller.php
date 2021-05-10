@@ -138,6 +138,7 @@ class TransaksiKontrakB3Controller extends Controller
             'np'         =>$request->transaksi_np,
             'created_at'                =>  date('Y-m-d'),
         );
+        
         try {
             $insertKuota = DB::table('tr_kontrak_b3')->insert($form_data);
             return response()->json(['success' => 'Data Berhasil Di Simpan']);

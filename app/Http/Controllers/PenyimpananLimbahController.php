@@ -131,9 +131,7 @@ class PenyimpananLimbahController extends Controller
                 'created_by'            => $username,
             );
             $insertPacking = DB::table('tr_packing')->insert($dataParamPack);
-        } else {
-
-
+        } else { 
             $modValue = (int)$row['jumlah'] % (int)$max_pack;
             //jumlah dibagi per max pack
             $divideValue = (int)$row['jumlah'] / (int)$max_pack;
@@ -345,11 +343,12 @@ class PenyimpananLimbahController extends Controller
                     $first = false;
                 }
                 // if ($row['fisik'] == 'Padat') {
-                if ($resultPack == null) {
-                    $resultPack = $this->toPackingTPS($row);
-                } else {
-                    $resultPack;
-                }
+                    // tidak dipakai soalnya gk pake packing2an
+                // if ($resultPack == null) {
+                //     $resultPack = $this->toPackingTPS($row);
+                // } else {
+                //     $resultPack;
+                // }
                 if ($row['idlimbah'] == 1 || $row['idlimbah'] == 2 || $row['idlimbah'] == 3) {
                     $jmlh_pack =0;
                 }else{

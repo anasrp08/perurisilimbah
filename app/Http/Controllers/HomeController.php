@@ -338,6 +338,7 @@ class HomeController extends Controller
         $arrKeluar=[];
         $arrSisa=[];
         $arrData=[];
+        $arrAllSisa=[];
         $dataNamaLimbah=DB::table('md_namalimbah')->where('tipe_kuota_limbah',$tipe_kuota_limbah)->pluck('id');
         // dd($dataNamaLimbah);
         $dataSatuan=DB::table('md_namalimbah')->where('tipe_kuota_limbah',$tipe_kuota_limbah)->first('konversi_kuota');
@@ -345,20 +346,56 @@ class HomeController extends Controller
         for($i=1;$i<=12;$i++){   
             $jumlahMasuk[$i]=$this->querySaldoMutasiKuotaNeraca($period,$i,['1'], $dataNamaLimbah);
              
-            $jumlahKeluar[$i]=$this->querySaldoMutasiKuotaNeraca($period,$i,['5','6','7','8','9'], $dataNamaLimbah);
+            $jumlahKeluar[$i]=$this->querySaldoMutasiKuotaNeraca($period,$i,['5','6','7','8','9'],$dataNamaLimbah);
             
             $jumlahSisa[$i]=null;
             $jumlahSisaPrev[$i]=0;
+           
             //jika bulan lebih dari 0
-            if($i>0){ 
-                 $jumlahSisa[$i]=$this->getSisaSaldo($period,$i,$dataNamaLimbah); 
-                 $jumlahSisaPrev[$i]=$this->getSisaSaldo((int)$period,$i-1,$dataNamaLimbah);
+            if($i>1){ 
+                //  $jumlahSisa[$i]=$this->getSisaSaldo($period,$i,$dataNamaLimbah); 
+                // dd($jumlahMasuk[$i]);
+               
+                //  $jumlahSisaPrev[$i]=$this->getSisaSaldo((int)$period,$i-1,$dataNamaLimbah);
+                //  dd($i-2);
+                 $jumlahMasuk[$i]= (int)$jumlahMasuk[$i] + (int) $arrAllSisa[$i-2];
+                //  if($jumlahKeluar[$i]==0){
+                //     $jumlahKeluar[$i]=$jumlahMasuk[$i];
+                // }
+                 $jumlahSisa[$i]=$jumlahMasuk[$i] - $jumlahKeluar[$i];
+                 array_push($arrAllSisa,(int)$jumlahSisa[$i]); 
+                
             }else{ 
-                $jumlahSisa[$i]=$this->getSisaSaldo((int)$period-1,$i,$dataNamaLimbah);
+
+                // $jumlahSisa[$i]=$this->getSisaSaldo($period,'1',['35']); 
+                
+                
+                $jumlahSisaPrev[$i]=$this->getSisaSaldo((int)$period-1,12,$dataNamaLimbah);
+                $jumlahMasuk[$i]= (int)$jumlahMasuk[$i] + (int) $jumlahSisaPrev[$i];
+                // if($jumlahKeluar[$i]==0){
+                //     $jumlahKeluar[$i]=0;
+                // } 
+                $jumlahSisa[$i]=$jumlahMasuk[$i] - $jumlahKeluar[$i];
+ 
+                array_push($arrAllSisa,(int)$jumlahSisa[$i]); 
+                // dd( $sisa);
+                
+                
             }
-            array_push($arrMasuk,(int)$jumlahMasuk[$i]+ $jumlahSisaPrev[$i]); 
-            array_push($arrKeluar,(int)$jumlahKeluar[$i]); 
-            array_push($arrSisa,(int)$jumlahSisa[$i]); 
+            $currMonth=date('m'); 
+            //isi 0 untuk bulan yg depan depan
+            if($i > ltrim($currMonth, '0')){
+                array_push($arrMasuk,0); 
+                array_push($arrKeluar,0); 
+                array_push($arrSisa,0);
+            }else{
+                array_push($arrMasuk,(int)$jumlahMasuk[$i]); 
+                array_push($arrKeluar,(int)$jumlahKeluar[$i]); 
+                array_push($arrSisa,(int)$jumlahSisa[$i]);
+            }
+            
+             
+            
 
         }  
         $arrData['saldoMasuk']=$arrMasuk;
@@ -391,10 +428,10 @@ class HomeController extends Controller
         }    
  
        
-        $valConvert= (float)$resultData->jumlah * (float)$konversSatuan;
-        $finalValue=round($valConvert, 1); 
+        // $valConvert= (float)$resultData->jumlah * (float)$konversSatuan;
+        // $finalValue=round($valConvert, 1); 
 
-        // $finalValue=$resultData->jumlah;
+        $finalValue=$resultData->jumlah;
           
 
 
@@ -408,6 +445,7 @@ class HomeController extends Controller
             ['1'],
             $namalimbah
         );
+        
         $dataKeluar=$this->querySaldoMutasiKuotaNeraca(
             $year,
             $month,
@@ -416,11 +454,11 @@ class HomeController extends Controller
         ); 
         
        
-        if((int)$dataKeluar==0){
-            $jumlahSisa=0;
-        }else{
+        // if((int)$dataKeluar==0){
+        //     $jumlahSisa=0;
+        // }else{
             $jumlahSisa=(int)$dataMasuk - (int)$dataKeluar;
-        } 
+        // }  
         return abs($jumlahSisa);
     }
     //dashboard neraca lain-lain
@@ -498,7 +536,7 @@ class HomeController extends Controller
         // $date=DateTime::createFromFormat("m/Y", $request->period);
         // $month= $date->format('m');
         // $year=$date->format('Y'); 
-        $dataChart=[];
+        $dataChart=[]; 
        
         for($i=1;$i<=12;$i++){
             $dataPenghasil[$i]=DB::table('tr_detailmutasi')
@@ -512,9 +550,8 @@ class HomeController extends Controller
             ->where('tr_detailmutasi.idasallimbah', $request->unit_kerja)
             ->where('tr_detailmutasi.idlimbah', $request->namalimbah) 
             ->where('tr_detailmutasi.idstatus', '1')
-            ->where('tr_detailmutasi.keterangan', '!=','proses langsung')
-            ->first(); 
-            
+            // ->where('tr_detailmutasi.keterangan', '!=','proses langsung')
+            ->first();   
 
             if($dataPenghasil[$i]->jumlah == null){
                 $dataPenghasil[$i]->jumlah=0;

@@ -157,9 +157,9 @@
         var cair = createPieChart(document.getElementById('cair'), "Cair", 0)
         var sludge = createPieChart(document.getElementById('sludge'), "Sludge", 1)
         var sk = createPieChart(document.getElementById('sk'), "Sampah Kontaminasi", 2)
-        var abu = createPieChart(document.getElementById('abu'), "Sampah Abu", 2)
+        var abu = createPieChart(document.getElementById('abu'), "Sampah Abu", 3)
         var lamputl = createPieChart(document.getElementById('lamputl'),
-            "Sampah Lampu TL, Catridge Printer, PCB", 2)
+            "Sampah Lampu TL, Catridge Printer, PCB", 4)
 
         var neracaKuotaCair = grafNeracaMutasi(document.getElementById('graf_kuota_cair'), 'Limbah Cair - Ton')
 
@@ -167,7 +167,7 @@
             'Limbah Sludge - M3')
 
         var neracaKuotaSK = grafNeracaMutasi(document.getElementById('graf_kuota_sk'),
-            'Limbah Sampah Kontaminasi - Ton')
+            'Limbah Sampah Kontaminasi - M3')
 
         var neracaKuotaAbu = grafNeracaMutasi(document.getElementById('graf_kuota_abu'), 'Limbah Abu - Ton')
 
@@ -248,7 +248,9 @@
                             },
                             afterLabel: function (tooltipItem, data) {
                                 var dataset = data['datasets'][0];
-                                // console.log(dataset['data'][tooltipItem['index']])
+                                  // console.log(dataset['_meta'][meta])
+								  var datasetSum=dataset['data']
+								  // console.log(datasetSum.reduce)
                                 var percent = Math.round((dataset['data'][tooltipItem['index']] /
                                     dataset["_meta"][meta]['total']) * 100)
                                 return "Presentase: " + '(' + percent + '%)';
@@ -635,20 +637,22 @@
                 success: function (data) {
                     // getDataNeraca(paramData)
                     var dataKuota = data.dataKuota
-
+ console.log(dataKuota)
                     updateData(cair, ["Konsumsi", "Sisa"], [dataKuota[0].konsumsi, dataKuota[0]
                         .sisa
                     ])
-                    updateData(sludge, ["Konsumsi", "Sisa"], [dataKuota[1].konsumsi, dataKuota[1]
+                    updateData(sk, ["Konsumsi", "Sisa"], [dataKuota[1].konsumsi, dataKuota[1].sisa])
+                    updateData(sludge, ["Konsumsi", "Sisa"], [dataKuota[2].konsumsi, dataKuota[2]
                         .sisa
                     ])
-                    updateData(sk, ["Konsumsi", "Sisa"], [dataKuota[2].konsumsi, dataKuota[2].sisa])
-                    updateData(abu, ["Konsumsi", "Sisa"], [dataKuota[2].konsumsi, dataKuota[2]
+                   
+                    updateData(abu, ["Konsumsi", "Sisa"], [dataKuota[3].konsumsi, dataKuota[3]
                         .sisa
                     ])
-                    updateData(lamputl, ["Konsumsi", "Sisa"], [dataKuota[2].konsumsi, dataKuota[2]
+                    updateData(lamputl, ["Konsumsi", "Sisa"], [dataKuota[4].konsumsi, dataKuota[4]
                         .sisa
                     ])
+
 
 
                 }
@@ -730,6 +734,7 @@
                 success: function (data) {
                     // console.log(data)
                     var dataKapasitas = data.dataKapasitas 
+					 console.log(dataKapasitas)
                     updateChart(tps1, dataKapasitas[0].saldo, dataKapasitas[0].kapasitasjumlah,50 ,405, 486)
                     updateChart(tps2, dataKapasitas[1].saldo, dataKapasitas[1].kapasitasjumlah, 20, 54, 65)
                     updateChart(tps3, dataKapasitas[2].saldo, dataKapasitas[2].kapasitasjumlah, 20, 150, 207)

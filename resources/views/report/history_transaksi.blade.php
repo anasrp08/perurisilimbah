@@ -244,12 +244,13 @@
                  
                 
                 {
-                    data: 'np_pemohon',
-                    name: 'np_pemohon',
+                    data: 'idstatus',
+                    name: 'idstatus',
                     render: function (data, type, row) {
-                    switch (row.idstatus) {
+					 
+                    switch (data) {
                             case 1:
-                                return data
+                                return row.np_pemohon
                                 break;
                             case 2:
                                 return row.np_penerima
@@ -277,6 +278,8 @@
                                 break;
                                 case 10:
                                 return row.np_perevisi
+								case 11:
+                                return row.np_penolak
                                 break; 
                             default:
                                 break;
@@ -319,7 +322,11 @@
                                 case 10:
                                 return '<span class="badge bg-fuchsia">' + data + '</span>'
                                 break; 
+								 case 11:
+                                return '<span class="badge badge-danger">' + data +'</span><br>Alasan: '+row.keterangan
+                                break; 
                             default:
+							 return '<span class="badge bg-gray">' + data + '</span>'
                                 break;
                         }
                     }
