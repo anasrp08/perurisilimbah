@@ -410,8 +410,8 @@
                         yAxes: [{
                             ticks: {
                                 beginAtZero: true,
-                                tickWidth: 5,
-                                stepSize: 10,
+                                // tickWidth: 5,
+                                // stepSize: 10,
                                 callback: function (value, index, values) {
 
 
@@ -638,19 +638,19 @@
                     // getDataNeraca(paramData)
                     var dataKuota = data.dataKuota
  console.log(dataKuota)
-                    updateData(cair, ["Konsumsi", "Sisa"], [dataKuota[0].konsumsi, dataKuota[0]
-                        .sisa
+                    updateData(cair, ["Konsumsi", "Sisa"], [dataKuota[0].jumlah_konsumsi, dataKuota[0]
+                        .sisa_kuota
                     ])
-                    updateData(sk, ["Konsumsi", "Sisa"], [dataKuota[1].konsumsi, dataKuota[1].sisa])
-                    updateData(sludge, ["Konsumsi", "Sisa"], [dataKuota[2].konsumsi, dataKuota[2]
-                        .sisa
+                    updateData(sk, ["Konsumsi", "Sisa"], [dataKuota[1].jumlah_konsumsi, dataKuota[1].sisa_kuota])
+                    updateData(sludge, ["Konsumsi", "Sisa"], [dataKuota[2].jumlah_konsumsi, dataKuota[2]
+                        .sisa_kuota
                     ])
                    
-                    updateData(abu, ["Konsumsi", "Sisa"], [dataKuota[3].konsumsi, dataKuota[3]
-                        .sisa
+                    updateData(abu, ["Konsumsi", "Sisa"], [dataKuota[3].jumlah_konsumsi, dataKuota[3]
+                        .sisa_kuota
                     ])
-                    updateData(lamputl, ["Konsumsi", "Sisa"], [dataKuota[4].konsumsi, dataKuota[4]
-                        .sisa
+                    updateData(lamputl, ["Konsumsi", "Sisa"], [dataKuota[4].jumlah_konsumsi, dataKuota[4]
+                        .sisa_kuota
                     ])
 
 

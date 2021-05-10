@@ -33,17 +33,18 @@
                     class="numberinput formproses form-control " autocomplete="off">
             </div> 
             <div class="form-group">
+                <label id='labelharga'>xxx</label>
+                <input type="text" id="dataharga" name="dataharga" class="numberinput formproses form-control "
+                    autocomplete="off">
+            </div>
+            <div class="form-group">
                 <label>Jumlah</label>
                 <div class="input-group input-group mb-3">
                     <input type="text" name="jmlhlimbah" id="jmlhlimbah" class="numberinput form-control">
 
                 </div>
             </div> 
-            <div class="form-group">
-                <label id='labelharga'>xxx</label>
-                <input type="text" id="dataharga" name="dataharga" class="numberinput formproses form-control "
-                    autocomplete="off">
-            </div>
+           
             
             <div class="form-group pihakketiga">
                 <label>Total Konsumsi</label>

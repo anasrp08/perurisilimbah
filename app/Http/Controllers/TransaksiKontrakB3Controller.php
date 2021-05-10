@@ -48,7 +48,7 @@ class TransaksiKontrakB3Controller extends Controller
             ->where('tahun',$request->tahun)
             ->select('tr_kontrak_b3.*','md_tipelimbah.*','tr_kontrak_b3.created_at as tgl_dibuat',
             'tbl_np.nama' )
-            
+            ->orderBy('tr_kontrak_b3.tipe_limbah')
             ->get();
             return datatables()->of($queryData)
                     ->addColumn('action', 'action_button') 
@@ -66,10 +66,11 @@ class TransaksiKontrakB3Controller extends Controller
         if (request()->ajax()) {
             $queryData = DB::table('md_kuota')
                 ->join('md_tipelimbah', 'md_tipelimbah.id', 'md_kuota.tipe_limbah')
-                ->join('tr_kontrak_b3','md_kuota.tipe_limbah', 'tr_kontrak_b3.tipe_limbah')
+                ->leftjoin('tr_kontrak_b3','md_kuota.tipe_limbah', 'tr_kontrak_b3.tipe_limbah')
                 ->select('md_kuota.*','md_tipelimbah.*',DB::raw('sum(tr_kontrak_b3.konsumsi) as jumlah_konsumsi'))
                 ->where('md_kuota.tahun',$request->tahun)
                 ->groupBy('tr_kontrak_b3.tipe_limbah')
+                ->orderBy('md_kuota.tipe_limbah')
                 ->get();
                 // dd($queryData);
  
@@ -138,7 +139,6 @@ class TransaksiKontrakB3Controller extends Controller
             'np'         =>$request->transaksi_np,
             'created_at'                =>  date('Y-m-d'),
         );
-        
         try {
             $insertKuota = DB::table('tr_kontrak_b3')->insert($form_data);
             return response()->json(['success' => 'Data Berhasil Di Simpan']);

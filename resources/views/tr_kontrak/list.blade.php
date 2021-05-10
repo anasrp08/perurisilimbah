@@ -135,12 +135,12 @@
             });
 
         }
-        $('#jmlhlimbah').on('change', function () {
-            // console.log(this)
+        $('#jmlhlimbah').on('change', function () { 
             var valJumlah = $(this).val()
-            // var harga = $('#dataharga').val()
+            var harga = $('#dataharga').val().split('.').join("")
+             
             var result = parseInt(valJumlah) * parseInt(harga)
-            console.log(result)
+            
             $('#transaksi_konsumsi').val(numberWithCommas(result))
         })
         $('#refresh').click(function () {
@@ -299,8 +299,8 @@
         var table_neraca = $('#neraca_anggaran').DataTable({
             processing: true,
             serverSide: true,
-            // scrollCollapse: true,
-            // scrollX: true,
+            scrollCollapse: true,
+            scrollX: true,
 
             columnDefs: [{
                     className: 'text-center',

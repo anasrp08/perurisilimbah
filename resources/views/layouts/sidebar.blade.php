@@ -110,7 +110,7 @@
         <li class="nav-item">
             <a href="{{ route('kontrak.listview') }}" class="nav-link">
                 <i class="fas fa-list nav-icon"></i>
-                <p>Neraca Anggaran</p>
+                <p>Master Neraca Anggaran</p>
             </a>
         </li>
     </ul>
