@@ -372,8 +372,8 @@ class HomeController extends Controller
 
         for ($i = 1; $i <= 12; $i++) {
 
-            $jumlahMasuk[$i] = $this->querySaldoMutasi($request->period, $i, ['1'], ['35']);
-            $jumlahKeluar[$i] = $this->querySaldoMutasi($request->period, $i, ['5', '6', '7', '8', '9'], ['35']);
+            $jumlahMasuk[$i] = $this->querySaldoMutasi($request->period, $i, ['1'],[$request->namalimbah]);
+            $jumlahKeluar[$i] = $this->querySaldoMutasi($request->period, $i, ['5', '6', '7', '8', '9'], [$request->namalimbah]);
             $jumlahSisa[$i] = null;
             $jumlahSisaPrev[$i] = null;
 
@@ -386,7 +386,7 @@ class HomeController extends Controller
  
             } else {
                 //untuk ambil sisa di tahun sebelumnya 
-                $jumlahSisaPrev[$i] = $this->getSisaSaldo((int)$request->period - 1, 12, ['35']);
+                $jumlahSisaPrev[$i] = $this->getSisaSaldo((int)$request->period - 1, 12, [$request->namalimbah]);
                 $jumlahMasuk[$i] = (int)$jumlahMasuk[$i] + (int) $jumlahSisaPrev[$i];
 
                 $jumlahSisa[$i] = $jumlahMasuk[$i] - $jumlahKeluar[$i];

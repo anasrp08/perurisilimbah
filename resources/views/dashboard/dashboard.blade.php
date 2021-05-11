@@ -112,8 +112,8 @@
 @endsection
 @section('scripts')
 <script src="{{ asset('/adminlte3/chartjs/Chart.bundle.min.js') }}"></script>
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="{{ asset('/adminlte3/plugins/highchart/highcharts.js') }}"></script>
+<script src="{{ asset('/adminlte3/plugins/highchart/highcharts-more.js') }}"></script>
 {{-- <script src="https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js"></script> --}}
 {{-- <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script> --}}
 
@@ -199,6 +199,7 @@
             dashboardNeracaKuota()
         })
         $('#display_neraca').click(function () {
+             console.log($('#namalimbah_neraca').val())
             var paramData = {
                 period: $('#tahun_neraca').val(),
                 namalimbah: $('#namalimbah_neraca').val()
@@ -950,9 +951,11 @@
         function updateDataNeracaLain(chart, saldoMasuk, saldoKeluar, sisaSaldo, satuan) {
 
             satuanNeracaLain = satuan
+            console.log(satuanNeracaLain)
             chart.data.datasets[0].data = saldoMasuk
             chart.data.datasets[1].data = saldoKeluar
             chart.data.datasets[2].data = sisaSaldo
+           
             chart.update();
 
         }

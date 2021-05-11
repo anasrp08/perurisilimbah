@@ -214,8 +214,6 @@ class PemohonController extends Controller
         foreach ($dataRequest as $row) {
 
             $jmlh_pack = UpdtSaldoHelper::convertJumlahToPack($row['nama_limbah'], $row['jmlhlimbah']);
-
-
             $dataHeader = array(
                 'id_transaksi'      =>  $lastTransactionNo,
                 'no_surat'          =>  '',
@@ -512,6 +510,7 @@ class PemohonController extends Controller
                 'keterangan'            =>  $request->keterangan,
                 'maksud'                   => $request->maksud,
                 'np_perevisi'          => $request->np_perevisi,
+                // 'np_penerima'          => $request->np_perevisi,
                 'updated_at'            => date('Y-m-d')
 
             );
@@ -533,24 +532,38 @@ class PemohonController extends Controller
                 'limbah3r'          =>  $request->limbah3r,
                 'created_by'        => $request->np_perevisi,
             );
-            $dataDetailTerima = array(
-                'id_transaksi'      =>  $dataToBeUpdate->id_transaksi,
-                'idmutasi'          => $dataToBeUpdate->id,
-                'idlimbah'          =>  $request->namalimbah,
-                'idstatus'          =>  2,
+            // $dataDetailTerima = array(
+            //     'id_transaksi'      =>  $dataToBeUpdate->id_transaksi,
+            //     'idmutasi'          => $dataToBeUpdate->id,
+            //     'idlimbah'          =>  $request->namalimbah,
+            //     'idstatus'          =>  2,
+            //     'jumlah'            =>  $request->jmlhlimbah,
+            //     'pack'              =>   $jmlh_pack,
+            //     'idsatuan'          =>  $request->satuan,
+            //     'created_at'        => date('Y-m-d'),
+            //     'tgl'               =>  AppHelper::convertDate($request->entridate),
+            //     'idasallimbah'      =>   $request->limbahasal,
+            //     'np_perevisi'       => $request->np_perevisi,
+            //     // 'np_pemohon'        => $request->np_pemohon,
+            //     'alasan_revisi'     => $request->alasan,
+            //     'idjenislimbah'     => $request->jenislimbah,
+            //     'limbah3r'          =>  $request->limbah3r,
+            //     'created_by'        => $request->np_perevisi,
+            //     'changed_by'        => $request->np_perevisi,
+            // );
+            $dataDetailPermohonan = array( 
+                'idlimbah'          =>  $request->namalimbah, 
                 'jumlah'            =>  $request->jmlhlimbah,
-                'pack'           =>   $jmlh_pack,
+                'pack'              =>  $jmlh_pack,
                 'idsatuan'          =>  $request->satuan,
-                'created_at'        => date('Y-m-d'),
-                'tgl'               =>  AppHelper::convertDate($request->entridate),
+                'created_at'        =>  date('Y-m-d'),
+                'tgl'               => AppHelper::convertDate($request->entridate),
                 'idasallimbah'      =>   $request->limbahasal,
-                'np_perevisi'       => $request->np_perevisi,
-                // 'np_pemohon'        => $request->np_pemohon,
-                'alasan_revisi'     => $request->alasan,
+                'np_perevisi'                   => $request->np_perevisi,
+                'alasan_revisi'        => $request->alasan,
                 'idjenislimbah'     => $request->jenislimbah,
                 'limbah3r'          =>  $request->limbah3r,
                 'created_by'        => $request->np_perevisi,
-                'changed_by'        => $request->np_perevisi,
             );
             $dataStatus = array(
 
@@ -563,7 +576,10 @@ class PemohonController extends Controller
             $updateHeader = DB::table('tr_headermutasi')->where('id', $request->hidden_id)->update($dataHeader);
             // $updateHeader = DB::table('tr_statusmutasi')->where('idmutasi', $request->hidden_id)->update($dataStatus);
             $insertDetail = DB::table('tr_detailmutasi')->insert($dataDetail);
-            $insertDetail1 = DB::table('tr_detailmutasi')->insert($dataDetailTerima);
+            // $insertDetail1 = DB::table('tr_detailmutasi')->insert($dataDetailTerima);
+            $insertDetail1 = DB::table('tr_detailmutasi')->where('idmutasi', $request->hidden_id)
+            ->where('idstatus','1')
+            ->update($dataDetailPermohonan);
             return response()->json(['success' => 'Data Berhasil Di Revisi']);
         } catch (Exception $e) {
             return response()->json(['error' => 'Data Gagal Di Revisi']);
