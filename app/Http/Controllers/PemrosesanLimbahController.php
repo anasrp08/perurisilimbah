@@ -604,7 +604,8 @@ class PemrosesanLimbahController extends Controller
         $nomor = (int)$noBA->no;
         
         $no = sprintf('%03d', $nomor);
-        $concatFormat = $no . "/" .$this->numberToRomanRepresentation($currMonth) . "/" . $currYear. "/" .$idlimbah;
+        $concatFormat = $no . "/" .$this->numberToRomanRepresentation($currMonth) . "/" . $idlimbah. "/" .$currYear;
+        // $concatFormat = $no . "/" .$this->numberToRomanRepresentation($currMonth) . "/" . $currYear. "/" .$idlimbah;
         // $concatFormat = 'BA-'.$no . "/" . 'BAPI' . "/" . $this->numberToRomanRepresentation($currMonth) . "/" . $currYear;
         $nomor++;
         DB::table('md_ba_pemusnahan')->update(['no' => $nomor]);
