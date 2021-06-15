@@ -393,7 +393,7 @@
 
                 jsonData["Data"] = output
                 jsonData["Header"] = $("#maksud").val()
-                // console.log(jsonData)
+              
 
 
                 $.ajax({
@@ -413,16 +413,19 @@
                     },
                     success: function (data) {
 
-                        if (data.errors) {
-                            toastr.error(data.errors, 'Error', {
-                                timeOut: 5000
+                        if (data.error) {
+                            toastr.error(data.error, 'Error', {
+                                closeButton: true,
+                                newestOnTop: false,
+                                positionClass: "toast-top-full-width",
                             });
                         }
                         if (data.success) {
-                            $('#save').text('Save');
-                            $('#save').prop('disabled', false);
+                            
                             toastr.success(data.success, 'Tersimpan', {
-                                timeOut: 3000
+                                timeOut: 3000,
+                                newestOnTop: false,
+                                positionClass: "toast-top-full-width",
                             });
 
                             setTimeout(function () {
@@ -437,6 +440,8 @@
 
 
                         }
+                        $('#save').text('Save');
+                        $('#save').prop('disabled', false);
 
                     }
                 })

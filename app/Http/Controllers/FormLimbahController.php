@@ -17,7 +17,7 @@ use Validator;
 use Response;
 use DB;
 use PDF;
-
+use Exception;
 
 class FormLimbahController extends Controller
 {
@@ -165,11 +165,19 @@ class FormLimbahController extends Controller
  
             if($request->idasallimbah == 'admin' || $request->idasallimbah == 'operator' || $request->idasallimbah == 'pengawas'){
  
-            }else{ 
+            }else if($request->idasallimbah == '225'){
+				$queryData = $queryData
+                ->where('tr_detailmutasi.idasallimbah',$request->idasallimbah);
+			
+			
+			}else { 
                 $queryData = $queryData
                 ->where('tr_detailmutasi.idasallimbah',$request->idasallimbah)
                 ->whereIn('tr_detailmutasi.idlimbah',$this->getLimbahIsProsesLgsg());
             }
+			
+			
+			
             if (!empty($request->f_date)) {
 
                 $splitDate2 = explode(" - ", $request->f_date);

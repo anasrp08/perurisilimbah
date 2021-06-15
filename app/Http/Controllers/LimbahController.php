@@ -15,7 +15,7 @@ use Validator;
 use Response;
 use DB;
 use PDF;
- 
+use Exception;
 
 class LimbahController extends Controller
 {

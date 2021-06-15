@@ -16,7 +16,7 @@ use Validator;
 use Response;
 use DB;
 use PDF;
-
+use Exception;
 
 class ReportLimbahController extends Controller
 {

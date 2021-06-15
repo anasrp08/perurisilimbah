@@ -11,7 +11,7 @@ use App\Rules\MatchOldPassword;
 use Validator;
 use App\Helpers\AppHelper;
 use App\User;
-
+use Exception;
 class SettingsController extends Controller
 {
 

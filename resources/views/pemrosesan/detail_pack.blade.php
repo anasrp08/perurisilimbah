@@ -8,6 +8,7 @@
                 </button>
             </div>
             <div class="modal-body">
+                <label>(Gunakan tanda . untuk desimal)</label>
                 <table id="detail_pack" class="table table-hover table-bordered" >
                     <thead>
                         <tr>

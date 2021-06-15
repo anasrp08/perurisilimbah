@@ -106,7 +106,9 @@ Route::post('/neraca_kontrak/data', 'TransaksiKontrakB3Controller@indexNeracaKon
 Route::post('/kontrakb3/store', 'TransaksiKontrakB3Controller@store')->name('kontrakb3.store');
 Route::post('/kontrakb3/getTipeLimbah', 'TransaksiKontrakB3Controller@getDataTipeLimbah')->name('kontrakb3.tipelimbah');
 // Route::post('/kontrakb3/editdata', 'TransaksiKontrakB3Controller@editData')->name('kontrak.editdata'); 
-Route::get('kontrakb3/destroy/{id}', 'TransaksiKontrakB3Controller@destroy');
+// Route::get('kontrakb3/destroy/{id}', 'TransaksiKontrakB3Controller@destroy');
+Route::post('/kontrakb3/delete', 'TransaksiKontrakB3Controller@deleteAnggaran')->name('kontrakb3.delete');
+
 // Route::post('/kontrakb3/kuota_anggaran/update', 'TransaksiKontrakB3Controller@updateAnggaran')->name('kontrak.update_anggaran');
 // Route::post('/kontrakb3/kuota_anggaran/konsumsi', 'TransaksiKontrakB3Controller@updateKonsumsi')->name('kontrak.konsumsi_anggaran');
 Route::resource('transaksianggaran', 'TransaksiKontrakB3Controller');

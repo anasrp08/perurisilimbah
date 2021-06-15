@@ -16,6 +16,7 @@ use Redirect;
 use Validator;
 use Response;
 use DB;
+use Exception;
 use PDF;
 use PDO;
 
@@ -132,7 +133,7 @@ class PemrosesanLimbahController extends Controller
         
         $status = $this->isZero($sisaJumlahKecil, $row);
         $jmlhOut = (int)$dataHeader->jumlah_out + (int)$jumlahKecilKeluar;
-
+        //yg membedakan report horizontal dan tidak
         $jmlhMassaOut = (float)$dataHeader->jmlh_massa_out + (float)$row['jmlh_proses'];
         $jmlhMassaIn = (float)$dataHeader->jmlh_massa_in - (float)$row['jmlh_proses'];
 
@@ -155,7 +156,7 @@ class PemrosesanLimbahController extends Controller
             'limbah3r'              => $row['limbah3r'],
             'created_at'            => date('Y-m-d'),
             'np_pemroses'           => $row['np_pemroses'],
-            'no_ba_pemusnahan'      => $this->getNoBAPemusnahan(), 
+            'no_ba_pemusnahan'      => $this->getNoBAPemusnahan($row['idlimbah']), 
             'created_by'            => $username,
 
         );
@@ -217,7 +218,7 @@ class PemrosesanLimbahController extends Controller
             'limbah3r'            => $row['limbah3r'],
             'created_at'            => date('Y-m-d'),
             'np_pemroses'           => $row['np_pemroses'],
-            'no_ba_pemusnahan'           => $this->getNoBAPemusnahan(), 
+            'no_ba_pemusnahan'           => $this->getNoBAPemusnahan($row['idlimbah']), 
             'created_by'            => $username,
 
         );
@@ -303,7 +304,6 @@ class PemrosesanLimbahController extends Controller
                 $jmlh = $dataHeader->jumlah_in;
                 //check limbah masuk report horizontal / tidak
                 if ($dataHeader->tipe_kuota_limbah != '-') {
-
                     $this->prosesReportHorizontal($row,$dataHeader,$jmlh_pack,$username);
                 } else {
                     $this->prosesNonReportHorizontal($row,$dataHeader,$jmlh_pack,$username);
@@ -311,7 +311,7 @@ class PemrosesanLimbahController extends Controller
             }
             return response()->json(['success' => 'Data Berhasil Di Simpan']);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Data Gagal Disimpan']);
+            return response()->json(['error' => 'Ada Kesalahan Sistem: '.$e->getMessage()]);
         }
     }
     public function prosesLain(Request $request)
@@ -386,7 +386,7 @@ class PemrosesanLimbahController extends Controller
 
             return response()->json(['success' => 'Data Berhasil Di Simpan']);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Data Gagal Disimpan']);
+            return response()->json(['error' => 'Ada Kesalahan Sistem: '.$e->getMessage()]);
         }
     }
 
@@ -560,7 +560,7 @@ class PemrosesanLimbahController extends Controller
 
             return response()->json(['success' => 'Data Berhasil Di Simpan']);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Data Gagal Disimpan']);
+            return response()->json(['error' => 'Ada Kesalahan Sistem: '.$e->getMessage()]);
         }
     }
 
@@ -583,7 +583,7 @@ class PemrosesanLimbahController extends Controller
         $updateDelete = DB::table('tbl_pemroses_lain')->where('id', $id)->update($dataUpdate);
         return response()->json(['success' => 'Data Berhasil Di Di Hapus']);
     }
-    public function getNoBAPemusnahan(){
+    public function getNoBAPemusnahan($idlimbah){
 
         $noBA = DB::table('md_ba_pemusnahan')->where('tahun',date('Y'))->first(); 
         if ($noBA === null) {
@@ -604,8 +604,8 @@ class PemrosesanLimbahController extends Controller
         $nomor = (int)$noBA->no;
         
         $no = sprintf('%03d', $nomor);
-
-        $concatFormat = 'BA-'.$no . "/" . 'BAPI' . "/" . $this->numberToRomanRepresentation($currMonth) . "/" . $currYear;
+        $concatFormat = $no . "/" .$this->numberToRomanRepresentation($currMonth) . "/" . $currYear. "/" .$idlimbah;
+        // $concatFormat = 'BA-'.$no . "/" . 'BAPI' . "/" . $this->numberToRomanRepresentation($currMonth) . "/" . $currYear;
         $nomor++;
         DB::table('md_ba_pemusnahan')->update(['no' => $nomor]);
         return  $concatFormat;

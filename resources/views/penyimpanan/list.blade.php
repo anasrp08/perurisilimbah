@@ -78,7 +78,7 @@
             theme: 'bootstrap4'
         })
 
-        $('#nonb3').hide() 
+        $('#nonb3').hide()
         $('#jenislimbah').change(function () {
             if ($(this).val() == "Limbah B3") {
                 $("#nonb3").hide();
@@ -103,19 +103,18 @@
             serverSide: true,
             scrollCollapse: true,
             scrollX: true,
-            paging:true,
+            paging: true,
             dom: '<"right"B>rtipl<"clear">',
-            buttons: [
-                {
+            buttons: [{
                     text: 'Packing',
                     className: 'btn btn-info',
                     action: function (e, dt, node, config) {
                         // $('#type').val('Padat')
                         $('#modalconfirm').modal('show')
-                        
+
                     }
                 },
- 
+
                 {
                     extend: "selectAll",
                     text: 'Pilih Semua',
@@ -129,7 +128,7 @@
             ],
             columnDefs: [{
                     className: 'text-center',
-                    targets: [1,   3, 4, 6]
+                    targets: [1, 3, 4, 6]
                 },
                 {
                     className: 'dt-body-nowrap',
@@ -151,20 +150,18 @@
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                data: function (d) { 
-                }
+                data: function (d) {}
             },
             // bFilter: false,
-            columns: [
-                {
+            columns: [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex',
                     orderable: false,
                     searchable: false
                 },
                 {
-                    data:'id',
-                    name:'id'
+                    data: 'id',
+                    name: 'id'
                 },
                 {
                     data: 'tgl',
@@ -239,13 +236,13 @@
             ]
         });
         $('#submit').on('click', function () {
-            if( $('#type').val()=='Padat'){
+            if ($('#type').val() == 'Padat') {
                 formatedData('Padat')
-            }else{
+            } else {
                 formatedData('Cair')
             }
-           
-            
+
+
 
         })
 
@@ -261,32 +258,32 @@
                 toastr.warning('Belum Ada Item Yang Dipilih', 'Warning', {
                     timeOut: 5000
                 });
-            } else { 
-                    for (i = 0; i < data1.count(); i++) {
-                       
-                            var obj = {};
-                            obj.limbah3r = data1[i].limbah3r;
-                            obj.tgl = data1[i].tgl;
-                            obj.idheader = data1[i].id;
-                            obj.id_transaksi = data1[i].id_transaksi;
-                            obj.idasallimbah = data1[i].idasallimbah;
-                            obj.idlimbah = data1[i].idlimbah;
-                            obj.idstatus = 3;
-                            obj.fisik = data1[i].fisik;
-                            obj.tps = data1[i].tps;
-                            obj.pack = data1[i].pack_in;
-                            obj.packing_besar = data1[i].packing_besar;
-                            obj.idjenislimbah = data1[i].idjenislimbah;
-                            obj.jumlah = data1[i].jumlah_in; 
-                            obj.idsatuan = data1[i].idsatuan; 
-                            obj.max_packing = data1[i].max_packing; 
-                            obj.np_packer = $('#np_packer').val();
-                            output.push(obj)
-                            
-                    }
-                    jsonData["Order"] = output
-                    // console.log(jsonData)
-                    packLimbah(jsonData)
+            } else {
+                for (i = 0; i < data1.count(); i++) {
+
+                    var obj = {};
+                    obj.limbah3r = data1[i].limbah3r;
+                    obj.tgl = data1[i].tgl;
+                    obj.idheader = data1[i].id;
+                    obj.id_transaksi = data1[i].id_transaksi;
+                    obj.idasallimbah = data1[i].idasallimbah;
+                    obj.idlimbah = data1[i].idlimbah;
+                    obj.idstatus = 3;
+                    obj.fisik = data1[i].fisik;
+                    obj.tps = data1[i].tps;
+                    obj.pack = data1[i].pack_in;
+                    obj.packing_besar = data1[i].packing_besar;
+                    obj.idjenislimbah = data1[i].idjenislimbah;
+                    obj.jumlah = data1[i].jumlah_in;
+                    obj.idsatuan = data1[i].idsatuan;
+                    obj.max_packing = data1[i].max_packing;
+                    obj.np_packer = $('#np_packer').val();
+                    output.push(obj)
+
+                }
+                jsonData["Order"] = output
+                // console.log(jsonData)
+                packLimbah(jsonData)
             }
             $('#np').val('').change()
             $('#modalconfirm').modal('toggle')
@@ -308,28 +305,35 @@
                 // dataType: "json",
                 beforeSend: function () {
                     $('#saveentri').text('proses menyimpan...');
+                    $('#saveentri').prop('disabled', true);
                 },
                 success: function (data) {
                     // console.log(data)
-                    if (data.errors) {
-                        toastr.success(data.errors, 'Success', {
-                            timeOut: 5000
+                    if (data.error) {
+                        toastr.error(data.error, 'Error', {
+                            closeButton: true,
+                            newestOnTop: false,
+                            positionClass: "toast-top-full-width",
                         });
                     }
                     if (data.success) {
                         toastr.success(data.success, 'Success', {
-                            timeOut: 5000
+                            timeOut: 5000,
+                            newestOnTop: false,
+                            positionClass: "toast-top-full-width",
                         });
                         $('#daftar_masuk').DataTable().ajax.reload();
-                       
+
 
                     }
+                    $('#saveentri').text('Submit');
+                    $('#saveentri').prop('disabled', false);
 
                 }
             })
         }
 
-      
+
         $('#daftar_masuk tbody').on('click', 'tr', function () {
             $(this).toggleClass('selected');
         });
@@ -341,9 +345,9 @@
             });
             user_id = $(this).data('id');
             var data = table.row($(this).closest('tr')).data();
-             
 
-        }); 
+
+        });
 
 
 

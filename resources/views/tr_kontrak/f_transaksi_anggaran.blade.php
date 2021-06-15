@@ -16,7 +16,7 @@
                 <select name="transaksi_tipelimbah" id="transaksi_tipelimbah" class="formproses form-control select2bs4"
                     style="width: 100%;">
                     {{-- <option value="-" selected="selected">Pilih Salah Satu</option> --}}
-                    <option value="" disabled selected>-</option>
+                    <option value=""  selected>-</option>
                     @foreach($tipeLimbah as $data)
                     <option value="{{$data->id}}">{{$data->tipelimbah}}</option>
                     @endforeach
@@ -38,9 +38,9 @@
                     autocomplete="off">
             </div>
             <div class="form-group">
-                <label>Jumlah</label>
+                <label>Jumlah (Gunakan . untuk desimal)</label>
                 <div class="input-group input-group mb-3">
-                    <input type="text" name="jmlhlimbah" id="jmlhlimbah" class="numberinput form-control">
+                    <input type="text" name="jmlhlimbah" id="jmlhlimbah" class=" form-control">
 
                 </div>
             </div> 

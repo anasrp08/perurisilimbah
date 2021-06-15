@@ -15,7 +15,7 @@ use Validator;
 use Response;
 use DB;
 use PDF;
- 
+use Exception;
 
 class MDVendorController extends Controller
 {
@@ -101,7 +101,7 @@ class MDVendorController extends Controller
             $queryInsert=DB::table('md_vendorlimbah')->insert($form_data);
             return response()->json(['success' => 'Data Berhasil Di Simpan']);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Data Gagal Disimpan']);
+            return response()->json(['error' => 'Ada Kesalahan Sistem: '.$e->getMessage()]);
         }
          
     }
@@ -170,7 +170,7 @@ class MDVendorController extends Controller
             $queryUpdate=DB::table('md_vendorlimbah')->where('id','=',$request->hidden_id)->update($form_data);
             return response()->json(['success' => 'Data Berhasil Di Simpan']);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Data Gagal Disimpan']);
+            return response()->json(['error' => 'Ada Kesalahan Sistem: '.$e->getMessage()]);
         }
     }
 

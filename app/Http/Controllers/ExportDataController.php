@@ -13,7 +13,7 @@ use App\Helpers\QueryHelper;
 use App\Exports\NeracaExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
-
+use Exception;
 use Redirect;
 use Validator;
 use Response;

@@ -601,16 +601,21 @@
                 // dataType: "json",
                 beforeSend: function () {
                     $('#saveentri').text('proses menyimpan...');
+                    $('#saveentri').prop('disabled', true);
                 },
                 success: function (data) {
-                    if (data.errors) {
-                        toastr.success(data.errors, 'Success', {
-                            timeOut: 5000
-                        });
-                    }
+                    if (data.error) {
+            toastr.error(data.error, 'Error', {
+                closeButton: true,
+                newestOnTop: false,
+                positionClass: "toast-top-full-width",
+            });
+        }
                     if (data.success) {
                         toastr.success(data.success, 'Success', {
-                            timeOut: 5000
+                            timeOut: 5000,
+                            newestOnTop: false,
+                positionClass: "toast-top-full-width",
                         });
                         $('#modaldetail').modal('toggle')
                         $('#daftar_pack').DataTable().ajax.reload();
@@ -620,6 +625,8 @@
 
 
                     }
+                    $('#saveentri').text('Submit');
+                    $('#saveentri').prop('disabled', false);
 
                 }
             })

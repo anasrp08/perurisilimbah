@@ -17,7 +17,7 @@ use Validator;
 use Response;
 use DB;
 use PDF;
-
+use Exception;
 
 class PenyimpananLimbahController extends Controller
 {
@@ -395,7 +395,7 @@ class PenyimpananLimbahController extends Controller
             }
             return response()->json(['success' => 'Data Berhasil Di Simpan']);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Data Gagal Disimpan']);
+            return response()->json(['error' => 'Ada Kesalahan Sistem: '.$e->getMessage()]);
         }
     }
     public function store(Request $request)

@@ -16,7 +16,7 @@ use Image;
 use Excel; 
 use DB;
 use App\Jobs\ImportJobKantor;
-
+use Exception;
 class MDUserController extends Controller
 {
     public function __construct()

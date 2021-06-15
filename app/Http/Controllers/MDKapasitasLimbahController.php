@@ -14,7 +14,7 @@ use Validator;
 use Response;
 use DB;
 use PDF;
- 
+use Exception;
 
 class MDKapasitasController extends Controller
 {
@@ -229,7 +229,7 @@ class MDKapasitasController extends Controller
             $queryUpdate=DB::table('md_namalimbah')->where('namalimbah','=',$request->namalimbah)->updateTs($updateJumlah,true);
             return response()->json(['success' => 'Data Berhasil Di Simpan']);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Data Gagal Disimpan']);
+            return response()->json(['error' => 'Ada Kesalahan Sistem: '.$e->getMessage()]);
         }
          
     }
@@ -323,7 +323,7 @@ class MDKapasitasController extends Controller
             $queryUpdate=DB::table('md_namalimbah')->where('namalimbah','=',$request->namalimbah)->updateTs($updateJumlah, true);
             return response()->json(['success' => 'Data Berhasil Di Simpan']);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Data Gagal Disimpan']);
+            return response()->json(['error' => 'Ada Kesalahan Sistem: '.$e->getMessage()]);
         }
     }
 

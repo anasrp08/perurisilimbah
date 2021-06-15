@@ -185,14 +185,10 @@
                     success: function (data) {
                         var html = '';
                         console.log(data)
-                        if (data.errors) {
-                            html = '<div class="alert alert-danger">';
-                            for (var count = 0; count < data.errors.length; count++) {
-                                html += '<p>' + data.errors[count] + '</p>';
-                            }
-                            html += '</div>';
-                            $('#form_result').html(html);
-                            $('#action_button').val('Submit');
+                        if (data.error) {
+                            toastr.error(data.error, 'Error', {
+                                timeOut: 5000
+                            });
                         }
                         if (data.success) {
                             toastr.success(data.success, 'Tersimpan', {

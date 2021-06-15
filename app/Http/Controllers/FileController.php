@@ -12,7 +12,7 @@ use App\Helpers\AppHelper;
 use App\Helpers\QueryHelper;
 use App\Helpers\AuthHelper; 
 use Illuminate\Support\Facades\Storage;
-
+use Exception;
 use Redirect;
 use Validator;
 use Response;

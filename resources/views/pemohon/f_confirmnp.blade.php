@@ -10,8 +10,7 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label>Nomor Pegawai</label>
-                    <select name="np" id="np" class="form-control select2bs4"
-                        style="width: 100%;">
+                    <select name="np" id="np" class="form-control select2bs4" style="width: 100%;">
                         {{-- <option value="-" selected="selected">Pilih Salah Satu</option> --}}
                         <option value="" disabled selected>-</option>
                         @foreach($np as $data)
@@ -19,16 +18,15 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>Update Massa (Kg)</label>
-                    <input type="text" name="massa" id="massa" class="form-control"
-                                placeholder="Nilai Massa">
+                <div class="form-group" id='input_massa' style="display: none;">
+                    <label>Update Massa (Kg - Gunakan tanda . untuk desimal)</label>
+                    <input type="text" name="massa" id="massa" class="form-control" placeholder="Nilai Massa">
                 </div>
-                <input type="hidden" id="np_pemohon" name="np_pemohon" >
-                
-                <input type="hidden" id="hidden_transaksi" name="hidden_transaksi" >
+                <input type="hidden" id="np_pemohon" name="np_pemohon">
+
+                <input type="hidden" id="hidden_transaksi" name="hidden_transaksi">
                 <div class="box-footer">
-                    <button name="submit" id="submit" class="btn btn-primary"   >Submit</button>
+                    <button name="submit" id="submit" class="btn btn-primary">Submit</button>
                     {{-- <button id="submit" type="submit" class="btn btn-primary" >Submit</button> --}}
                 </div>
             </div>

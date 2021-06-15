@@ -13,7 +13,7 @@ use App\Helpers\QueryHelper;
 use App\Helpers\UpdtSaldoHelper;
 use App\Helpers\AuthHelper;
 
-
+use Exception;
 use Redirect;
 use Validator;
 use Response;
@@ -50,6 +50,8 @@ class PemohonController extends Controller
                     'md_namalimbah.namalimbah',
                     'md_namalimbah.jenislimbah',
                     'md_namalimbah.is_lgsg_proses',
+                    'md_namalimbah.konversi_kuota',
+                    'md_namalimbah.konversi_satuan_kecil',
                     'md_penghasillimbah.seksi',
                     'md_statusmutasi.keterangan as status',
                     'md_satuan.satuan'
@@ -191,10 +193,11 @@ class PemohonController extends Controller
     public function store(Request $request)
     {
 
+        try {
         $username = AuthHelper::getAuthUser()[0]->email;
         $getRequest = json_decode($request->getContent(), true);
         $dataRequest = $getRequest['Data'];
-        $requestHeader = $getRequest['Header'];
+        $requestHeader=$getRequest['Header'];
 
         $countDataReq = count($dataRequest);
         $error = null;
@@ -253,11 +256,12 @@ class PemohonController extends Controller
             );
             $insertDetail = DB::table('tr_detailmutasi')->insert($dataDetail);
         }
-        try {
+       
             // UpdtSaldoHelper::updateSaldoNamaLimbah($row['nama_limbah'],$row['jmlhlimbah']);
             return response()->json(['success' => 'Data Berhasil Di Simpan']);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Data Gagal Disimpan']);
+            // return $e->getMessage();
+            return response()->json(['error' => 'Ada Kesalahan Sistem: '.$e->getMessage()]);
         }
     }
 
@@ -316,7 +320,7 @@ class PemohonController extends Controller
                     $updateHeaderValidasi = DB::table('tr_headermutasi')->where('id', $row['idheader'])->update($dataStatus, true);
                 
                 } else if ($row['hiddenTransaksi'] == 'terima') {
-
+                   
                     $noSurat = $this->noSurat($row['idasallimbah']);
                     $dataDetail = array(
                         'id_transaksi'      =>  $row['id_transaksi'],
@@ -335,7 +339,7 @@ class PemohonController extends Controller
                         'created_at'        => date('Y-m-d'),
                         'created_by'            => $username,
 
-                    );
+                    ); 
                     $dataStatus = array(
                         'idstatus'          =>  2,
                         'no_surat'          =>  $noSurat,
@@ -430,7 +434,7 @@ class PemohonController extends Controller
             }
             return response()->json(['success' => 'Data Berhasil Di Simpan']);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Data Gagal Disimpan']);
+            return response()->json(['error' => 'Ada Kesalahan Sistem: '.$e->getMessage()]);
         }
     }
     public function getNoBAPemusnahan()
@@ -492,11 +496,13 @@ class PemohonController extends Controller
     //menu revisi
     public function updateRevisi(Request $request)
     {
+        
         $username = AuthHelper::getAuthUser()[0]->email;
         try {
             $jmlh_pack = UpdtSaldoHelper::convertJumlahToPack($request->namalimbah, $request->jmlhlimbah);
             $dataToBeUpdate = DB::table('tr_headermutasi')->where('id', $request->hidden_id)->first();
             // $dataLimbah=DB::table('md_namalimbah')->where('id',$request->namalimbah)->first();
+           
             $dataHeader = array(
 
                 'idlimbah'            =>   $request->namalimbah,

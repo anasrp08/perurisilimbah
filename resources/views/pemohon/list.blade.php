@@ -45,7 +45,7 @@
                 <tr>
                     <th>No. </th>
                     <th>ID</th>
-					<th>Status</th>
+                    <th>Status</th>
                     <th>No. Surat</th>
                     <th>Tanggal</th>
                     <th>Nama Limbah</th>
@@ -53,7 +53,7 @@
                     {{-- <th>Satuan</th> --}}
                     <th>Asal Limbah</th>
                     <th>Jenis Limbah (B3/Non)</th>
-                    
+
                     <th>Diterima Oleh</th>
                     <th>Tgl. Validasi</th>
                     <th>Divalidasi Oleh</th>
@@ -99,16 +99,18 @@
 
         })
         $('input[name="f_date"]').on('apply.daterangepicker', function (ev, picker) {
-            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format(
+                'DD/MM/YYYY'));
         });
         $('.select2bs4').select2({
             theme: 'bootstrap4'
         })
-        $('#filter').click(function () { 
+
+        $('#filter').click(function () {
             $('#daftar_pemohon').DataTable().draw(true);
         })
 
-        $('#nonb3').hide() 
+        $('#nonb3').hide()
         $('#jenislimbah').change(function () {
             if ($(this).val() == "Limbah B3") {
                 $("#nonb3").hide();
@@ -125,7 +127,7 @@
             format: 'dd/mm/yyyy',
             todayHighlight: true
         });
-      
+
 
         $('#nonb3').hide()
         $('#jenislimbah').change(function () {
@@ -171,7 +173,7 @@
             var radio
 
             var arrValue = []
-            var date = $('#prosesdate').val() 
+            var date = $('#prosesdate').val()
             arrValue.push(moment(date, 'DD-MM-YYYY').format('YYYY-MM-DD'))
             arrValue.push($('#vendor').val())
             arrValue.push($('#nomanifest').val())
@@ -250,7 +252,7 @@
                 obj.nospbe = arrValue[4];
                 obj.status_lama = data[i].idstatus;
                 obj.np_pemroses = $('#np_pemroses').val();
-                obj.idmutasi = data[i].id ;
+                obj.idmutasi = data[i].id;
                 obj.keterangan_proses = $('#keterangan_proses').val();
                 output.push(obj);
                 jsonData["Order"] = output
@@ -280,24 +282,29 @@
                     $('#submit_proses').prop('disable', true);
                 },
                 success: function (data) {
-                    if (data.errors) {
-                        toastr.errors(data.errors, 'Success', {
-                            timeOut: 5000
+                    if (data.error) {
+                        toastr.error(data.error, 'Error', {
+                            closeButton: true,
+                            newestOnTop: false,
+                            positionClass: "toast-top-full-width"
                         });
                     }
                     if (data.success) {
                         toastr.success(data.success, 'Success', {
-                            timeOut: 5000
+                            timeOut: 5000,
+                            newestOnTop: false,
+                            positionClass: "toast-top-full-width"
                         });
                         $('#modalproses').modal('toggle')
                         $('#daftar_pemohon').DataTable().ajax.reload();
                         $('.formproses').val('');
                         $('.radioPilihan').prop('checked', false);
                         $('#np_pemroses').val('').change();
-                        $('#submit_proses').text('Proses');
-                        $('#submit_proses').prop('disable', false);
+
 
                     }
+                    $('#submit_proses').text('Proses');
+                    $('#submit_proses').prop('disable', false);
 
                 }
             })
@@ -330,28 +337,60 @@
                     action: function (e, dt, node, config) {
                         var dataSelected = table.rows({
                             selected: true
-                        }).data()
+                        }).data() 
                         var isProsesLgsg = false
 
-                        for (i = 0; i < dataSelected.count(); i++) {
-                            if (dataSelected[i].is_lgsg_proses == '1') {
+                        // for (i = 0; i < dataSelected.count(); i++) {
+                        //     if (dataSelected[i].is_lgsg_proses == '1') {
 
-                                toastr.warning(
+                        //         toastr.warning(
+                        //             'Ada limbah yang harus diproses langsung',
+                        //             'Perhatian', {
+                        //                 timeOut: 5000
+                        //             });
+                        //         isProsesLgsg = true
+                        //         break;
+                        //     }
+                        // }
+
+
+                        if (dataSelected.count() > 1 || dataSelected.count() == 0) {
+                            toastr.warning('Harus pilih salah satu', 'Warning', {
+                                timeOut: 5000
+                            });
+                        } else if (dataSelected.count() == 1) {
+                            if (dataSelected[0].is_lgsg_proses == '1') {
+                                    toastr.warning(
                                     'Ada limbah yang harus diproses langsung',
                                     'Perhatian', {
                                         timeOut: 5000
                                     });
-                                isProsesLgsg = true
-                                break;
-                            }
-                        }
-                        if (!isProsesLgsg) {
-                            $('#title_konfirmasi').text('Diterima Oleh: ')
-                            $('#hidden_transaksi').val('terima')
-                            $('#modalconfirm').modal('show')
-                        } else {
+                                }else{
+                                    $('#title_konfirmasi').text('Diterima Oleh: ')
+                                    $('#hidden_transaksi').val('terima')
+                                    $('#modalconfirm').modal('show') 
+                                    if (dataSelected[0].konversi_kuota != '-' && dataSelected[0].konversi_satuan_kecil !=
+                                    '-' && dataSelected[0].harga_satuan_konversi != '-') {
+                                    $('#input_massa').css('display', 'block')
+                                }else{
+                                    $('#input_massa').css('display', 'none')
+                                }
+
+                                }
+
+                              
+
+                                
 
                         }
+
+                        // if (!isProsesLgsg) {
+                        //     $('#title_konfirmasi').text('Diterima Oleh: ')
+                        //     $('#hidden_transaksi').val('terima')
+                        //     $('#modalconfirm').modal('show')
+                        // } else {
+
+                        // }
 
 
                     }
@@ -380,6 +419,10 @@
                             });
                         } else if (data.count() == 1) {
 
+                            if (data.konversi_kuota != '-' && data.konversi_satuan_kecil !=
+                                '-' && data.harga_satuan_konversi != '-') {
+                                $('#input_massa').css('display', 'block')
+                            }
                             $('#title_revisi').text('Revisi Permohonan')
                             $('#hidden_transaksi').val('revisi')
                             $('#np_pemohon').val(data[0].np_pemohon)
@@ -436,8 +479,8 @@
                             $('#modalproses').modal('show')
                         } else {
 
-                        } 
-                    } 
+                        }
+                    }
                 },
                 {
                     text: 'Tolak Permohonan',
@@ -445,26 +488,26 @@
                     action: function (e, dt, node, config) {
                         var dataSelected = table.rows({
                             selected: true
-                        }).data() 
-                        if(dataSelected.count() > 1){
+                        }).data()
+                        if (dataSelected.count() > 1) {
                             toastr.error(
-                                    'Hanya Boleh Pilih 1 Permohonan',
-                                    'Perhatian', {
-                                        timeOut: 3000
-                                    });
-                        }else  if(dataSelected.idstatus == 11 || dataSelected.idstatus == 10){
+                                'Hanya Boleh Pilih 1 Permohonan',
+                                'Perhatian', {
+                                    timeOut: 3000
+                                });
+                        } else if (dataSelected.idstatus == 11 || dataSelected.idstatus == 10) {
                             toastr.error(
-                                    'Tidak Diizinkan',
-                                    'Perhatian', {
-                                        timeOut: 3000
-                                    });
-                        }else{
+                                'Tidak Diizinkan',
+                                'Perhatian', {
+                                    timeOut: 3000
+                                });
+                        } else {
                             console.log(dataSelected)
                             $('#title_tolak').text('Permohonan Ditolak')
                             $('#hidden_transaksi').val('tolak')
                             $('#hidden_id_tolak').val(dataSelected[0].idheader)
                             $('#modaltolak').modal('show')
-                        } 
+                        }
                     }
                 },
                 {
@@ -505,10 +548,10 @@
                 data: function (d) {
                     d.idasallimbah = seksi
                     // d.status=$('#status').val()
-                    d.namalimbah=$('#f_namalimbah').val() 
-                    d.jenislimbah=$('#f_jenislimbah').val()
-                    d.limbahasal=$('#f_limbahasal').val() 
-                    d.f_date=$('#f_date').val() 
+                    d.namalimbah = $('#f_namalimbah').val()
+                    d.jenislimbah = $('#f_jenislimbah').val()
+                    d.limbahasal = $('#f_limbahasal').val()
+                    d.f_date = $('#f_date').val()
 
 
 
@@ -526,13 +569,13 @@
                     data: 'id',
                     name: 'id',
                 },
-{
+                {
                     data: 'status',
                     name: 'status',
                     render: function (data, type, row) {
 
                         switch (row.idstatus) {
-                        case 1:
+                            case 1:
                                 return '<span class="badge badge-warning">' + data + '</span>'
                                 break;
                             case 2:
@@ -553,17 +596,19 @@
                             case 7:
                                 return '<span class="badge bg-gray">' + data + '</span>'
                                 break;
-                                case 8:
+                            case 8:
                                 return '<span class="badge bg-indigo">' + data + '</span>'
                                 break;
-                                case 9:
+                            case 9:
                                 return '<span class="badge bg-teal">' + data + '</span>'
                                 break;
-                                case 10:
+                            case 10:
                                 return '<span class="badge bg-fuchsia">' + data + '</span>'
-                                case 11:
-                                return '<span class="badge badge-danger">' + data +'<br>'+'Oleh: '+row.np_penolak+'</span><br>Alasan: '+row.alasan_tolak
-                                break; 
+                            case 11:
+                                return '<span class="badge badge-danger">' + data + '<br>' +
+                                    'Oleh: ' + row.np_penolak + '</span><br>Alasan: ' + row
+                                    .alasan_tolak
+                                break;
                             default:
                                 break;
                         }
@@ -594,7 +639,7 @@
                     data: 'jumlah_in',
                     name: 'jumlah_in',
                     render: function (data, type, row) {
-                        return data + ' ('+row.satuan+')'
+                        return data + ' (' + row.satuan + ')'
                     }
 
                 },
@@ -612,7 +657,7 @@
 
                 },
 
-                
+
                 {
                     data: 'changed_by',
                     name: 'changed_by',
@@ -673,11 +718,11 @@
             buttonTerima.nodes().css("display", "none");
             buttonRevisi.nodes().css("display", "none");
             buttonProsesLangsung.nodes().css("display", "none");
-			   buttonTolak.nodes().css("display", "none");
+            buttonTolak.nodes().css("display", "none");
         } else if (roleOperator == 1) {
             buttonValidasi.nodes().css("display", "none");
-			  buttonTolak.nodes().css("display", "none");
-        } 
+            buttonTolak.nodes().css("display", "none");
+        }
         $('#form_revisi').on('submit', function (event) {
             event.preventDefault();
             url = "{{ route('history.update') }}"
@@ -694,27 +739,33 @@
                 // dataType: "json",
                 beforeSend: function () {
                     $('#simpan').text('proses menyimpan...');
+                    $('#simpan').prop('disabled', true);
                 },
                 success: function (data) {
                     // console.log(data)
-                    if (data.errors) {
+                    if (data.error) {
 
-                        toastr.success(data.errors, 'Gagal Update', {
-                            timeOut: 5000
+                        toastr.error(data.error, 'Error', {
+                            closeButton: true,
+                            newestOnTop: false,
+                            positionClass: "toast-top-full-width",
                         });
                     }
                     if (data.success) {
                         toastr.success(data.success, 'Success', {
-                            timeOut: 5000
+                            timeOut: 5000,
+                            newestOnTop: false,
+                            positionClass: "toast-top-full-width",
                         });
-                        // $('#np').val('').change()
-                        $('#simpan').text('Submit');
+                        // $('#np').val('').change() 
                         $('#modalrevisi').modal('toggle')
                         $('#daftar_pemohon').DataTable().ajax.reload();
 
                     }
+                    $('#simpan').text('Submit');
+                    $('#simpan').prop('disabled', false);
                 }
-            }) 
+            })
         })
 
         $('#form_tolak').on('submit', function (event) {
@@ -727,33 +778,51 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 data: new FormData(this),
-                contentType: false, 
-                processData: false, 
+                contentType: false,
+                processData: false,
                 beforeSend: function () {
                     $('#simpan').text('proses menyimpan...');
+                    $('#simpan').prop('disabled', true);
                 },
-                success: function (data) { 
-                    if (data.errors) { 
-                        toastr.success(data.errors, 'Gagal Update', {
-                            timeOut: 5000
+                success: function (data) {
+                    if (data.error) {
+
+                        toastr.error(data.error, 'Error', {
+                            closeButton: true,
+                            newestOnTop: false,
+                            positionClass: "toast-top-full-width",
                         });
                     }
                     if (data.success) {
                         toastr.success(data.success, 'Success', {
-                            timeOut: 5000
-                        }); 
+                            timeOut: 5000,
+                            newestOnTop: false,
+                            positionClass: "toast-top-full-width",
+                        });
                         $('#form_tolak')[0].reset();
-                        $('#simpan').text('Submit'); 
                         $('#modaltolak').modal('toggle')
                         $('#daftar_pemohon').DataTable().ajax.reload();
 
                     }
+                    $('#simpan').text('Submit');
+                    $('#simpan').prop('disabled', false);
                 }
             })
 
 
         })
+        $('#massa').keypress(function (evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode;
 
+            if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        });
+        $('#modalconfirm').on('hidden.bs.modal', function (e) {
+            $('#np').val('').change()
+            $('#massa').val('')
+        })
         $('#submit').on('click', function () {
             var output = [];
             var jsonData = {}
@@ -764,90 +833,94 @@
 
             var data1 = table.rows({
                 selected: true
-            }).data()  
-            if($('#np').val()=='' ||  $('#massa').val()==''){
+            }).data()
+            if ($('#np').val() == '') {
                 toastr.warning('Semua Field Harus Diisi', 'Warning', {
                     timeOut: 5000
                 });
-            }else{
-            if (data1.count() == 0) {
-                toastr.warning('Ada Order Yang Belum Dipilih', 'Warning', {
-                    timeOut: 5000
-                });
-            } else if(data1.count() > 1) {
-                toastr.warning('Pilih Salah Satu Item', 'Warning', {
-                    timeOut: 5000
-                });
+            } else {
+                if (data1.count() == 0) {
+                    toastr.warning('Ada Order Yang Belum Dipilih', 'Warning', {
+                        timeOut: 5000
+                    });
+                } else if (data1.count() > 1) {
+                    toastr.warning('Pilih Salah Satu Item', 'Warning', {
+                        timeOut: 5000
+                    });
 
-            }else{
-                for (i = 0; i < data1.count(); i++) {
-                    
-                    var obj = {};
-                    obj.idheader = data1[i].id;
-                    obj.limbah3r = data1[i].limbah3r;
-                    obj.limbah3r = data1[i].limbah3r;
-                    obj.tgl = data1[i].tgl;
-                    obj.id_transaksi = data1[i].id_transaksi;
-                    obj.idmutasi = data1[i].idmutasi;
-                    obj.idasallimbah = data1[i].idasallimbah;
-                    obj.idlimbah = data1[i].idlimbah;
-                    obj.idstatus = data1[i].idstatus;
-                    obj.idjenislimbah = data1[i].idjenislimbah;
-                    obj.jumlah = data1[i].jumlah_in;
-                    obj.satuan = data1[i].idsatuan;
-                    obj.np = $('#np').val();
-                    obj.massa = $('#massa').val(); 
-                    obj.hiddenTransaksi = $('#hidden_transaksi').val(); 
-                    output.push(obj);
-                    jsonData["Order"] = output
-                   
-                }
-                var url = '' 
+                } else {
+                    for (i = 0; i < data1.count(); i++) {
 
-
-                console.log(jsonData)
-                url = "{{ route('pemohon.updatevalid') }}"
-                $.ajax({
-                    url: url,
-                    method: "POST",
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                            'content')
-                    },
-                    data: JSON.stringify(jsonData),
-                    // contentType: 'json',
-                    // cache: false,
-                    // processData: false,
-                    // dataType: "json",
-                    beforeSend: function () {
-                        $('#submit').text('proses menyimpan...');
-                        $('#submit').prop('disabled', true);
-                    },
-                    success: function (data) {
-                        // console.log(data)
-                        if (data.errors) {
-                            toastr.success(data.errors, 'Success', {
-                                timeOut: 5000
-                            });
-                        }
-                        if (data.success) {
-                            toastr.success(data.success, 'Success', {
-                                timeOut: 5000
-                            });
-                            $('#daftar_pemohon').DataTable().ajax.reload();
-                           
-                            $('#submit').text('Submit');
-                            $('#submit').prop('disabled', false);
-                         
-
-                        }
+                        var obj = {};
+                        obj.idheader = data1[i].id;
+                        obj.limbah3r = data1[i].limbah3r;
+                        obj.limbah3r = data1[i].limbah3r;
+                        obj.tgl = data1[i].tgl;
+                        obj.id_transaksi = data1[i].id_transaksi;
+                        obj.idmutasi = data1[i].idmutasi;
+                        obj.idasallimbah = data1[i].idasallimbah;
+                        obj.idlimbah = data1[i].idlimbah;
+                        obj.idstatus = data1[i].idstatus;
+                        obj.idjenislimbah = data1[i].idjenislimbah;
+                        obj.jumlah = data1[i].jumlah_in;
+                        obj.satuan = data1[i].idsatuan;
+                        obj.np = $('#np').val();
+                        obj.massa = $('#massa').val();
+                        obj.hiddenTransaksi = $('#hidden_transaksi').val();
+                        output.push(obj);
+                        jsonData["Order"] = output
 
                     }
-                })
-                $('#np').val('').change()
-                $('#modalconfirm').modal('toggle')
+                    var url = ''
 
-            } 
+
+                    console.log(jsonData)
+                    url = "{{ route('pemohon.updatevalid') }}"
+                    $.ajax({
+                        url: url,
+                        method: "POST",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                'content')
+                        },
+                        data: JSON.stringify(jsonData),
+                        // contentType: 'json',
+                        // cache: false,
+                        // processData: false,
+                        // dataType: "json",
+                        beforeSend: function () {
+                            $('#submit').text('proses menyimpan...');
+                            $('#submit').prop('disabled', true);
+                        },
+                        success: function (data) {
+                            if (data.error) {
+
+                                toastr.error(data.error, 'Error', {
+                                    closeButton: true,
+                                    newestOnTop: false,
+                                    positionClass: "toast-top-full-width",
+                                });
+                            }
+                            if (data.success) {
+                                toastr.success(data.success, 'Success', {
+                                    timeOut: 5000,
+                                    newestOnTop: false,
+                                    positionClass: "toast-top-full-width",
+                                });
+                                $('#daftar_pemohon').DataTable().ajax.reload();
+
+                            }
+                            $('#np').val('').change();
+                            $('#massa').val('');
+                            $('#submit').text('Submit');
+                            $('#submit').prop('disabled', false);
+
+                        }
+                    })
+                    $('#np').val('').change()
+                    $('#modalconfirm').modal('toggle')
+
+                }
             }
 
         })
@@ -866,7 +939,7 @@
             // updateValid(paramData)
 
         });
-       
+
 
 
         // });

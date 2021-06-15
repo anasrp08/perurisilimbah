@@ -35,37 +35,37 @@
     </div>
     <div class="col-md-8">
         <div class="card card-primary card-tabs">
-        <div class="card-header p-0 pt-1">
-            <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link  active" id="home-tab" data-toggle="pill" href="#home" role="tab"
-                        aria-controls="home" aria-selected="true">Daftar Pencatatan</a>
-                </li>
+            <div class="card-header p-0 pt-1">
+                <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link  active" id="home-tab" data-toggle="pill" href="#home" role="tab"
+                            aria-controls="home" aria-selected="true">Daftar Pencatatan</a>
+                    </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" id="neraca-anggaran-tab" data-toggle="pill" href="#neraca-anggaran" role="tab"
-                        aria-controls="neraca-anggaran" aria-selected="false">Neraca Anggaran</a>
-                </li>
-            </ul>
-        </div>
+                    <li class="nav-item">
+                        <a class="nav-link" id="neraca-anggaran-tab" data-toggle="pill" href="#neraca-anggaran"
+                            role="tab" aria-controls="neraca-anggaran" aria-selected="false">Neraca Anggaran</a>
+                    </li>
+                </ul>
+            </div>
 
-        <div class="card-body">
-            <div class="tab-content" id="custom-tabs-one-tabContent">
-                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab"
-                style="position: relative;">
-                    @include('tr_kontrak.tbl_transaksi')
+            <div class="card-body">
+                <div class="tab-content" id="custom-tabs-one-tabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab"
+                        style="position: relative;">
+                        @include('tr_kontrak.tbl_transaksi')
 
-                </div>
-                <div class="tab-pane fade" id="neraca-anggaran" role="tabpanel" aria-labelledby="neraca-anggaran-tab"
-                style="position: relative;">
-                @include('tr_kontrak.tbl_neraca_anggaran')
+                    </div>
+                    <div class="tab-pane fade" id="neraca-anggaran" role="tabpanel"
+                        aria-labelledby="neraca-anggaran-tab" style="position: relative;">
+                        @include('tr_kontrak.tbl_neraca_anggaran')
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
 </div>
-  
+
 @include('layouts.confimdelete')
 
 
@@ -108,8 +108,16 @@
                 .val())
 
         });
-        var harga = 0
+        $('#jmlhlimbah').keypress(function (evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode;
 
+            if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        });
+        var harga = 0
+        var hargaAfterRemoveDot
         function getDropdown(paramUrl, param1, param2) {
 
             var paramData
@@ -125,8 +133,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 data: paramData,
-                success: function (data) {
-                    console.log(data)
+                success: function (data) { 
                     harga = data.dataHarga
                     $('#dataharga').val(numberWithCommas(data.dataHarga))
                     $('#labelharga').text('Harga / ' + data.dataSatuan)
@@ -135,12 +142,12 @@
             });
 
         }
-        $('#jmlhlimbah').on('change', function () { 
+        $('#jmlhlimbah').on('change', function () {
             var valJumlah = $(this).val()
-            var harga = $('#dataharga').val().split('.').join("")
-             
-            var result = parseInt(valJumlah) * parseInt(harga)
-            
+            hargaAfterRemoveDot = $('#dataharga').val().split('.').join("")
+
+            var result = parseFloat(valJumlah) * parseInt(hargaAfterRemoveDot)
+
             $('#transaksi_konsumsi').val(numberWithCommas(result))
         })
         $('#refresh').click(function () {
@@ -153,6 +160,7 @@
             var label = $('#labelharga').text()
             var splitData = label.split(' / ')
             formData.append('satuan', splitData[1])
+            formData.append('hargaSplit', hargaAfterRemoveDot)
             $.ajax({
                 url: "{{ route('kontrakb3.store') }}",
                 method: "POST",
@@ -183,11 +191,12 @@
                         $('#simpan_transaksi').attr('disabled', false);
                         $('#tambah_transaksi')[0].reset();
                         $('#daftar_transaksi').DataTable().ajax.reload();
-                        $('#transaksi_tipelimbah').val('').change()
+                        // $('#transaksi_tipelimbah').val('').change()
                         $('#transaksi_tahun').val(moment().format('YYYY'))
                         $('#transaksi_total').val('')
-                        $('#transaksi_np').val('')
+                        // $('#transaksi_np').val('')
                         $('#transaksi_konsumsi').val('')
+                        window.location.reload()
 
                     }
                 }
@@ -295,7 +304,7 @@
                 $('.edit').hide();
             }
         });
-        
+
         var table_neraca = $('#neraca_anggaran').DataTable({
             processing: true,
             serverSide: true,
@@ -419,7 +428,7 @@
 
                     }
                 },
-                
+
 
             ]
         });
@@ -443,32 +452,73 @@
 
 
         $(document).on('click', '.delete', function () {
-            user_id = $(this).data('id');
+            // user_id = $(this).data('id_catat');
+
             $("#success-alert").hide();
             var data = table.row($(this).closest('tr')).data();
-
+            user_id = data.id_catat
             $('#confirmModal').modal();
 
         });
 
         $('#ok_button').click(function () {
             // console.log(user_id)
+            var param_data = {
+                id_catat: user_id
+            }
             $.ajax({
-                url: "/kontrakb3/destroy/" + user_id,
+                url: "{{ route('kontrakb3.delete') }}",
+                method: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: param_data,
+                // contentType: false,
+                // cache: false,
+                // processData: false,
+                dataType: "json",
                 beforeSend: function () {
                     $('#ok_button').text('Deleting...');
+
+                    $('#ok_button').attr('disabled', true)
                 },
                 success: function (data) {
-                    toastr.success('Data Berhasil Di Hapus', 'Terhapus', {
-                        timeOut: 5000
-                    });
-                    setTimeout(function () {
-                        $('#ok_button').text('OK');
-                        $('#confirmModal').modal('hide');
+                    var html = '';
+                    if (data.error) {
+                        toastr.error('Data Gagal Di Simpan', 'Error Alert', {
+                            timeOut: 5000
+                        });
+                    }
+                    if (data.success) {
+                        toastr.success('Data Berhasil Di Simpan', 'Success Alert', {
+                            timeOut: 5000
+                        });
+
                         $('#daftar_transaksi').DataTable().ajax.reload();
-                    }, 2000);
+
+
+                    }
+                    $('#ok_button').text('Hapus');
+                    $('#ok_button').attr('disabled', false)
                 }
             })
+
+            // $.ajax({
+            //     url: "/kontrakb3/destroy/" + user_id,
+            //     beforeSend: function () {
+            //         $('#ok_button').text('Deleting...');
+            //     },
+            //     success: function (data) {
+            //         toastr.success('Data Berhasil Di Hapus', 'Terhapus', {
+            //             timeOut: 5000
+            //         });
+            //         setTimeout(function () {
+            //             $('#ok_button').text('OK');
+            //             $('#confirmModal').modal('hide');
+            //             $('#daftar_transaksi').DataTable().ajax.reload();
+            //         }, 2000);
+            //     }
+            // })
         });
 
 
