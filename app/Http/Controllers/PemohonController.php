@@ -296,7 +296,7 @@ class PemohonController extends Controller
      */
     public function updatevalid(Request $request)
     {
-
+        try {
         $username = AuthHelper::getAuthUser()[0]->email;
         $getRequest = json_decode($request->getContent(), true);
         $dataRequest = $getRequest['Order'];
@@ -305,7 +305,7 @@ class PemohonController extends Controller
         $dataStatus = null;
         $dataDetail = null;
         $jmlh_pack = null;
-        try {
+        
 
             foreach ($dataRequest as $row) {
 

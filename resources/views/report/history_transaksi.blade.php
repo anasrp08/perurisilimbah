@@ -54,6 +54,7 @@
                     <th>Tanggal</th>
                     <th>Nama Limbah</th>
                     <th>Jumlah</th>  
+					 <th>Massa</th>  
                     <th>Asal Limbah</th>
                     <th>Jenis Limbah</th> 
                     <th>Proses Oleh</th>  
@@ -228,6 +229,14 @@
                     name: 'jumlah',
                     render: function (data, type, row) {
                         return data+' '+row.satuan
+                    }
+
+                },
+				{
+                    data: 'jmlh_massa',
+                    name: 'jmlh_massa',
+                    render: function (data, type, row) {
+                        return data 
                     }
 
                 },

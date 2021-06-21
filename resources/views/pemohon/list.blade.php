@@ -337,7 +337,7 @@
                     action: function (e, dt, node, config) {
                         var dataSelected = table.rows({
                             selected: true
-                        }).data() 
+                        }).data()
                         var isProsesLgsg = false
 
                         // for (i = 0; i < dataSelected.count(); i++) {
@@ -360,27 +360,28 @@
                             });
                         } else if (dataSelected.count() == 1) {
                             if (dataSelected[0].is_lgsg_proses == '1') {
-                                    toastr.warning(
+                                toastr.warning(
                                     'Ada limbah yang harus diproses langsung',
                                     'Perhatian', {
                                         timeOut: 5000
                                     });
-                                }else{
-                                    $('#title_konfirmasi').text('Diterima Oleh: ')
-                                    $('#hidden_transaksi').val('terima')
-                                    $('#modalconfirm').modal('show') 
-                                    if (dataSelected[0].konversi_kuota != '-' && dataSelected[0].konversi_satuan_kecil !=
+                            } else {
+                                $('#title_konfirmasi').text('Diterima Oleh: ')
+                                $('#hidden_transaksi').val('terima')
+                                $('#modalconfirm').modal('show')
+                                if (dataSelected[0].konversi_kuota != '-' && dataSelected[0]
+                                    .konversi_satuan_kecil !=
                                     '-' && dataSelected[0].harga_satuan_konversi != '-') {
                                     $('#input_massa').css('display', 'block')
-                                }else{
+                                } else {
                                     $('#input_massa').css('display', 'none')
                                 }
 
-                                }
+                            }
 
-                              
 
-                                
+
+
 
                         }
 
@@ -836,39 +837,81 @@
             }).data()
             if ($('#np').val() == '') {
                 toastr.warning('Semua Field Harus Diisi', 'Warning', {
+                    closeButton: true,
+                                    newestOnTop: false,
+                                    positionClass: "toast-top-full-width",
                     timeOut: 5000
                 });
             } else {
                 if (data1.count() == 0) {
                     toastr.warning('Ada Order Yang Belum Dipilih', 'Warning', {
+                        closeButton: true,
+                                    newestOnTop: false,
+                                    positionClass: "toast-top-full-width",
                         timeOut: 5000
                     });
                 } else if (data1.count() > 1) {
                     toastr.warning('Pilih Salah Satu Item', 'Warning', {
+                        closeButton: true,
+                                    newestOnTop: false,
+                                    positionClass: "toast-top-full-width",
                         timeOut: 5000
                     });
 
                 } else {
                     for (i = 0; i < data1.count(); i++) {
+                        console.log(data1)
+                        if (data1[i].konversi_satuan_kecil != '-') {
+                            if ($('#massa').val() == '') {
+                                toastr.error('Inputan Massa Belum Terisi', 'Warning', {
+                                    closeButton: true,
+                                    newestOnTop: false,
+                                    positionClass: "toast-top-full-width",
+                                    timeOut: 5000
+                                });
+                                break;
+                            } else {
+                                var obj = {};
+                                obj.idheader = data1[i].id;
+                                obj.limbah3r = data1[i].limbah3r;
+                                obj.limbah3r = data1[i].limbah3r;
+                                obj.tgl = data1[i].tgl;
+                                obj.id_transaksi = data1[i].id_transaksi;
+                                obj.idmutasi = data1[i].idmutasi;
+                                obj.idasallimbah = data1[i].idasallimbah;
+                                obj.idlimbah = data1[i].idlimbah;
+                                obj.idstatus = data1[i].idstatus;
+                                obj.idjenislimbah = data1[i].idjenislimbah;
+                                obj.jumlah = data1[i].jumlah_in;
+                                obj.satuan = data1[i].idsatuan;
+                                obj.np = $('#np').val();
+                                obj.massa = $('#massa').val();
+                                obj.hiddenTransaksi = $('#hidden_transaksi').val();
+                                output.push(obj);
+                                jsonData["Order"] = output
+                            }
 
-                        var obj = {};
-                        obj.idheader = data1[i].id;
-                        obj.limbah3r = data1[i].limbah3r;
-                        obj.limbah3r = data1[i].limbah3r;
-                        obj.tgl = data1[i].tgl;
-                        obj.id_transaksi = data1[i].id_transaksi;
-                        obj.idmutasi = data1[i].idmutasi;
-                        obj.idasallimbah = data1[i].idasallimbah;
-                        obj.idlimbah = data1[i].idlimbah;
-                        obj.idstatus = data1[i].idstatus;
-                        obj.idjenislimbah = data1[i].idjenislimbah;
-                        obj.jumlah = data1[i].jumlah_in;
-                        obj.satuan = data1[i].idsatuan;
-                        obj.np = $('#np').val();
-                        obj.massa = $('#massa').val();
-                        obj.hiddenTransaksi = $('#hidden_transaksi').val();
-                        output.push(obj);
-                        jsonData["Order"] = output
+                        } else { 
+                            var obj = {};
+                            obj.idheader = data1[i].id;
+                            obj.limbah3r = data1[i].limbah3r;
+                            obj.limbah3r = data1[i].limbah3r;
+                            obj.tgl = data1[i].tgl;
+                            obj.id_transaksi = data1[i].id_transaksi;
+                            obj.idmutasi = data1[i].idmutasi;
+                            obj.idasallimbah = data1[i].idasallimbah;
+                            obj.idlimbah = data1[i].idlimbah;
+                            obj.idstatus = data1[i].idstatus;
+                            obj.idjenislimbah = data1[i].idjenislimbah;
+                            obj.jumlah = data1[i].jumlah_in;
+                            obj.satuan = data1[i].idsatuan;
+                            obj.np = $('#np').val();
+                            obj.massa = $('#massa').val();
+                            obj.hiddenTransaksi = $('#hidden_transaksi').val();
+                            output.push(obj);
+                            jsonData["Order"] = output
+                        }
+
 
                     }
                     var url = ''

@@ -870,6 +870,7 @@ class ReportLimbahController extends Controller
                 ->select('tr_detailmutasi.*',  
                 'tr_detailmutasi.idlimbah',
                 'tr_detailmutasi.idstatus',
+                'tr_detailmutasi.jmlh_massa',
                 'tr_detailmutasi.idjenislimbah',  
                 'tr_detailmutasi.idasallimbah', 
                 'md_namalimbah.id as idnama',

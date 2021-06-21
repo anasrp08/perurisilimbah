@@ -37,7 +37,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-         
+     
         $user = Auth::user();
 
         $roleuser = $user;
